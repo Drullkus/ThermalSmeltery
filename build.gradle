@@ -41,6 +41,7 @@ dependencies {
     compile group: 'cofh', name: 'ThermalFoundation', version: "[$minecraft_version]$thermalfoundation_version-dev", ext: 'jar'
 
     compile "mantle:Mantle:$minecraft_version-$mantle_version:deobf"
+    compile "tconstruct:TConstruct:$minecraft_version-$tconstruct_version:deobf"
     compile "codechicken:CodeChickenLib:$minecraft_version-$cclib_version:dev"
     compile "codechicken:CodeChickenCore:$minecraft_version-$ccc_version:dev"
     compile "codechicken:NotEnoughItems:$minecraft_version-$nei_version:dev"
