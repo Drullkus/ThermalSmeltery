@@ -1,71 +1,99 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
+        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-    }
+    dependencies { classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT' }
 }
 
 apply plugin: 'forge'
 
-version = "1.0"
-group= "com.yourname.modid" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "modid"
+version = "$minecraft_version-$version"
 
 minecraft {
-    version = "1.7.10-10.13.2.1291"
-    runDir = "eclipse"
+    version = "$minecraft_version-$forge_version"
+    mappings = mcp_mappings_version
+    runDir = "run"
+}
+
+repositories {
+    ivy {
+        name "CoFHCore"
+        artifactPattern 'http://addons.cursecdn.com/files/2226/638/[module]-[revision].[ext]'
+    }
+    ivy {
+        name "ThermalExpansion"
+        artifactPattern "http://addons.cursecdn.com/files/2221/850/[module]-[revision].[ext]"
+    }
+    ivy {
+        name "ThermalFoundation"
+        artifactPattern "http://addons.cursecdn.com/files/2226/628/[module]-[revision].[ext]"
+    }
+    maven { url 'http://dvs1.progwml6.com/files/maven' } // Mantle
+    maven { url "http://mobiusstrip.eu/maven" } // Waila
+    maven { url "http://chickenbones.net/maven/" } // CodeChicken Stuff
 }
 
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-      
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+    compile group: 'cofh', name: 'CoFHCore', version: "[$minecraft_version]$cofhcore_version-dev", ext: 'jar'
+    compile group: 'cofh', name: 'ThermalExpansion', version: "[$minecraft_version]$thermalexpansion_version-dev", ext: 'jar'
+    compile group: 'cofh', name: 'ThermalFoundation', version: "[$minecraft_version]$thermalfoundation_version-dev", ext: 'jar'
 
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-    compile "mantle:Mantle:${config.minecraft_version}-${config.mantle_version}:deobf"
-    compile "codechicken:CodeChickenLib:${config.minecraft_version}-${config.CCLIB_version}:dev"
-    compile "codechicken:CodeChickenCore:${config.minecraft_version}-${config.ccc_version}:dev"
-    compile "codechicken:NotEnoughItems:${config.minecraft_version}-${config.NEI_version}:dev"
-    compile "mcp.mobius.waila:Waila:${waila_version}_${minecraft_version}:dev"
-    deployerJars 'org.apache.maven.wagon:wagon-ssh:2.2'
+    compile "mantle:Mantle:$minecraft_version-$mantle_version:deobf"
+    compile "codechicken:CodeChickenLib:$minecraft_version-$cclib_version:dev"
+    compile "codechicken:CodeChickenCore:$minecraft_version-$ccc_version:dev"
+    compile "codechicken:NotEnoughItems:$minecraft_version-$nei_version:dev"
+    compile "mcp.mobius.waila:Waila:${waila_version}_$minecraft_version:dev"
 }
 
-processResources
-{
-    // this will ensure that this task is redone when the versions change.
+processResources {
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
+    inputs.property "description", project.description
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        include '**/*.info'
+        include '**/*.properties'
+
+        expand([
+                'version'    : project.version,
+                'mcversion'  : project.minecraft.version,
+                'description': project.description
+        ])
+
     }
-        
-    // copy everything else, thats not the mcmod.info
+
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        exclude '**/*.info'
+        exclude '**/*.properties'
     }
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
+tasks.withType(JavaCompile) { task ->
+    task.options.encoding = 'UTF-8'
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives javadocJar
+    archives deobfJar
 }
 
 sourceSets { main { output.resourcesDir = output.classesDir } }
