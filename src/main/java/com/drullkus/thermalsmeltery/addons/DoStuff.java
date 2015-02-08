@@ -1,6 +1,5 @@
 package com.drullkus.thermalsmeltery.addons;
 
-
 import mantle.pulsar.pulse.Handler;
 import mantle.utils.ItemMetaWrapper;
 import net.minecraft.item.ItemStack;
@@ -13,14 +12,15 @@ public class DoStuff {
     public static int RFMultiplier = 24;
 
     @Handler
-    public static void init()
+    public static void postInit()
     {
+        // Someone better call Saul
         letsGetCooking();
     }
 
     private static void letsGetCooking() {
         Map<ItemMetaWrapper, FluidStack> smelteryMap = tconstruct.library.crafting.Smeltery.getSmeltingList();
-        Map<ItemMetaWrapper, Integer> tempMap = tconstruct.library.crafting.smeltery.getTemperatureList();
+        Map<ItemMetaWrapper, Integer> tempMap = tconstruct.library.crafting.Smeltery.getTemperatureList();
 
         for (Map.Entry<ItemMetaWrapper, FluidStack> entry : smelteryMap.entrySet())
         {
@@ -29,4 +29,5 @@ public class DoStuff {
             TE4Helper.addCrucibleRecipe(energy, input, entry.getValue());
         }
     }
+
 }
