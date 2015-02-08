@@ -34,3 +34,7 @@ Please include the following:
 1. Fork/Clone and run `gradlew [setupDevWorkspace|setupDecompWorkspace] [eclipse|idea]`. This process will automatically download all the dependencies and set them up in your workspace.
 2. Open in IDE of your choice.
 3. Add `-Dfml.coreMods.load=cofh.asm.LoadingPlugin` to your launch options.
+
+
+##Special Thanks
+*Matthewprenger and tterrag for helping me with my git and gradle derps.
