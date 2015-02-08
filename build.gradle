@@ -13,14 +13,14 @@ version = "$minecraft_version-$version"
 
 minecraft {
     version = "$minecraft_version-$forge_version"
-    mappings = mcp_mappings_version
+    //mappings = mcp_mappings_version
     runDir = "run"
 }
 
 repositories {
     ivy {
         name "CoFHCore"
-        artifactPattern 'http://addons.cursecdn.com/files/2226/638/[module]-[revision].[ext]'
+        artifactPattern 'http://addons.cursecdn.com/files/2221/835/[module]-[revision].[ext]'
     }
     ivy {
         name "ThermalExpansion"
@@ -28,7 +28,7 @@ repositories {
     }
     ivy {
         name "ThermalFoundation"
-        artifactPattern "http://addons.cursecdn.com/files/2226/628/[module]-[revision].[ext]"
+        artifactPattern "http://addons.cursecdn.com/files/2221/831/[module]-[revision].[ext]"
     }
     maven { url 'http://dvs1.progwml6.com/files/maven' } // Mantle
     maven { url "http://mobiusstrip.eu/maven" } // Waila
