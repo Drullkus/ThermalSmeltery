@@ -38,3 +38,4 @@ Please include the following:
 
 ##Special Thanks
 *Matthewprenger and tterrag for helping me with my git and gradle derps.
+*Demoxin for helping out tremendously with the Magma Crucible recipes
