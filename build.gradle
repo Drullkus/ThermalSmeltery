@@ -8,6 +8,7 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'curseforge'
 
 version = "$minecraft_version-$version"
 
@@ -95,6 +96,22 @@ artifacts {
     archives sourcesJar
     archives javadocJar
     archives deobfJar
+}
+
+curse {
+    dependsOn build
+    onlyIf { return project.hasProperty('curseforge_key') }
+    if (project.hasProperty('curseforge_key')) {
+        apiKey = project.curseforge_key
+    }
+
+    projectId = curseforge_project_id
+    releaseType = 'release'
+
+    additionalArtifact sourcesJar, javadocJar, deobfJar
+
+    relatedProject 'tinkers-construct': 'requiredLibrary'
+    relatedProject 'thermalexpansion': 'optionalLibrary'
 }
 
 sourceSets { main { output.resourcesDir = output.classesDir } }
