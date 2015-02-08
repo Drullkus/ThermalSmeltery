@@ -10,7 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-@Mod(modid = "thermalsmeltery", name = "Thermal Smeltery", version = "1.0.1", dependencies = "after:ThermalExpansion;required-after:TConstruct")
+@Mod(modid = "thermalsmeltery", name = "Thermal Smeltery", dependencies = "after:ThermalExpansion;required-after:TConstruct")
 public class ThermalSmeltery {
 
     public static final String modID = "Thermal Smeltery";
