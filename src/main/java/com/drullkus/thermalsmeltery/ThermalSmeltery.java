@@ -17,8 +17,8 @@ public class ThermalSmeltery {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        DoStuff.postInit();
         logger.info("Oh no... I'm smelting! I better call Saul!");
+        DoStuff.postInit();
     }
 
 }
