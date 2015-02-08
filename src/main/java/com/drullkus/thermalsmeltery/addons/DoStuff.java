@@ -1,5 +1,6 @@
 package com.drullkus.thermalsmeltery.addons;
 
+import com.drullkus.thermalsmeltery.Config;
 import mantle.pulsar.pulse.Handler;
 import mantle.utils.ItemMetaWrapper;
 import net.minecraft.item.ItemStack;
@@ -23,7 +24,7 @@ public class DoStuff {
         for (Map.Entry<ItemMetaWrapper, FluidStack> entry : smelteryMap.entrySet())
         {
             ItemStack input = new ItemStack(entry.getKey().item, 1, entry.getKey().meta);
-            int energy = tempMap.get(entry.getKey()) * 15; // Calculate temperature to energy here
+            int energy = tempMap.get(entry.getKey()) * 15 * Config.multiplier; // Calculate temperature to energy here
             TE4Helper.addCrucibleRecipe(energy, input, entry.getValue());
         }
     }

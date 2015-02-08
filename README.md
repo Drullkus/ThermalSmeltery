@@ -1,7 +1,7 @@
 # ThermalSmeltery
 This is a very short mod that adds the capability to melt metals in the Thermal Expansion Crucible into Tinker's Construct Metals.
 
-This mod basically adapts every TiCon Smeltery recipe to the Magma Crucible. In theory it should add recipes from mods adding TiCon Smeltery Recipe as well, namely Extra Tinker's Construct.
+This mod dynamically adapts every TiCon Smeltery recipe to the Magma Crucible. In theory it should add recipes from mods adding TiCon Smeltery Recipe as well, including ExtraTCon.
 
 
 ##[Downloads](http://minecraft.curseforge.com/mc-mods/227661-thermal-smeltery/files)
@@ -25,8 +25,8 @@ Please include the following:
 * Versions of any mods potentially related to the issue
 * Any relevant screenshots are greatly appreciated.
 * For crashes:
- * Steps to reproduce
- * ForgeModLoader-client-0.log (the FML log) from the root folder of the client
+* Steps to reproduce
+* ForgeModLoader-client-0.log (the FML log) from the root folder of the client
 
 
 ##Development Setup
