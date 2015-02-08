@@ -9,8 +9,6 @@ import java.util.Map;
 
 public class DoStuff {
 
-    public static int RFMultiplier = 24;
-
     @Handler
     public static void postInit()
     {
@@ -25,7 +23,7 @@ public class DoStuff {
         for (Map.Entry<ItemMetaWrapper, FluidStack> entry : smelteryMap.entrySet())
         {
             ItemStack input = new ItemStack(entry.getKey().item, 1, entry.getKey().meta);
-            int energy = tempMap.get(entry.getKey()) * 100; // Calculate temperature to energy here
+            int energy = tempMap.get(entry.getKey()) * 15; // Calculate temperature to energy here
             TE4Helper.addCrucibleRecipe(energy, input, entry.getValue());
         }
     }
