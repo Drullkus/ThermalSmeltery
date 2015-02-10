@@ -10,14 +10,7 @@ import java.util.Map;
 
 public class DoStuff {
 
-    @Handler
-    public static void postInit()
-    {
-        // Someone better call Saul
-        letsGetCooking();
-    }
-
-    private static void letsGetCooking() {
+    public static void letsGetCooking() {
         Map<ItemMetaWrapper, FluidStack> smelteryMap = tconstruct.library.crafting.Smeltery.getSmeltingList();
         Map<ItemMetaWrapper, Integer> tempMap = tconstruct.library.crafting.Smeltery.getTemperatureList();
 

@@ -28,7 +28,8 @@ public class ThermalSmeltery {
     public void postInit(FMLPostInitializationEvent event)
     {
         logger.info("Oh no... I'm smelting! I better call Saul!");
-        DoStuff.postInit();
+        DoStuff.letsGetCooking();
+        logger.info("Successfully adapted TCon Smeltery Recipes to TE Magma Crucible. Let's get cooking.");
     }
 
 }

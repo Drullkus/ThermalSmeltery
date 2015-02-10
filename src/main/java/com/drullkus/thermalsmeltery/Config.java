@@ -2,9 +2,6 @@ package com.drullkus.thermalsmeltery;
 
 import net.minecraftforge.common.config.Configuration;
 
-/**
- * Created by eric on 2/8/15.
- */
 public class Config {
     public static int multiplier;
 
