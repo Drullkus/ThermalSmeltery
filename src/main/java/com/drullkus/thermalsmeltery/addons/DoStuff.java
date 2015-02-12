@@ -1,7 +1,6 @@
 package com.drullkus.thermalsmeltery.addons;
 
 import com.drullkus.thermalsmeltery.Config;
-import mantle.pulsar.pulse.Handler;
 import mantle.utils.ItemMetaWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -21,5 +20,4 @@ public class DoStuff {
             TE4Helper.addCrucibleRecipe(energy, input, entry.getValue());
         }
     }
-
 }
