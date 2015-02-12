@@ -1,8 +1,10 @@
 package com.drullkus.thermalsmeltery;
 
-import com.drullkus.thermalsmeltery.addons.DoStuff;
+import com.drullkus.thermalsmeltery.addons.TConToolModifiers;
+import com.drullkus.thermalsmeltery.util.MagmaCrucibleAdaptation;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.common.config.Configuration;
@@ -22,14 +24,22 @@ public class ThermalSmeltery {
     public void preInit(FMLPreInitializationEvent fEvent)
     {
         config = new Config(new Configuration(fEvent.getSuggestedConfigurationFile()));
+        //ModItems.init(); //Unfinished
+    }
+
+    @EventHandler
+    public void init(FMLInitializationEvent fEvent)
+    {
+
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         logger.info("Oh no... I'm smelting! I better call Saul!");
-        DoStuff.letsGetCooking();
-        logger.info("Successfully adapted TCon Smeltery Recipes to TE Magma Crucible. Let's get cooking.");
+        MagmaCrucibleAdaptation.letsGetCooking();
+        TConToolModifiers.init();
+        logger.info("Let's get cooking.");
     }
 
 }

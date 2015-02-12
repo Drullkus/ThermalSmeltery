@@ -9,19 +9,16 @@ public class TE4Helper {
 
     public static void addPulverizerRecipe (int energy, ItemStack input, ItemStack primaryOutput)
     {
-
         addPulverizerRecipe(energy, input, primaryOutput, null, 0);
     }
 
     public static void addPulverizerRecipe (int energy, ItemStack input, ItemStack primaryOutput, ItemStack secondaryOutput)
     {
-
         addPulverizerRecipe(energy, input, primaryOutput, secondaryOutput, 100);
     }
 
     public static void addPulverizerRecipe (int energy, ItemStack input, ItemStack primaryOutput, ItemStack secondaryOutput, int secondaryChance)
     {
-
         if (input == null || primaryOutput == null || secondaryOutput == null)
         {
             return;
@@ -43,7 +40,6 @@ public class TE4Helper {
 
     public static void addCrucibleRecipe (int energy, ItemStack input, FluidStack output)
     {
-
         if (input == null || output == null)
         {
             return;
