@@ -2,7 +2,7 @@ package com.drullkus.thermalsmeltery;
 
 import com.drullkus.thermalsmeltery.addons.TConSmeltery;
 import com.drullkus.thermalsmeltery.addons.TConToolModifiers;
-import com.drullkus.thermalsmeltery.util.MagmaCrucibleAdaptation;
+import com.drullkus.thermalsmeltery.addons.MagmaCrucibleAdaptation;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -13,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-@Mod(modid = "thermalsmeltery", name = "Thermal Smeltery", dependencies = "after:ThermalExpansion;required-after:TConstruct")
+@Mod(modid = "thermalsmeltery", name = "Thermal Smeltery", dependencies = "after:ThermalExpansion;after:BigReactors;required-after:TConstruct")
 public class ThermalSmeltery {
 
     public static final String modID = "Thermal Smeltery";
@@ -32,6 +32,7 @@ public class ThermalSmeltery {
     public void init(FMLInitializationEvent fEvent)
     {
         TConSmeltery.addSmelteryAlloy();
+        TConSmeltery.addSmelteryCasting();
     }
 
     @EventHandler

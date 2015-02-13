@@ -1,4 +1,4 @@
-package com.drullkus.thermalsmeltery.util;
+package com.drullkus.thermalsmeltery.addons;
 
 import com.drullkus.thermalsmeltery.Config;
 import com.drullkus.thermalsmeltery.addons.TE4Helper;
