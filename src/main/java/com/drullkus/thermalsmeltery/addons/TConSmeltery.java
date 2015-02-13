@@ -26,7 +26,7 @@ public class TConSmeltery {
         LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
         LiquidCasting basinCasting = TConstructRegistry.getBasinCasting();
 
-        if (Config.TConYelloriumCasting)
+        if (Config.TConYelloriumCasting && FluidRegistry.getFluid("yellorium") != null)
         {
             //Yellorium Casting
             //Ingot
