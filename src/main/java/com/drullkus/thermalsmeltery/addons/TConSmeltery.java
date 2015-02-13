@@ -10,8 +10,6 @@ import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
 import tconstruct.smeltery.TinkerSmeltery;
-import tconstruct.tools.TinkerTools;
-import tconstruct.world.TinkerWorld;
 
 public class TConSmeltery {
     public static void addSmelteryAlloy() {
