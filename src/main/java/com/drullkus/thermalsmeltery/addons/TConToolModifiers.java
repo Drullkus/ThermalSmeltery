@@ -20,7 +20,7 @@ public class TConToolModifiers {
     static void addModifiers()
     {
         ModifyBuilder.registerModifier(new ModVoidTouch(new ItemStack[]{new ItemStack(GameRegistry.findItem("ThermalExpansion", "Device"), 1, 5)}, 171));
-        TConstructClientRegistry.addEffectRenderMapping(171, "ThermalExpansion", "Device", true);
+        TConstructClientRegistry.addEffectRenderMapping(171, "ThermalExpansion", "Device", false);
 
         TConstructRegistry.registerActiveToolMod(new TConActiveToolMod());
     }
