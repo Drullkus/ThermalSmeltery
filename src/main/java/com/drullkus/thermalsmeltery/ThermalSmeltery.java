@@ -1,5 +1,6 @@
 package com.drullkus.thermalsmeltery;
 
+import com.drullkus.thermalsmeltery.addons.TConSmeltery;
 import com.drullkus.thermalsmeltery.addons.TConToolModifiers;
 import com.drullkus.thermalsmeltery.util.MagmaCrucibleAdaptation;
 import cpw.mods.fml.common.Mod;
@@ -30,7 +31,7 @@ public class ThermalSmeltery {
     @EventHandler
     public void init(FMLInitializationEvent fEvent)
     {
-
+        TConSmeltery.addSmelteryAlloy();
     }
 
     @EventHandler

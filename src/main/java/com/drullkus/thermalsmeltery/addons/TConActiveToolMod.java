@@ -8,8 +8,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import tconstruct.library.ActiveToolMod;
 import tconstruct.library.tools.ToolCore;
+import java.util.Random;
 
-public class TConActiveToolMod extends ActiveToolMod {
+public class TConActiveToolMod extends ActiveToolMod
+{
+    Random random = new Random();
 
     @Override
     public boolean beforeBlockBreak (ToolCore tool, ItemStack item, int x, int y, int z, EntityLivingBase player)
@@ -20,19 +23,19 @@ public class TConActiveToolMod extends ActiveToolMod {
 
         NBTTagCompound tags = item.getTagCompound().getCompoundTag("InfiTool");
         World world = player.worldObj;
-        int bID = player.worldObj.getBlockId(x, y, z);
-        Block block = Block.blocksList[bID];
-        if (block == null || bID < 1 || bID > 4095)
+        Block block = world.getBlock(x, y, z);
+        int meta = world.getBlockMetadata(x, y, z);
+        if (block == null)
             return false;
 
         if (tags.hasKey("Void Touch") && block.quantityDropped(meta, 0, random) != 0)
         {
             world.setBlockToAir(x, y, z);
             if (player instanceof EntityPlayer && !((EntityPlayer) player).capabilities.isCreativeMode)
-                tool.onBlockDestroyed(item, world, bID, x, y, z, player);
+                tool.onBlockDestroyed(item, world, block, x, y, z, player);
             if (!world.isRemote)
             {
-                world.playAuxSFX(2001, x, y, z, bID + (meta << 12));
+                world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(block) + (meta << 12));
             }
             return true;
         }
