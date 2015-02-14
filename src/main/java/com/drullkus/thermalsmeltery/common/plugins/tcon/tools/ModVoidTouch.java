@@ -7,13 +7,9 @@ import tconstruct.modifiers.tools.ModBoolean;
 
 public class ModVoidTouch extends ModBoolean {
 
-    static String name = "Crooked";
-    static String color = "\u00a77";
-    static String tooltip = "Crooked";
-
-    public ModVoidTouch(ItemStack[] items, int effect)
+    public ModVoidTouch(ItemStack[] items, int effect, String tag, String c, String tip)
     {
-        super(items, effect, name, color, tooltip);
+        super(items, effect, tag, c, tip);
     }
 
     @Override

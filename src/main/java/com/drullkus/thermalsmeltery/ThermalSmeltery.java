@@ -33,9 +33,10 @@ public class ThermalSmeltery
     public void preInit (FMLPreInitializationEvent event)
     {
         TSmeltConfig.initProps(event.getModConfigurationDirectory());
-        
+
         pulsar.registerPulse(new TSmeltTE());
         pulsar.registerPulse(new TConSmeltery());
+        pulsar.registerPulse(new TConToolModifiers());
 
         this.itemTab = new ModCreativeTab("ThermalSmeltery");
 
@@ -56,7 +57,6 @@ public class ThermalSmeltery
         pulsar.postInit(event);
 
         // logger.info("Oh no... I'm smelting! I better call Saul!"); RIP
-        TConToolModifiers.init();
     }
 
 }

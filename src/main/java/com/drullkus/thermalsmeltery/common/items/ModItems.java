@@ -22,7 +22,7 @@ public class ModItems {
 	    
 	    for (int i = 0; i < item.length; i++)
         {
-            GameRegistry.registerItem(item[i], itemStrings[i]); // 1.7 compat
+            GameRegistry.registerItem(item[i], itemStrings[i]);
         }
 		
 		ThermalSmeltery.itemTab.init(new ItemStack(ModItems.Tool_Mod_Void));
