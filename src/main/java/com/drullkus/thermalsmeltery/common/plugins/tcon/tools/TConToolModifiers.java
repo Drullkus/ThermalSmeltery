@@ -1,6 +1,6 @@
-package com.drullkus.thermalsmeltery.common.plugins.tcon;
+package com.drullkus.thermalsmeltery.common.plugins.tcon.tools;
 
-import com.drullkus.thermalsmeltery.common.core.handler.Config;
+import com.drullkus.thermalsmeltery.common.core.handler.TSmeltConfig;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
@@ -11,11 +11,11 @@ import tconstruct.library.crafting.ModifyBuilder;
 public class TConToolModifiers {
     public static void init()
     {
-        if(Config.TConModifiers)
+        /**if(Config.TConModifiers)
         {
             addModifiers();
             //ThermalSmeltery.logger.info("TCon Modifiers added!");
-        }
+        }*/
     }
 
     static void addModifiers()

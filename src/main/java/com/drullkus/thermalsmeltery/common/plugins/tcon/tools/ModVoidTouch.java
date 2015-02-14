@@ -1,4 +1,4 @@
-package com.drullkus.thermalsmeltery.common.plugins.tcon;
+package com.drullkus.thermalsmeltery.common.plugins.tcon.tools;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

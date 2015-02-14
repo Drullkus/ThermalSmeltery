@@ -1,4 +1,4 @@
-package com.drullkus.thermalsmeltery.common.plugins.tcon;
+package com.drullkus.thermalsmeltery.common.plugins.tcon.tools;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
