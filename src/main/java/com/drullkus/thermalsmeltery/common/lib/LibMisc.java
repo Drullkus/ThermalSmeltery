@@ -13,8 +13,8 @@ public class LibMisc
 
 	public static final String DEPENDENCIES = "after:ThermalExpansion;after:BigReactors;required-after:TConstruct";
 
-	public static final String COMMON_PROXY = "net.teamti.thaumicintegration.common.core.proxy.TICommonProxy";
+	public static final String COMMON_PROXY = "xxx";
 
-	public static final String CLIENT_PROXY = "net.teamti.thaumicintegration.client.core.proxy.TIClientProxy";
+	public static final String CLIENT_PROXY = "xxx";
 
 }
