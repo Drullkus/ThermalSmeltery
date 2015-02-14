@@ -1,0 +1,7 @@
+# MISC
+itemGroup.ThermalSmeltery=Thermal Smeltery
+
+# ITEM NAMES
+item.thermalsmeltery:potatoesMashed.name=Mashed Potato
+item.thermalsmeltery:potatoesWedge.name=Potato Shard
+item.thermalsmeltery:upgradeparts.PerditioVoid.name=Perditio Void Touch

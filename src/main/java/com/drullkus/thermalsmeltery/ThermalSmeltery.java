@@ -1,47 +1,62 @@
 package com.drullkus.thermalsmeltery;
 
-import com.drullkus.thermalsmeltery.addons.TConSmeltery;
-import com.drullkus.thermalsmeltery.addons.TConToolModifiers;
-import com.drullkus.thermalsmeltery.addons.MagmaCrucibleAdaptation;
+import com.drullkus.thermalsmeltery.common.core.handler.TSmeltConfig;
+import com.drullkus.thermalsmeltery.common.core.handler.ModCreativeTab;
+import com.drullkus.thermalsmeltery.common.items.ModItems;
+import com.drullkus.thermalsmeltery.common.lib.LibMisc;
+import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.TConSmeltery;
+import com.drullkus.thermalsmeltery.common.plugins.tcon.tools.TConToolModifiers;
+import com.drullkus.thermalsmeltery.common.plugins.te.TSmeltTE;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import mantle.pulsar.config.ForgeCFG;
+import mantle.pulsar.control.PulseManager;
 import net.minecraftforge.common.config.Configuration;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+@Mod(modid = LibMisc.MOD_ID, name = LibMisc.MOD_NAME, version = LibMisc.VERSION, dependencies = LibMisc.DEPENDENCIES)
+public class ThermalSmeltery
+{
+    public static final Logger logger = LogManager.getLogger(LibMisc.MOD_ID);
 
-@Mod(modid = "thermalsmeltery", name = "Thermal Smeltery", dependencies = "after:ThermalExpansion;after:BigReactors;required-after:TConstruct")
-public class ThermalSmeltery {
+    public static PulseManager pulsar = new PulseManager(LibMisc.MOD_ID, new ForgeCFG("TSmeltModules", "Modules: Disabling these will disable a chunk of the mod"));
 
-    public static final String modID = "Thermal Smeltery";
-    public static final Logger logger = LogManager.getLogger(modID);
-
-    public static Config config;
+    public static ModCreativeTab itemTab;
 
     @EventHandler
-    public void preInit(FMLPreInitializationEvent fEvent)
+    public void preInit (FMLPreInitializationEvent event)
     {
-        config = new Config(new Configuration(fEvent.getSuggestedConfigurationFile()));
-        //ModItems.init(); //Unfinished
+        TSmeltConfig.initProps(event.getModConfigurationDirectory());
+
+        pulsar.registerPulse(new TSmeltTE());
+        pulsar.registerPulse(new TConSmeltery());
+        pulsar.registerPulse(new TConToolModifiers());
+
+        this.itemTab = new ModCreativeTab("ThermalSmeltery");
+
+        pulsar.preInit(event);
     }
 
     @EventHandler
-    public void init(FMLInitializationEvent fEvent)
+    public void init (FMLInitializationEvent event)
     {
-        TConSmeltery.addSmelteryAlloy();
-        TConSmeltery.addSmelteryCasting();
+        ModItems.init();
+
+        pulsar.init(event);
     }
 
     @EventHandler
-    public void postInit(FMLPostInitializationEvent event)
+    public void postInit (FMLPostInitializationEvent event)
     {
-        logger.info("Oh no... I'm smelting! I better call Saul!");
-        MagmaCrucibleAdaptation.letsGetCooking();
-        TConToolModifiers.init();
-        logger.info("Let's get cooking.");
+        pulsar.postInit(event);
+
+        // logger.info("Oh no... I'm smelting! I better call Saul!"); RIP
     }
 
 }
