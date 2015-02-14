@@ -7,8 +7,6 @@ public class LibMisc
 
 	public static final String MOD_NAME = "Thermal Smeltery";
 
-	public static final String VERSION = "${version}";
-
 	public static final String NETWORK_CHANNEL = MOD_ID;
 
 	public static final String DEPENDENCIES = "after:BigReactors;required-after:TConstruct";
