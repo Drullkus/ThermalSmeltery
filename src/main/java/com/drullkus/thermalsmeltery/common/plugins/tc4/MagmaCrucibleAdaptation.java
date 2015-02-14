@@ -1,10 +1,11 @@
-package com.drullkus.thermalsmeltery.addons;
+package com.drullkus.thermalsmeltery.common.plugins.tc4;
 
-import com.drullkus.thermalsmeltery.Config;
-import com.drullkus.thermalsmeltery.addons.TE4Helper;
+import com.drullkus.thermalsmeltery.common.core.handler.Config;
+
 import mantle.utils.ItemMetaWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+
 import java.util.Map;
 
 

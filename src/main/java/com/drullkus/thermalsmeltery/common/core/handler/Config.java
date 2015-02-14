@@ -1,4 +1,4 @@
-package com.drullkus.thermalsmeltery;
+package com.drullkus.thermalsmeltery.common.core.handler;
 
 import net.minecraftforge.common.config.Configuration;
 

@@ -1,6 +1,7 @@
-package com.drullkus.thermalsmeltery.addons;
+package com.drullkus.thermalsmeltery.common.plugins.tcon;
 
-import com.drullkus.thermalsmeltery.Config;
+import com.drullkus.thermalsmeltery.common.core.handler.Config;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
 import tconstruct.library.TConstructRegistry;
