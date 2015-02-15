@@ -35,13 +35,10 @@ public class ModVoidTouch extends ModBoolean {
     {
         if(tool.getToolName().equals("Mattock") ||
                 tool.getToolName().equals("Hatchet") ||
-                tool.getToolName().equals("Broadsword") ||
-                tool.getToolName().equals("Longsword") ||
-                tool.getToolName().equals("Rapier") ||
-                tool.getToolName().equals("Cutlass") ||
-                tool.getToolName().equals("Cleaver") ||
+                tool.getToolName().equals("Shovel") ||
+                tool.getToolName().equals("Excavator") ||
+                tool.getToolName().equals("Battle Axe") ||
                 tool.getToolName().equals("Lumber Axe") ||
-                tool.getToolName().equals("Scythe") ||
                 tool.getToolName().equals("Pickaxe") )
         {
             return true;
