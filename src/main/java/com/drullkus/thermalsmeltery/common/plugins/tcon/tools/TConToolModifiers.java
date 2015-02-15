@@ -26,7 +26,7 @@ public class TConToolModifiers
     {
         ItemStack voidTouch = new ItemStack(ModItems.Tool_Mod_Void, 1, 0);
         int effect = 20;
-        ModifyBuilder.registerModifier(new ModVoidTouch(new ItemStack[] { voidTouch }, effect, "Void Touch", "\u00a7b", "Void Touch"));
+        ModifyBuilder.registerModifier(new ModVoidTouch(new ItemStack[] { voidTouch }, effect, "Voiding", "\u00a7b", "Voiding"));
 
         for (ToolCore tool : TConstructRegistry.getToolMapping())
         {
