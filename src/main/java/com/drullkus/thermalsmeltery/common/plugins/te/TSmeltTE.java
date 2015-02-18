@@ -21,6 +21,8 @@ import cpw.mods.fml.common.registry.GameRegistry.ObjectHolder;
 public class TSmeltTE
 {
 
+    ItemStack nullifier;
+    
     @Handler
     public void preInit (FMLPostInitializationEvent event) {
         Map<ItemMetaWrapper, FluidStack> smelteryMap = tconstruct.library.crafting.Smeltery.getSmeltingList();
@@ -32,6 +34,7 @@ public class TSmeltTE
             TE4Helper.addCrucibleRecipe(energy, input, entry.getValue());
         }
 
-        TE4Helper.addPulverizerRecipe(20000, new ItemStack(GameRegistry.findBlock("ThermalExpansion", "Device"), 1, 5), new ItemStack(ModItems.Tool_Mod_Void, 1, 0), null, 0);
+        nullifier = GameRegistry.findItemStack("ThermalExpansion", "Device", 5);
+        TE4Helper.addPulverizerRecipe(20000, nullifier, new ItemStack(ModItems.Tool_Mod_Void, 1, 0));
     }
 }
