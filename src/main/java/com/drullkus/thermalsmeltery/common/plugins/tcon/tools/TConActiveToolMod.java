@@ -52,7 +52,7 @@ public class TConActiveToolMod extends TActiveOmniMod
         if (block == null)
             return false;
 
-        if (tags.hasKey("Void Touch") && block.quantityDropped(meta, 0, random) != 0)
+        if (tags.hasKey("Voiding") && block.quantityDropped(meta, 0, random) != 0)
         {
             world.setBlockToAir(x, y, z);
             if (entity instanceof EntityPlayer && !((EntityPlayer) entity).capabilities.isCreativeMode)
