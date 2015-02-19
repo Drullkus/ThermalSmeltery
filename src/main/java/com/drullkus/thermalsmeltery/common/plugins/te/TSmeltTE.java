@@ -34,7 +34,7 @@ public class TSmeltTE
             TE4Helper.addCrucibleRecipe(energy, input, entry.getValue());
         }
 
-        nullifier = GameRegistry.findItemStack("ThermalExpansion", "Device", 5);
+        nullifier = new ItemStack(GameRegistry.findItem("ThermalExpansion", "Device"), 1, 5);
         TE4Helper.addPulverizerRecipe(20000, nullifier, new ItemStack(ModItems.Tool_Mod_Void, 1, 0));
     }
 }

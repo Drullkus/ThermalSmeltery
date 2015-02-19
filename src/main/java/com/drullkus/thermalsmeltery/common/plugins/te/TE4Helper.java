@@ -5,37 +5,43 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 import cpw.mods.fml.common.event.FMLInterModComms;
 
-public class TE4Helper {
+public class TE4Helper
+{
 
     public static void addPulverizerRecipe (int energy, ItemStack input, ItemStack primaryOutput)
     {
-        addPulverizerRecipe(energy, input, primaryOutput, null, 0);
+        addPulveriserRecipe(energy, input, primaryOutput, null, 0);
     }
 
     public static void addPulverizerRecipe (int energy, ItemStack input, ItemStack primaryOutput, ItemStack secondaryOutput)
     {
-        addPulverizerRecipe(energy, input, primaryOutput, secondaryOutput, 100);
+        addPulveriserRecipe(energy, input, primaryOutput, secondaryOutput, 100);
     }
 
-    public static void addPulverizerRecipe (int energy, ItemStack input, ItemStack primaryOutput, ItemStack secondaryOutput, int secondaryChance)
+    public static void addPulveriserRecipe (int energy, ItemStack input, ItemStack output, ItemStack bonus, int chance)
     {
-        if (input == null || primaryOutput == null || secondaryOutput == null)
+        NBTTagCompound data = new NBTTagCompound();
+
+        data.setInteger("energy", energy);
+
+        NBTTagCompound inputCompound = new NBTTagCompound();
+        input.writeToNBT(inputCompound);
+        data.setTag("input", inputCompound);
+
+        NBTTagCompound outputCompound = new NBTTagCompound();
+        output.writeToNBT(outputCompound);
+        data.setTag("primaryOutput", outputCompound);
+
+        if (bonus != null)
         {
-            return;
+            NBTTagCompound outputCompound2 = new NBTTagCompound();
+            bonus.writeToNBT(outputCompound2);
+            data.setTag("secondaryOutput", outputCompound2);
+
+            data.setInteger("secondaryChance", chance);
         }
-        NBTTagCompound toSend = new NBTTagCompound();
 
-        toSend.setInteger("energy", energy);
-        toSend.setTag("input", new NBTTagCompound());
-        toSend.setTag("primaryOutput", new NBTTagCompound());
-        toSend.setTag("secondaryOutput", new NBTTagCompound());
-
-        input.writeToNBT(toSend.getCompoundTag("input"));
-        primaryOutput.writeToNBT(toSend.getCompoundTag("primaryOutput"));
-        secondaryOutput.writeToNBT(toSend.getCompoundTag("secondaryOutput"));
-        toSend.setInteger("secondaryChance", secondaryChance);
-
-        FMLInterModComms.sendMessage("ThermalExpansion", "PulverizerRecipe", toSend);
+        FMLInterModComms.sendMessage("ThermalExpansion", "PulverizerRecipe", data);
     }
 
     public static void addCrucibleRecipe (int energy, ItemStack input, FluidStack output)
