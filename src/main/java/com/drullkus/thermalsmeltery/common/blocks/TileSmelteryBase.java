@@ -37,17 +37,29 @@ public abstract class TileSmelteryBase extends TileMachineBase
 
     @Override
     protected void transferProducts() {
-        if(this.augmentAutoTransfer) {
-            if(this.inventory[1] != null) {
-                for(int side = this.outputTracker + 1; side <= this.outputTracker + 6; ++side) {
-                    int var1 = side % 6;
-                    if(this.sideCache[var1] == 2 && this.transferItem(1, 4, var1)) {
-                        this.outputTracker = var1;
-                        break;
+        if(this.augmentAutoTransfer)
+        {
+            out: for (int slot = this.getMaxInputSlot() + 1; slot<inventory.length-1;slot++)
+            {
+                if (this.inventory[slot] != null)
+                {
+                    for (int side = this.outputTracker + 1; side <= this.outputTracker + 6; ++side)
+                    {
+                        int pushSide = side % 6;
+                        if (isOutput(pushSide) && this.transferItem(slot, 4, pushSide))
+                        {
+                            this.outputTracker = pushSide;
+                            break out;
+                        }
                     }
                 }
             }
         }
+    }
+
+    public boolean isOutput(int side)
+    {
+        return this.sideCache[side] == 2;
     }
 
     @Override

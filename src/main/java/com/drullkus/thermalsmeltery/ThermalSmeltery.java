@@ -2,6 +2,7 @@ package com.drullkus.thermalsmeltery;
 
 import com.drullkus.thermalsmeltery.common.core.handler.TSmeltConfig;
 import com.drullkus.thermalsmeltery.common.core.handler.ModCreativeTab;
+import com.drullkus.thermalsmeltery.common.gui.GuiHandler;
 import com.drullkus.thermalsmeltery.common.items.ModItems;
 import com.drullkus.thermalsmeltery.common.lib.LibMisc;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.TConSmeltery;
@@ -13,6 +14,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import mantle.pulsar.config.ForgeCFG;
 import mantle.pulsar.control.PulseManager;
 
@@ -30,6 +32,8 @@ public class ThermalSmeltery
     public static PulseManager pulsar = new PulseManager(LibMisc.MOD_ID, new ForgeCFG("TSmeltModules", "Modules: Disabling these will disable a chunk of the mod"));
 
     public static ModCreativeTab itemTab;
+
+    public static final GuiHandler guiHandler = new GuiHandler();
 
     @EventHandler
     public void preInit (FMLPreInitializationEvent event)
@@ -49,7 +53,7 @@ public class ThermalSmeltery
     public void init (FMLInitializationEvent event)
     {
         ModItems.init();
-
+        NetworkRegistry.INSTANCE.registerGuiHandler(ThermalSmeltery.instance, guiHandler);
         pulsar.init(event);
     }
 
