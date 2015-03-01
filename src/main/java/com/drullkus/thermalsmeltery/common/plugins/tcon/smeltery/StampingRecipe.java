@@ -1,8 +1,6 @@
 package com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery;
 
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
-import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.CastingRecipe;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.smeltery.TinkerSmeltery;
@@ -23,12 +21,11 @@ public class StampingRecipe
         coolTime = delay;
     }
 
-    public StampingRecipe(CastingRecipe recipe)
+    public StampingRecipe(LiquidCasting tableCasting, CastingRecipe recipe)
     {
         this.output = recipe.output.copy();
         this.cast = recipe.cast.copy();
         this.coolTime = recipe.coolTime;
-        LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
         float value = 0;
         try
         {
@@ -54,7 +51,7 @@ public class StampingRecipe
 
     public boolean matches(ItemStack metal, ItemStack inputCast)
     {
-        return StampingRegistry.isOreDictMatch(this.metal, metal) && metal.stackSize >= this.metal.stackSize && ((cast != null && cast.getItemDamage() == Short.MAX_VALUE && inputCast.getItem() == cast.getItem()) || ItemStack.areItemStacksEqual(this.cast, inputCast));
+        return MachineRecipeRegistry.isOreDictMatch(this.metal, metal) && metal.stackSize >= this.metal.stackSize && ((cast != null && cast.getItemDamage() == Short.MAX_VALUE && inputCast.getItem() == cast.getItem()) || ItemStack.areItemStacksEqual(this.cast, inputCast));
     }
 
     public ItemStack getMainResult()

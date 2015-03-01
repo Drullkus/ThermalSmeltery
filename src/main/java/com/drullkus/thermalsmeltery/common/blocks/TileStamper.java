@@ -3,7 +3,7 @@ package com.drullkus.thermalsmeltery.common.blocks;
 import com.drullkus.thermalsmeltery.common.gui.client.GuiStamper;
 import com.drullkus.thermalsmeltery.common.gui.container.ContainerStamper;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.StampingRecipe;
-import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.StampingRegistry;
+import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -131,12 +131,12 @@ public class TileStamper extends TileSmelteryBase
     @Override
     public boolean isItemValid(ItemStack itemStack, int slot, int i1)
     {
-        return slot == 0 ? StampingRegistry.isValidMetal(itemStack) : slot == 1 && StampingRegistry.isValidCast(itemStack);
+        return slot == 0 ? MachineRecipeRegistry.isValidMetal(itemStack) : slot == 1 && MachineRecipeRegistry.isValidCast(itemStack);
     }
 
     private StampingRecipe getRecipe()
     {
-        return StampingRegistry.getRecipe(inventory[0], inventory[1]);
+        return MachineRecipeRegistry.getStampingRecipe(inventory[0], inventory[1]);
     }
 
     private int getRecipeTime(StampingRecipe recipe)

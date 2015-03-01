@@ -33,8 +33,6 @@ public class ThermalSmeltery
 
     public static ModCreativeTab itemTab;
 
-    public static final GuiHandler guiHandler = new GuiHandler();
-
     @EventHandler
     public void preInit (FMLPreInitializationEvent event)
     {
@@ -53,7 +51,7 @@ public class ThermalSmeltery
     public void init (FMLInitializationEvent event)
     {
         ModItems.init();
-        NetworkRegistry.INSTANCE.registerGuiHandler(ThermalSmeltery.instance, guiHandler);
+
         pulsar.init(event);
     }
 

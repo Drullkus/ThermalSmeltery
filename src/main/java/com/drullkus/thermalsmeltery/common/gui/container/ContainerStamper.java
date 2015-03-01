@@ -5,7 +5,7 @@ import cofh.lib.gui.slot.SlotEnergy;
 import cofh.lib.gui.slot.SlotRemoveOnly;
 import cofh.lib.gui.slot.SlotValidated;
 import com.drullkus.thermalsmeltery.common.blocks.TileStamper;
-import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.StampingRegistry;
+import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRegistry;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -29,6 +29,6 @@ public class ContainerStamper extends ContainerTEBase implements ISlotValidator
     @Override
     public boolean isItemValid(ItemStack itemStack)
     {
-        return StampingRegistry.isValidCast(itemStack) || StampingRegistry.isValidMetal(itemStack);
+        return MachineRecipeRegistry.isValidCast(itemStack) || MachineRecipeRegistry.isValidMetal(itemStack);
     }
 }
