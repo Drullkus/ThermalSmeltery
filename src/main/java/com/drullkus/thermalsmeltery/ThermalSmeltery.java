@@ -22,6 +22,9 @@ import org.apache.logging.log4j.Logger;
 @Mod(modid = LibMisc.MOD_ID, name = LibMisc.MOD_NAME, dependencies = LibMisc.DEPENDENCIES)
 public class ThermalSmeltery
 {
+    @Mod.Instance(value = LibMisc.MOD_ID)
+    public static ThermalSmeltery instance = new ThermalSmeltery();
+
     public static final Logger logger = LogManager.getLogger(LibMisc.MOD_ID);
 
     public static PulseManager pulsar = new PulseManager(LibMisc.MOD_ID, new ForgeCFG("TSmeltModules", "Modules: Disabling these will disable a chunk of the mod"));
@@ -37,7 +40,7 @@ public class ThermalSmeltery
         pulsar.registerPulse(new TConSmeltery());
         pulsar.registerPulse(new TConToolModifiers());
 
-        this.itemTab = new ModCreativeTab("ThermalSmeltery");
+        itemTab = new ModCreativeTab("ThermalSmeltery");
 
         pulsar.preInit(event);
     }

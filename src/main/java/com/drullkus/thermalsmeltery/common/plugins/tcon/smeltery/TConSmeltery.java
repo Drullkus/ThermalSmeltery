@@ -5,6 +5,7 @@ import com.drullkus.thermalsmeltery.common.core.handler.TSmeltConfig;
 import com.drullkus.thermalsmeltery.common.lib.LibMisc;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.ObjectHolder;
 import mantle.pulsar.pulse.Handler;
@@ -14,6 +15,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructRegistry;
+import tconstruct.library.crafting.CastingRecipe;
 import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.library.crafting.Smeltery;
 import tconstruct.smeltery.TinkerSmeltery;
@@ -47,6 +49,23 @@ public class TConSmeltery
         }
         else {
             ThermalSmeltery.logger.warn("Tinker's Smeltery is disabled, Adding alloy mixing and casting disabled.");
+        }
+    }
+
+    @Handler
+    public void postInit (FMLPostInitializationEvent event)
+    {
+        LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
+        for (CastingRecipe recipe : tableCasting.getCastingRecipes())
+        {
+            MachineRecipeRegistry.registerStampingRecipe(tableCasting, recipe);
+            MachineRecipeRegistry.registerIngotRecipe(recipe);
+        }
+
+        LiquidCasting basinCasting = TConstructRegistry.getBasinCasting();
+        for (CastingRecipe recipe : basinCasting.getCastingRecipes())
+        {
+            MachineRecipeRegistry.registerBlockRecipe(recipe);
         }
     }
 }
