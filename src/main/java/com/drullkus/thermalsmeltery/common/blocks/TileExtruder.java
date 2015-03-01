@@ -4,8 +4,13 @@ import cofh.api.tileentity.ITileInfo;
 import cofh.core.network.PacketCoFHBase;
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.StringHelper;
+import com.drullkus.thermalsmeltery.common.gui.client.GuiExtruder;
+import com.drullkus.thermalsmeltery.common.gui.client.GuiStamper;
+import com.drullkus.thermalsmeltery.common.gui.container.ContainerExtruder;
+import com.drullkus.thermalsmeltery.common.gui.container.ContainerStamper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
@@ -27,11 +32,11 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
 
     public static void initialize() {
         defaultSideConfigSmeltery[TYPE] = new SideConfig();
-        defaultSideConfigSmeltery[TYPE].numGroup = 5;
-        defaultSideConfigSmeltery[TYPE].slotGroups = new int[][]{new int[0], {0}, {1}, new int[0], {1}};
+        defaultSideConfigSmeltery[TYPE].numGroup = 4;
+        defaultSideConfigSmeltery[TYPE].slotGroups = new int[][]{new int[0], {0}, new int[0]};
         defaultSideConfigSmeltery[TYPE].allowInsertion = new boolean[]{false, true, false, false, false};
         defaultSideConfigSmeltery[TYPE].allowExtraction = new boolean[]{false, true, true, false, true};
-        defaultSideConfigSmeltery[TYPE].sideTex = new int[]{0, 1, 2, 3, 4};
+        defaultSideConfigSmeltery[TYPE].sideTex = new int[]{0, 1, 2, 3};
         defaultSideConfigSmeltery[TYPE].defaultSides = new byte[]{(byte)3, (byte)1, (byte)2, (byte)2, (byte)2, (byte)2};
 //        int basePower = MathHelper.clampI(ThermalExpansion.config.get("block.tweak", "Machine.Crucible.BasePower", 400), 100, 500);
 //        ThermalExpansion.config.set("block.tweak", "Machine.Crucible.BasePower", var0);
@@ -194,5 +199,23 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
             }
 
         }
+    }
+
+    @Override
+    public FluidTankAdv getTank()
+    {
+        return tank;
+    }
+
+    @Override
+    public Object getGuiClient(InventoryPlayer inventoryPlayer)
+    {
+        return new GuiExtruder(inventoryPlayer, this);
+    }
+
+    @Override
+    public Object getGuiServer(InventoryPlayer inventoryPlayer)
+    {
+        return new ContainerExtruder(inventoryPlayer, this);
     }
 }

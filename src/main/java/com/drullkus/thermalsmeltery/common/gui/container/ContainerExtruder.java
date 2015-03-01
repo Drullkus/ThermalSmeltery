@@ -1,0 +1,21 @@
+package com.drullkus.thermalsmeltery.common.gui.container;
+
+import cofh.lib.gui.slot.SlotEnergy;
+import cofh.lib.gui.slot.SlotRemoveOnly;
+import com.drullkus.thermalsmeltery.common.blocks.TileExtruder;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.tileentity.TileEntity;
+import thermalexpansion.gui.container.ContainerTEBase;
+
+public class ContainerExtruder extends ContainerTEBase
+{
+    public TileExtruder extruder;
+
+    public ContainerExtruder(InventoryPlayer inventoryPlayer, TileEntity entity)
+    {
+        super(inventoryPlayer, entity);
+        this.extruder = (TileExtruder)entity;
+        this.addSlotToContainer(new SlotRemoveOnly(this.extruder, 0, 117, 30));
+        this.addSlotToContainer(new SlotEnergy(this.extruder, this.extruder.getChargeSlot(), 8, 53));
+    }
+}
