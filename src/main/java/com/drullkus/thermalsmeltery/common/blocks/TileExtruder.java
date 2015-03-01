@@ -5,11 +5,8 @@ import cofh.core.network.PacketCoFHBase;
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.StringHelper;
 import com.drullkus.thermalsmeltery.common.gui.client.GuiExtruder;
-import com.drullkus.thermalsmeltery.common.gui.client.GuiStamper;
 import com.drullkus.thermalsmeltery.common.gui.container.ContainerExtruder;
-import com.drullkus.thermalsmeltery.common.gui.container.ContainerStamper;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRegistry;
-import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.StampingRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -32,9 +29,11 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     static final int TYPE = BlockSmeltery.Types.EXTRUDER.ordinal();
     FluidTankAdv tank = new FluidTankAdv(10000);
     FluidStack renderFluid;
-    private boolean block;
+    public boolean block;
+    public boolean blockFlag;
 
-    public static void initialize() {
+    public static void initialize()
+    {
         defaultSideConfigSmeltery[TYPE] = new SideConfig();
         defaultSideConfigSmeltery[TYPE].numGroup = 4;
         defaultSideConfigSmeltery[TYPE].slotGroups = new int[][]{new int[0], {0}, new int[0]};
@@ -54,14 +53,14 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
 
     public TileExtruder()
     {
-        this.inventory = new ItemStack[3];
+        this.inventory = new ItemStack[2];
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound)
     {
         super.writeToNBT(tagCompound);
-        tagCompound.setBoolean("craftBlock",block);
+        tagCompound.setBoolean("craftBlock", block);
         this.tank.writeToNBT(tagCompound);
     }
 
@@ -70,8 +69,9 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     {
         super.readFromNBT(tagCompound);
         block = tagCompound.getBoolean("craftBlock");
+        blockFlag = this.block;
         this.tank.readFromNBT(tagCompound);
-        if(this.tank.getFluid() != null)
+        if (this.tank.getFluid() != null)
         {
             this.renderFluid = this.tank.getFluid();
         }
@@ -83,30 +83,36 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
         super.handleGuiPacket(packet);
         this.tank.setFluid(packet.getFluidStack());
         block = packet.getBool();
+        blockFlag = packet.getBool();
     }
 
     @Override
     public PacketCoFHBase getGuiPacket()
     {
         PacketCoFHBase packet = super.getGuiPacket();
-        if(this.tank.getFluid() == null) {
+        if (this.tank.getFluid() == null)
+        {
             packet.addFluidStack(this.renderFluid);
-        } else {
+        } else
+        {
             packet.addFluidStack(this.tank.getFluid());
         }
         packet.addBool(block);
+        packet.addBool(blockFlag);
         return packet;
     }
 
     @Override
-    public PacketCoFHBase getFluidPacket() {
+    public PacketCoFHBase getFluidPacket()
+    {
         PacketCoFHBase var1 = super.getFluidPacket();
         var1.addFluidStack(this.renderFluid);
         return var1;
     }
 
     @Override
-    protected void handleFluidPacket(PacketCoFHBase var1) {
+    protected void handleFluidPacket(PacketCoFHBase var1)
+    {
         super.handleFluidPacket(var1);
         this.renderFluid = var1.getFluidStack();
         this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
@@ -121,13 +127,44 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     }
 
     @Override
-    public void handleTilePacket(PacketCoFHBase var1, boolean var2) {
+    public void handleTilePacket(PacketCoFHBase var1, boolean var2)
+    {
         super.handleTilePacket(var1, var2);
-        if(!var2) {
+        if (!var2)
+        {
             this.renderFluid = var1.getFluidStack();
-        } else {
+        } else
+        {
             var1.getFluidStack();
         }
+    }
+
+    @Override
+    public PacketCoFHBase getModePacket()
+    {
+        PacketCoFHBase var1 = super.getModePacket();
+        var1.addBool(this.blockFlag);
+        return var1;
+    }
+
+    @Override
+    protected void handleModePacket(PacketCoFHBase var1)
+    {
+        super.handleModePacket(var1);
+        this.blockFlag = var1.getBool();
+        if (!this.isActive)
+        {
+            this.block = this.blockFlag;
+        }
+        this.callNeighborTileChange();
+    }
+
+    public void setMode(boolean block)
+    {
+        boolean var2 = this.blockFlag;
+        this.blockFlag = block;
+        this.sendModePacket();
+        this.blockFlag = var2;
     }
 
     @Override
@@ -140,12 +177,14 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     protected boolean hasRoomForOutput()
     {
         CastingRecipe recipe = getRecipe();
-        return canFit(recipe.output,0);
+        return canFit(recipe.output, 0);
     }
 
     @Override
-    protected boolean hasValidInput() {
-        return getRecipe() != null;
+    protected boolean hasValidInput()
+    {
+        CastingRecipe recipe = getRecipe();
+        return recipe != null && this.tank.getFluidAmount() >= recipe.castingMetal.amount;
     }
 
     @Override
@@ -165,10 +204,12 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
             this.inventory[0] = output;
         } else
         {
-            this.inventory[0].stackSize+=output.stackSize;
+            this.inventory[0].stackSize += output.stackSize;
         }
 
-        this.tank.drain(recipe.castingMetal,true);
+        this.tank.drain(recipe.castingMetal, true);
+
+        this.block = this.blockFlag;
     }
 
     public CastingRecipe getRecipe()
@@ -187,19 +228,19 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
         if (resource == null || !MachineRecipeRegistry.isValidFluid(resource.getFluid())) return 0;
-        return from == ForgeDirection.UNKNOWN || this.sideCache[from.ordinal()] == 1?this.tank.fill(resource, doFill):0;
+        return from == ForgeDirection.UNKNOWN || this.sideCache[from.ordinal()] == 1 ? this.tank.fill(resource, doFill) : 0;
     }
 
     @Override
     public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain)
     {
-        return from != ForgeDirection.UNKNOWN && this.sideCache[from.ordinal()] == 2?(resource != null && resource.isFluidEqual(this.tank.getFluid())?this.tank.drain(resource.amount, doDrain):null):null;
+        return from != ForgeDirection.UNKNOWN && this.sideCache[from.ordinal()] == 2 ? (resource != null && resource.isFluidEqual(this.tank.getFluid()) ? this.tank.drain(resource.amount, doDrain) : null) : null;
     }
 
     @Override
     public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain)
     {
-        return from != ForgeDirection.UNKNOWN && this.sideCache[from.ordinal()] != 2?null:this.tank.drain(maxDrain, doDrain);
+        return from != ForgeDirection.UNKNOWN && this.sideCache[from.ordinal()] != 2 ? null : this.tank.drain(maxDrain, doDrain);
     }
 
     @Override
@@ -223,11 +264,14 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     @Override
     public void getTileInfo(List<IChatComponent> list, ForgeDirection forgeDirection, EntityPlayer entityPlayer, boolean b)
     {
-        if(!b) {
-            if(this.tank.getFluid() != null) {
+        if (!b)
+        {
+            if (this.tank.getFluid() != null)
+            {
                 list.add(new ChatComponentText(StringHelper.localize("info.cofh.fluid") + ": " + StringHelper.getFluidName(this.tank.getFluid())));
                 list.add(new ChatComponentText(StringHelper.localize("info.cofh.amount") + ": " + this.tank.getFluidAmount() + "/" + this.tank.getCapacity() + " mB"));
-            } else {
+            } else
+            {
                 list.add(new ChatComponentText(StringHelper.localize("info.cofh.fluid") + ": " + StringHelper.localize("info.cofh.empty")));
             }
 
