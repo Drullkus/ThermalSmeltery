@@ -32,20 +32,18 @@ public class StampingRecipe
             this.metal = tableCasting.getCastingRecipe(recipe.castingMetal, new ItemStack(TinkerSmeltery.metalPattern, 1, 0)).getResult();
             value = (float)tableCasting.getCastingAmount(recipe.castingMetal, recipe.cast)/tableCasting.getCastingAmount(recipe.castingMetal, new ItemStack(TinkerSmeltery.metalPattern, 1, 0));
             metal.stackSize = (int)Math.max(Math.floor(value), 1);
-            value-=metal.stackSize;
+            if (value>1)
+                value-=metal.stackSize;
         }catch(NullPointerException e)
         {
             this.metal = null; //Ender Pearls -> Frying Pan?
         }
 
-        if (value % 1 > 0.1)
+        if (value > 0.1)
         {
-            CastingRecipe nuggets = tableCasting.getCastingRecipe(recipe.castingMetal, new ItemStack(TinkerSmeltery.metalPattern, 1, 26));
-            if (nuggets!=null)
-            {
-                this.secondaryResult = nuggets.getResult();
-                this.secondaryResult.stackSize = (int)(9 * (value % 1));
-            }
+            secondaryResult = output.copy();
+            secondaryResult.stackSize /= value;
+            secondaryResult.stackSize -= output.stackSize;
         }
     }
 
