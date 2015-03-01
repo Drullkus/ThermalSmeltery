@@ -111,10 +111,10 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     }
 
     @Override
-    protected void handleFluidPacket(PacketCoFHBase var1)
+    protected void handleFluidPacket(PacketCoFHBase packet)
     {
-        super.handleFluidPacket(var1);
-        this.renderFluid = var1.getFluidStack();
+        super.handleFluidPacket(packet);
+        this.renderFluid = packet.getFluidStack();
         this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
     }
 
@@ -127,15 +127,15 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     }
 
     @Override
-    public void handleTilePacket(PacketCoFHBase var1, boolean var2)
+    public void handleTilePacket(PacketCoFHBase packet, boolean var2)
     {
-        super.handleTilePacket(var1, var2);
+        super.handleTilePacket(packet, var2);
         if (!var2)
         {
-            this.renderFluid = var1.getFluidStack();
+            this.renderFluid = packet.getFluidStack();
         } else
         {
-            var1.getFluidStack();
+            packet.getFluidStack();
         }
     }
 
@@ -148,10 +148,10 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     }
 
     @Override
-    protected void handleModePacket(PacketCoFHBase var1)
+    protected void handleModePacket(PacketCoFHBase packet)
     {
-        super.handleModePacket(var1);
-        this.blockFlag = var1.getBool();
+        super.handleModePacket(packet);
+        this.blockFlag = packet.getBool();
         if (!this.isActive)
         {
             this.block = this.blockFlag;

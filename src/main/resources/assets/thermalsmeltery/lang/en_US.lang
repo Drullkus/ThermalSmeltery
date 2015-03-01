@@ -1,5 +1,7 @@
 # MISC
 itemGroup.ThermalSmeltery=Thermal Smeltery
+info.thermalsmeltery.toggleIngot=Toggle: Ingots
+info.thermalsmeltery.toggleBlock=Toggle: Blocks
 
 # ITEM NAMES
 item.thermalsmeltery:potatoesMashed.name=Mashed Potato

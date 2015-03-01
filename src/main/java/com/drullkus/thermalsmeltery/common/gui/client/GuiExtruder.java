@@ -58,9 +58,9 @@ public class GuiExtruder extends GuiAugmentableBase
                 this.block.setDisabled();
             } else
             {
-                this.block.setToolTip("info.thermalsmeltery.toggleBlock");
-                this.block.setSheetX(204);
-                this.block.setHoverX(204);
+                this.block.setToolTip("info.thermalsmeltery.toggleIngot");
+                this.block.setSheetX(184);
+                this.block.setHoverX(184);
                 this.block.setActive();
             }
         } else if(this.myTile.blockFlag)
@@ -69,9 +69,9 @@ public class GuiExtruder extends GuiAugmentableBase
             this.block.setDisabled();
         } else
         {
-            this.block.setToolTip("info.thermalsmeltery.toggleIngot");
-            this.block.setSheetX(184);
-            this.block.setHoverX(184);
+            this.block.setToolTip("info.thermalsmeltery.toggleBlock");
+            this.block.setSheetX(204);
+            this.block.setHoverX(204);
             this.block.setActive();
         }
     }
