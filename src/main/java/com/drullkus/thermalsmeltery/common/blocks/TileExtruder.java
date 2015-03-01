@@ -8,6 +8,8 @@ import com.drullkus.thermalsmeltery.common.gui.client.GuiExtruder;
 import com.drullkus.thermalsmeltery.common.gui.client.GuiStamper;
 import com.drullkus.thermalsmeltery.common.gui.container.ContainerExtruder;
 import com.drullkus.thermalsmeltery.common.gui.container.ContainerStamper;
+import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRegistry;
+import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.StampingRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -20,6 +22,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
+import tconstruct.library.crafting.CastingRecipe;
+import thermalexpansion.block.machine.MachineHelper;
 
 import java.util.List;
 
@@ -133,27 +137,56 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     }
 
     @Override
-    protected boolean canStart() {
-        return false;
+    protected boolean hasRoomForOutput()
+    {
+        CastingRecipe recipe = getRecipe();
+        return canFit(recipe.output,0);
     }
 
     @Override
     protected boolean hasValidInput() {
-        return false;
+        return getRecipe() != null;
     }
 
     @Override
-    protected void processStart() {
+    protected void processStart()
+    {
+        MachineHelper.setProcessMax(this, getRecipeTime(getRecipe()));
     }
 
     @Override
-    protected void processFinish() {
+    protected void processFinish()
+    {
+        CastingRecipe recipe = getRecipe();
+        ItemStack output = recipe.getResult();
+
+        if (this.inventory[0] == null)
+        {
+            this.inventory[0] = output;
+        } else
+        {
+            this.inventory[0].stackSize+=output.stackSize;
+        }
+
+        this.tank.drain(recipe.castingMetal,true);
     }
 
+    public CastingRecipe getRecipe()
+    {
+        if (this.tank.getFluid() == null) return null;
+        return MachineRecipeRegistry.getExtruderRecipe(this.getTank().getFluid().getFluid(), block);
+    }
+
+    private int getRecipeTime(CastingRecipe recipe)
+    {
+        if (recipe == null) return 0;
+        return recipe.coolTime * 500; //TODO: something sensible here;
+    }
 
     @Override
     public int fill(ForgeDirection from, FluidStack resource, boolean doFill)
     {
+        if (resource == null || !MachineRecipeRegistry.isValidFluid(resource.getFluid())) return 0;
         return from == ForgeDirection.UNKNOWN || this.sideCache[from.ordinal()] == 1?this.tank.fill(resource, doFill):0;
     }
 
@@ -172,7 +205,7 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     @Override
     public boolean canFill(ForgeDirection from, Fluid fluid)
     {
-        return from == ForgeDirection.UNKNOWN || this.sideCache[from.ordinal()] == 1;
+        return MachineRecipeRegistry.isValidFluid(fluid) && (from == ForgeDirection.UNKNOWN || this.sideCache[from.ordinal()] == 1);
     }
 
     @Override

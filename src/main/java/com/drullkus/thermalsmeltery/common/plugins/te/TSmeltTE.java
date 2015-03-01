@@ -25,7 +25,7 @@ import cpw.mods.fml.common.registry.GameRegistry.ObjectHolder;
 @Pulse(id = "TSmelt TE", description = "Thermal Expansion Integration", modsRequired = "ThermalExpansion")
 public class TSmeltTE
 {
-    public static final GuiHandler guiHandler = new GuiHandler();
+    //public static final GuiHandler guiHandler = new GuiHandler();
     ItemStack nullifier;
     
     @Handler
@@ -48,7 +48,7 @@ public class TSmeltTE
     @Handler
     public void init (FMLInitializationEvent event)
     {
-        NetworkRegistry.INSTANCE.registerGuiHandler(ThermalSmeltery.instance, guiHandler);
+        NetworkRegistry.INSTANCE.registerGuiHandler(ThermalSmeltery.instance, new GuiHandler());
     }
 
 

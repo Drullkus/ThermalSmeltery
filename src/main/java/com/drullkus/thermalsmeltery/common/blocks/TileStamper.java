@@ -2,8 +2,8 @@ package com.drullkus.thermalsmeltery.common.blocks;
 
 import com.drullkus.thermalsmeltery.common.gui.client.GuiStamper;
 import com.drullkus.thermalsmeltery.common.gui.container.ContainerStamper;
-import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.StampingRecipe;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRegistry;
+import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.StampingRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -50,9 +50,12 @@ public class TileStamper extends TileSmelteryBase
     }
 
     @Override
-    protected boolean canStart()
+    protected boolean hasRoomForOutput()
     {
-        return hasValidInput();
+        StampingRecipe recipe = getRecipe();
+        ItemStack main = recipe.getMainResult();
+        ItemStack secondary = recipe.getSecondaryResult();
+        return canFit(main, 2) && canFit(secondary, 3);
     }
 
     @Override
@@ -79,44 +82,22 @@ public class TileStamper extends TileSmelteryBase
         StampingRecipe recipe = getRecipe();
         ItemStack main = recipe.getMainResult();
         ItemStack secondary = recipe.getSecondaryResult();
-        int var4;
         if (this.inventory[2] == null)
         {
             this.inventory[2] = main;
-        } else if (this.inventory[2].isItemEqual(main))
-        {
-            if (this.inventory[2].stackSize + main.stackSize <= main.getMaxStackSize())
-            {
-                this.inventory[2].stackSize += main.stackSize;
-            } else
-            {
-                var4 = main.getMaxStackSize() - this.inventory[2].stackSize;
-                this.inventory[2].stackSize += var4;
-                if (this.inventory[3] == null)
-                {
-                    this.inventory[3] = main;
-                    this.inventory[3].stackSize = main.stackSize - var4;
-                } else
-                {
-                    this.inventory[3].stackSize += main.stackSize - var4;
-                }
-            }
-        } else if (this.inventory[3] == null)
-        {
-            this.inventory[3] = main;
         } else
         {
-            this.inventory[3].stackSize += main.stackSize;
+            this.inventory[2].stackSize += main.stackSize;
         }
 
         if (secondary != null)
         {
-            if (this.inventory[4] == null)
+            if (this.inventory[3] == null)
             {
-                this.inventory[4] = secondary;
+                this.inventory[3] = secondary;
             } else
             {
-                this.inventory[4].stackSize += secondary.stackSize;
+                this.inventory[3].stackSize += secondary.stackSize;
             }
         }
 
@@ -141,6 +122,7 @@ public class TileStamper extends TileSmelteryBase
 
     private int getRecipeTime(StampingRecipe recipe)
     {
+        if (recipe == null) return 0;
         return recipe.coolTime * 500; //TODO: something sensible here;
     }
 

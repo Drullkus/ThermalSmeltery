@@ -3,6 +3,7 @@ package com.drullkus.thermalsmeltery.common.blocks;
 import cofh.core.render.IconRegistry;
 import com.drullkus.thermalsmeltery.ThermalSmeltery;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
 import thermalexpansion.block.machine.TileMachineBase;
@@ -74,7 +75,20 @@ public abstract class TileSmelteryBase extends TileMachineBase
         var1.setInteger("Tracker", this.outputTracker);
     }
 
+    @Override
+    protected boolean canStart()
+    {
+        return hasValidInput() && hasRoomForOutput();
+    }
 
+    protected abstract boolean hasRoomForOutput();
+
+    protected boolean canFit(ItemStack stack, int slot)
+    {
+        if (stack == null || inventory[slot] == null) return true;
+        if (stack.isItemEqual(inventory[slot])) return stack.stackSize + inventory[slot].stackSize <= stack.getMaxStackSize();
+        return false;
+    }
 
     @Override
     public String getName()
