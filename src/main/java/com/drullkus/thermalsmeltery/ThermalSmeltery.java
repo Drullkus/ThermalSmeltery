@@ -2,7 +2,6 @@ package com.drullkus.thermalsmeltery;
 
 import com.drullkus.thermalsmeltery.common.core.handler.TSmeltConfig;
 import com.drullkus.thermalsmeltery.common.core.handler.ModCreativeTab;
-import com.drullkus.thermalsmeltery.common.gui.GuiHandler;
 import com.drullkus.thermalsmeltery.common.items.ModItems;
 import com.drullkus.thermalsmeltery.common.lib.LibMisc;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.TConSmeltery;
@@ -14,7 +13,6 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import mantle.pulsar.config.ForgeCFG;
 import mantle.pulsar.control.PulseManager;
 
