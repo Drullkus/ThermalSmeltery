@@ -174,6 +174,12 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     }
 
     @Override
+    protected int getMaxInputSlot()
+    {
+        return -1;
+    }
+
+    @Override
     protected boolean hasRoomForOutput()
     {
         CastingRecipe recipe = getRecipe();
