@@ -24,6 +24,7 @@ public class ElementTinkersTank extends ElementFluidTank
         FluidStack fluid = this.tank.getFluid();
         if (fluid != null)
         {
+            int junk = 0;
             if (fluid.getFluid() == TinkerSmeltery.moltenGlassFluid)
             {
                 int blocks = fluid.amount / 1000;
@@ -32,18 +33,17 @@ public class ElementTinkersTank extends ElementFluidTank
                 int panels = (fluid.amount % 1000) / 250;
                 if (panels > 0)
                     list.add(StatCollector.translateToLocalFormatted("info.thermalsmeltery.panel", panels));
-                int mB = (fluid.amount % 1000) % 250;
-                if (mB > 0)
-                    list.add("mB: " + mB);
+                junk = (fluid.amount % 1000) % 250;
             }
             else if (fluid.getFluid() == TinkerSmeltery.moltenStoneFluid)
             {
                 int blocks = fluid.amount / TConstruct.ingotLiquidValue;
                 if (blocks > 0)
                     list.add(StatCollector.translateToLocalFormatted("info.thermalsmeltery.block", blocks));
-                int mB = fluid.amount % TConstruct.ingotLiquidValue;
-                if (mB > 0)
-                    list.add("mB: " + mB);
+                int bricks = (fluid.amount % (TConstruct.ingotLiquidValue/4))*4/TConstruct.ingotLiquidValue;
+                if (bricks > 0)
+                    list.add(StatCollector.translateToLocalFormatted("info.thermalsmeltery.brick", bricks));
+                junk = fluid.amount % TConstruct.ingotLiquidValue;
             }
             else
             {
@@ -54,13 +54,13 @@ public class ElementTinkersTank extends ElementFluidTank
                 if (mB > 0)
                 {
                     int nuggets = mB / TConstruct.nuggetLiquidValue;
-                    int junk = (mB % TConstruct.nuggetLiquidValue);
+                    junk = (mB % TConstruct.nuggetLiquidValue);
                     if (nuggets > 0)
                         list.add(StatCollector.translateToLocalFormatted("info.thermalsmeltery.nugget", nuggets));
-                    if (junk > 0)
-                        list.add("mB: " + junk);
                 }
             }
+            if (junk > 0)
+                list.add("mB: " + junk);
         }
     }
 }

@@ -1,11 +1,13 @@
 package com.drullkus.thermalsmeltery.common.blocks;
 
 import cofh.core.render.IconRegistry;
+import cofh.lib.util.helpers.ServerHelper;
 import com.drullkus.thermalsmeltery.ThermalSmeltery;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
+import thermalexpansion.block.machine.MachineHelper;
 import thermalexpansion.block.machine.TileMachineBase;
 import thermalexpansion.core.TEProps;
 
@@ -86,8 +88,61 @@ public abstract class TileSmelteryBase extends TileMachineBase
     protected boolean canFit(ItemStack stack, int slot)
     {
         if (stack == null || inventory[slot] == null) return true;
-        if (stack.isItemEqual(inventory[slot])) return stack.stackSize + inventory[slot].stackSize <= stack.getMaxStackSize();
-        return false;
+        return stack.isItemEqual(inventory[slot]) && stack.stackSize + inventory[slot].stackSize <= stack.getMaxStackSize();
+    }
+
+    @Override
+    public void updateEntity()
+    {
+        if(!ServerHelper.isClientWorld(this.worldObj)) {
+            boolean active = this.isActive;
+            int energy;
+            if(this.isActive) {
+                if(MachineHelper.getProcessRemaining(this) > 0) {
+                    energy = this.calcEnergy()* MachineHelper.getEnergyMod(this);
+                    if (energy<=this.energyStorage.getEnergyStored())
+                    {
+                        this.energyStorage.modifyEnergyStored(-energy);
+                        MachineHelper.updateProcessRemaining(this, -energy * MachineHelper.getProcessMod(this));
+                    }
+                    else
+                    {
+                        active = false;
+                    }
+                }
+
+                if(this.canFinish()) {
+                    this.processFinish();
+                    this.transferProducts();
+                    this.energyStorage.modifyEnergyStored(-MachineHelper.getProcessRemaining(this) * MachineHelper.getEnergyMod(this) / MachineHelper.getProcessMod(this));
+                    if(this.redstoneControlOrDisable() && this.canStart()) {
+                        this.processStart();
+                    } else {
+                        this.isActive = false;
+                        MachineHelper.setWasActive(this, true);
+                        this.tracker.markTime(this.worldObj);
+                    }
+                }
+            } else if(this.redstoneControlOrDisable()) {
+                if(this.timeCheck()) {
+                    this.transferProducts();
+                }
+
+                if(this.timeCheckEighth() && this.canStart()) {
+                    energy = this.calcEnergy();
+                    if (energy * MachineHelper.getEnergyMod(this)<=this.energyStorage.getEnergyStored())
+                    {
+                        this.processStart();
+                        this.energyStorage.modifyEnergyStored(-energy * MachineHelper.getEnergyMod(this));
+                        MachineHelper.updateProcessRemaining(this, -energy * MachineHelper.getProcessMod(this));
+                        this.isActive = true;
+                    }
+                }
+            }
+
+            this.updateIfChanged(active);
+            this.chargeEnergy();
+        }
     }
 
     @Override

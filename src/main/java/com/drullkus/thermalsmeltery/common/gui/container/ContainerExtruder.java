@@ -15,7 +15,7 @@ public class ContainerExtruder extends ContainerTEBase
     {
         super(inventoryPlayer, entity);
         this.extruder = (TileExtruder)entity;
-        this.addSlotToContainer(new SlotRemoveOnly(this.extruder, 0, 117, 30));
+        this.addSlotToContainer(new SlotRemoveOnly(this.extruder, 0, 126, 30));
         this.addSlotToContainer(new SlotEnergy(this.extruder, this.extruder.getChargeSlot(), 8, 53));
     }
 }

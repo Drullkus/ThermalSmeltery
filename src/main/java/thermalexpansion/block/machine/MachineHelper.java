@@ -27,4 +27,14 @@ public class MachineHelper
         machineBase.processMax = val;
         machineBase.processRem = val;
     }
+
+    public static void updateProcessRemaining(TileMachineBase machineBase, int val)
+    {
+        machineBase.processRem += val;
+    }
+
+    public static void setWasActive(TileMachineBase machineBase, boolean val)
+    {
+        machineBase.wasActive = val;
+    }
 }
