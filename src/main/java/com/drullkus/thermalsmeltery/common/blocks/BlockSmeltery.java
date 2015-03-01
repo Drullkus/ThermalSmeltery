@@ -34,8 +34,8 @@ import java.util.List;
 public class BlockSmeltery extends BlockTEBase
 {
     public static final String[] NAMES = new String[]{"extruder", "stamper"};
-    public static boolean[] enable = new boolean[Types.values().length];
-    public static boolean[] creativeTiers = new boolean[4];
+    public static boolean[] enable = new boolean[]{true,true};
+    public static boolean[] creativeTiers = new boolean[]{true,false,false,true};
     public static ItemStack[] defaultAugments = new ItemStack[3];
     public static boolean defaultAutoTransfer = true;
     public static boolean defaultRedstoneControl = true;
@@ -51,6 +51,7 @@ public class BlockSmeltery extends BlockTEBase
         this.setCreativeTab(ThermalSmeltery.itemTab);
     }
 
+    @Override
     public TileEntity createNewTileEntity(World var1, int var2) {
         if(var2 >= Types.values().length) {
             return null;
@@ -66,19 +67,20 @@ public class BlockSmeltery extends BlockTEBase
         }
     }
 
-    public void getSubBlocks(Item var1, CreativeTabs var2, List var3) {
-        int var4;
-        for(var4 = 0; var4 < Types.values().length; ++var4) {
-            if(enable[var4]) {
-                for(int var5 = 0; var5 < 4; ++var5) {
-                    if(creativeTiers[var5]) {
-                        var3.add(ItemBlockSmeltery.setDefaultTag(new ItemStack(var1, 1, var4), (byte)var5));
+    @Override
+    public void getSubBlocks(Item item, CreativeTabs tab, List list) {
+        for(int i = 0; i < NAMES.length; ++i) {
+            if(enable[i]) {
+                for(int tier = 0; tier < 4; ++tier) {
+                    if(creativeTiers[tier]) {
+                        list.add(ItemBlockSmeltery.setDefaultTag(new ItemStack(item, 1, i), (byte)tier));
                     }
                 }
             }
         }
     }
 
+    @Override
     public void onBlockPlacedBy(World var1, int var2, int var3, int var4, EntityLivingBase var5, ItemStack var6) {
         if(var6.stackTagCompound != null) {
             TileSmelteryBase var7 = (TileSmelteryBase)var1.getTileEntity(var2, var3, var4);
@@ -99,50 +101,86 @@ public class BlockSmeltery extends BlockTEBase
         super.onBlockPlacedBy(var1, var2, var3, var4, var5, var6);
     }
 
+    @Override
     public boolean onBlockActivated(World var1, int var2, int var3, int var4, EntityPlayer var5, int var6, float var7, float var8, float var9) {
         TileEntity var10 = var1.getTileEntity(var2, var3, var4);
         return (var10 instanceof IFluidHandler) && FluidHelper.fillHandlerWithContainer(var1, (IFluidHandler)var10, var5) || super.onBlockActivated(var1, var2, var3, var4, var5, var6, var7, var8, var9);
     }
 
+    @Override
     public int getRenderBlockPass() {
         return 1;
     }
 
+    @Override
     public boolean canRenderInPass(int var1) {
         renderPass = var1;
         return var1 < 2;
     }
 
+    @Override
     public boolean isNormalCube(IBlockAccess var1, int var2, int var3, int var4) {
         return false;
     }
 
+    @Override
     public boolean isSideSolid(IBlockAccess var1, int var2, int var3, int var4, ForgeDirection var5) {
         return true;
     }
 
+    @Override
     public boolean renderAsNormalBlock() {
         return true;
     }
 
-    public IIcon getIcon(IBlockAccess var1, int var2, int var3, int var4, int var5) {
-        ISidedTexture var6 = (ISidedTexture)var1.getTileEntity(var2, var3, var4);
-        return var6 == null?null:var6.getTexture(var5, renderPass);
+    @Override
+    public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side) {
+        ISidedTexture te = (ISidedTexture)world.getTileEntity(x, y, z);
+        return te == null?null:te.getTexture(side, renderPass);
     }
 
+    @Override
     public IIcon getIcon(int var1, int var2) {
-        return var1 == 0?IconRegistry.getIcon("MachineBottom"):(var1 == 1?IconRegistry.getIcon("MachineTop"):(var1 != 3?IconRegistry.getIcon("MachineSide"):IconRegistry.getIcon("MachineFace" + var2)));
+        return var1 == 0?IconRegistry.getIcon("SmelteryBottom"):(var1 == 1?IconRegistry.getIcon("SmelteryTop"):(var1 != 3?IconRegistry.getIcon("SmelterySide"):IconRegistry.getIcon("SmelteryFace" + var2)));
     }
 
     @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister var1) {
+    @Override
+    public void registerBlockIcons(IIconRegister var1)
+    {
+        IconRegistry.addIcon("SmelteryBottom", "thermalsmeltery:machine/machineBottom", var1);
+        IconRegistry.addIcon("SmelteryTop", "thermalsmeltery:machine/machineTop", var1);
+        IconRegistry.addIcon("SmelterySide", "thermalsmeltery:machine/machineSide", var1);
 
         for(int var2 = 0; var2 < Types.values().length; ++var2) {
-            IconRegistry.addIcon("MachineFace" + var2, "thermalsmeltery:machine/Machine_Face_" + StringHelper.titleCase(NAMES[var2]), var1);
-            IconRegistry.addIcon("MachineActive" + var2, "thermalsmeltery:machine/Machine_Active_" + StringHelper.titleCase(NAMES[var2]), var1);
+            IconRegistry.addIcon("SmelteryFace" + var2, "thermalsmeltery:machine/machineFace" + StringHelper.titleCase(NAMES[var2]), var1);
+            IconRegistry.addIcon("SmelteryActive" + var2, "thermalsmeltery:machine/machineActive" + StringHelper.titleCase(NAMES[var2]), var1);
         }
+
+        IconRegistry.addIcon("sideConfig_0", "thermalsmeltery:machine/sideBlank", var1);
+        IconRegistry.addIcon("sideConfig_1", "thermalsmeltery:machine/sideBlue", var1);
+        IconRegistry.addIcon("sideConfig_2", "thermalsmeltery:machine/sideRed", var1);
+        IconRegistry.addIcon("sideConfig_3", "thermalsmeltery:machine/sideYellow", var1);
+        IconRegistry.addIcon("sideConfig_4", "thermalsmeltery:machine/sideOrange", var1);
+        IconRegistry.addIcon("sideConfig_5", "thermalsmeltery:machine/sideGreen", var1);
+        IconRegistry.addIcon("sideConfig_6", "thermalsmeltery:machine/sidePurple", var1);
+        IconRegistry.addIcon("topConfig_0", "thermalsmeltery:machine/topBlank", var1);
+        IconRegistry.addIcon("topConfig_1", "thermalsmeltery:machine/topBlue", var1);
+        IconRegistry.addIcon("topConfig_2", "thermalsmeltery:machine/topRed", var1);
+        IconRegistry.addIcon("topConfig_3", "thermalsmeltery:machine/topYellow", var1);
+        IconRegistry.addIcon("topConfig_4", "thermalsmeltery:machine/topOrange", var1);
+        IconRegistry.addIcon("topConfig_5", "thermalsmeltery:machine/topGreen", var1);
+        IconRegistry.addIcon("topConfig_6", "thermalsmeltery:machine/topPurple", var1);
+        IconRegistry.addIcon("bottomConfig_0", "thermalsmeltery:machine/bottomBlank", var1);
+        IconRegistry.addIcon("bottomConfig_1", "thermalsmeltery:machine/bottomBlue", var1);
+        IconRegistry.addIcon("bottomConfig_2", "thermalsmeltery:machine/bottomRed", var1);
+        IconRegistry.addIcon("bottomConfig_3", "thermalsmeltery:machine/bottomYellow", var1);
+        IconRegistry.addIcon("bottomConfig_4", "thermalsmeltery:machine/bottomOrange", var1);
+        IconRegistry.addIcon("bottomConfig_5", "thermalsmeltery:machine/bottomGreen", var1);
+        IconRegistry.addIcon("bottomConfig_6", "thermalsmeltery:machine/bottomPurple", var1);
     }
 
+    @Override
     public NBTTagCompound getItemStackTag(World var1, int var2, int var3, int var4) {
         NBTTagCompound var5 = super.getItemStackTag(var1, var2, var3, var4);
         TileSmelteryBase var6 = (TileSmelteryBase)var1.getTileEntity(var2, var3, var4);
@@ -159,6 +197,7 @@ public class BlockSmeltery extends BlockTEBase
         return var5;
     }
 
+    @Override
     public boolean initialize() {
         TileStamper.initialize();
         TileExtruder.initialize();
@@ -182,17 +221,13 @@ public class BlockSmeltery extends BlockTEBase
         return true;
     }
 
+    @Override
     public boolean postInit() {
 //        TECraftingHandler.addMachineUpgradeRecipes(extruder);
 //        TECraftingHandler.addMachineUpgradeRecipes(stamper);
 //        TECraftingHandler.addSecureRecipe(assembler);
 //        TECraftingHandler.addSecureRecipe(charger);
         return true;
-    }
-
-    public static void refreshItemStacks() {
-        extruder = ItemBlockSmeltery.setDefaultTag(extruder);
-        stamper = ItemBlockSmeltery.setDefaultTag(stamper);
     }
 
     static {

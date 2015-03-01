@@ -5,3 +5,7 @@ itemGroup.ThermalSmeltery=Thermal Smeltery
 item.thermalsmeltery:potatoesMashed.name=Mashed Potato
 item.thermalsmeltery:potatoesWedge.name=Potato Shard
 item.thermalsmeltery:upgradeparts.PerditioVoid.name=Null Voiding Touch
+
+# BLOCK NAMES
+tile.thermalsmeltery.machine.stamper.name=Pattern Stamper
+tile.thermalsmeltery.machine.extruder.name=Extruder

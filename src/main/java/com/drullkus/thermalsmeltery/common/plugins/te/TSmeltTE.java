@@ -2,6 +2,7 @@ package com.drullkus.thermalsmeltery.common.plugins.te;
 
 import java.util.Map;
 
+import com.drullkus.thermalsmeltery.common.blocks.ModBlocks;
 import com.drullkus.thermalsmeltery.common.items.ModItems;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
@@ -33,6 +34,8 @@ public class TSmeltTE
             int energy = tempMap.get(entry.getKey()) * 10 * TSmeltConfig.multiplier;
             TE4Helper.addCrucibleRecipe(energy, input, entry.getValue());
         }
+
+        ModBlocks.initialize();
 
         nullifier = new ItemStack(GameRegistry.findItem("ThermalExpansion", "Device"), 1, 5);
         TE4Helper.addPulverizerRecipe(20000, nullifier, new ItemStack(ModItems.Tool_Mod_Void, 1, 0));

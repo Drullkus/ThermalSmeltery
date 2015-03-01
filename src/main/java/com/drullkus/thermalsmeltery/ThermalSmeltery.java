@@ -1,6 +1,5 @@
 package com.drullkus.thermalsmeltery;
 
-import com.drullkus.thermalsmeltery.common.blocks.ModBlocks;
 import com.drullkus.thermalsmeltery.common.core.handler.TSmeltConfig;
 import com.drullkus.thermalsmeltery.common.core.handler.ModCreativeTab;
 import com.drullkus.thermalsmeltery.common.items.ModItems;
@@ -50,7 +49,6 @@ public class ThermalSmeltery
     public void init (FMLInitializationEvent event)
     {
         ModItems.init();
-        ModBlocks.initialize();
 
         pulsar.init(event);
     }
