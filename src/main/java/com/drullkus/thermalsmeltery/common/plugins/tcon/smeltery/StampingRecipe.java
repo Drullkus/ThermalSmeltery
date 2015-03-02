@@ -44,6 +44,7 @@ public class StampingRecipe
             secondaryResult = output.copy();
             secondaryResult.stackSize /= value;
             secondaryResult.stackSize -= output.stackSize;
+            if (secondaryResult.stackSize <= 0) secondaryResult = null;
         }
     }
 

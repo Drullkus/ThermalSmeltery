@@ -29,27 +29,32 @@ public abstract class TileSmelteryBase extends TileMachineBase
     }
 
     @Override
-    public boolean openGui(EntityPlayer player) {
-        if(this.hasGui()) {
+    public boolean openGui(EntityPlayer player)
+    {
+        if (this.hasGui())
+        {
             player.openGui(ThermalSmeltery.instance, 0, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
             return true;
-        } else {
+        } else
+        {
             return false;
         }
     }
 
     @Override
-    protected void transferProducts() {
-        if(this.augmentAutoTransfer)
+    protected void transferProducts()
+    {
+        if (this.augmentAutoTransfer)
         {
-            out: for (int slot = this.getMaxInputSlot() + 1; slot<inventory.length-1;slot++)
+            out:
+            for (int slot = this.getMaxInputSlot() + 1; slot < inventory.length - 1; slot++)
             {
                 if (this.inventory[slot] != null)
                 {
                     for (int side = this.outputTracker + 1; side <= this.outputTracker + 6; ++side)
                     {
                         int pushSide = side % 6;
-                        if (isOutput(pushSide) && this.transferItem(slot, 4, pushSide))
+                        if (isOutputForSlot(pushSide, slot) && this.transferItem(slot, 4, pushSide))
                         {
                             this.outputTracker = pushSide;
                             break out;
@@ -60,19 +65,31 @@ public abstract class TileSmelteryBase extends TileMachineBase
         }
     }
 
+    public boolean isOutputForSlot(int side, int slot)
+    {
+        if (!isOutput(side)) return false;
+        for (int i : sideConfig.slotGroups[this.sideCache[side]])
+        {
+            if (i == slot) return true;
+        }
+        return false;
+    }
+
     public boolean isOutput(int side)
     {
-        return this.sideCache[side] == 2;
+        return this.sideConfig.allowExtraction[this.sideCache[side]];
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound var1) {
+    public void readFromNBT(NBTTagCompound var1)
+    {
         super.readFromNBT(var1);
         this.outputTracker = var1.getInteger("Tracker");
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound var1) {
+    public void writeToNBT(NBTTagCompound var1)
+    {
         super.writeToNBT(var1);
         var1.setInteger("Tracker", this.outputTracker);
     }
@@ -94,43 +111,51 @@ public abstract class TileSmelteryBase extends TileMachineBase
     @Override
     public void updateEntity()
     {
-        if(!ServerHelper.isClientWorld(this.worldObj)) {
+        if (!ServerHelper.isClientWorld(this.worldObj))
+        {
             boolean active = this.isActive;
             int energy;
-            if(this.isActive) {
-                if(MachineHelper.getProcessRemaining(this) > 0) {
-                    energy = this.calcEnergy()* MachineHelper.getEnergyMod(this);
-                    if (energy<=this.energyStorage.getEnergyStored())
+            if (this.isActive)
+            {
+                if (MachineHelper.getProcessRemaining(this) > 0)
+                {
+                    energy = this.calcEnergy() * MachineHelper.getEnergyMod(this);
+                    if (energy <= this.energyStorage.getEnergyStored())
                     {
                         this.energyStorage.modifyEnergyStored(-energy);
                         MachineHelper.updateProcessRemaining(this, -energy * MachineHelper.getProcessMod(this));
-                    }
-                    else
+                    } else
                     {
                         active = false;
                     }
                 }
 
-                if(this.canFinish()) {
+                if (this.canFinish())
+                {
                     this.processFinish();
                     this.transferProducts();
                     this.energyStorage.modifyEnergyStored(-MachineHelper.getProcessRemaining(this) * MachineHelper.getEnergyMod(this) / MachineHelper.getProcessMod(this));
-                    if(this.redstoneControlOrDisable() && this.canStart()) {
+                    if (this.redstoneControlOrDisable() && this.canStart())
+                    {
                         this.processStart();
-                    } else {
+                    } else
+                    {
                         this.isActive = false;
                         MachineHelper.setWasActive(this, true);
                         this.tracker.markTime(this.worldObj);
                     }
                 }
-            } else if(this.redstoneControlOrDisable()) {
-                if(this.timeCheck()) {
+            } else if (this.redstoneControlOrDisable())
+            {
+                if (this.timeCheck())
+                {
                     this.transferProducts();
                 }
 
-                if(this.timeCheckEighth() && this.canStart()) {
+                if (this.timeCheckEighth() && this.canStart())
+                {
                     energy = this.calcEnergy();
-                    if (energy * MachineHelper.getEnergyMod(this)<=this.energyStorage.getEnergyStored())
+                    if (energy * MachineHelper.getEnergyMod(this) <= this.energyStorage.getEnergyStored())
                     {
                         this.processStart();
                         this.energyStorage.modifyEnergyStored(-energy * MachineHelper.getEnergyMod(this));
@@ -154,15 +179,17 @@ public abstract class TileSmelteryBase extends TileMachineBase
     @Override
     public IIcon getTexture(int face, int pass)
     {
-        return pass == 0?(face == 0? IconRegistry.getIcon("SmelteryBottom"):(face == 1?IconRegistry.getIcon("SmelteryTop"):(face != this.facing?IconRegistry.getIcon("SmelterySide"):(this.isActive?IconRegistry.getIcon("SmelteryActive", this.getType()):IconRegistry.getIcon("SmelteryFace", this.getType()))))):(face < 6?IconRegistry.getIcon(getFaceString(face) + TEProps.textureSelection, this.sideConfig.sideTex[this.sideCache[face]]):IconRegistry.getIcon("SmelterySide"));
+        return pass == 0 ? (face == 0 ? IconRegistry.getIcon("SmelteryBottom") : (face == 1 ? IconRegistry.getIcon("SmelteryTop") : (face != this.facing ? IconRegistry.getIcon("SmelterySide") : (this.isActive ? IconRegistry.getIcon("SmelteryActive", this.getType()) : IconRegistry.getIcon("SmelteryFace", this.getType()))))) : (face < 6 ? IconRegistry.getIcon(getFaceString(face) + TEProps.textureSelection, this.sideConfig.sideTex[this.sideCache[face]]) : IconRegistry.getIcon("SmelterySide"));
     }
 
     private String getFaceString(int face)
     {
-        switch(face)
+        switch (face)
         {
-            case 0:return "bottom";
-            case 1:return "top";
+            case 0:
+                return "bottom";
+            case 1:
+                return "top";
         }
         return "side";
     }
@@ -176,7 +203,7 @@ public abstract class TileSmelteryBase extends TileMachineBase
     @Override
     public int getLightValue()
     {
-        return isActive? lightValueSmeltery[getType()]:0;
+        return isActive ? lightValueSmeltery[getType()] : 0;
     }
 
     @Override
