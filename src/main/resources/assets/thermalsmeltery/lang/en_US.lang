@@ -1,7 +1,7 @@
 # MISC
 itemGroup.ThermalSmeltery=Thermal Smeltery
-info.thermalsmeltery.toggleIngot=Toggle: Ingots
-info.thermalsmeltery.toggleBlock=Toggle: Blocks
+info.thermalsmeltery.toggleIngot=Toggle Ingots
+info.thermalsmeltery.toggleBlock=Toggle Blocks
 info.thermalsmeltery.block=Blocks: %d
 info.thermalsmeltery.brick=Bricks: %d
 info.thermalsmeltery.ingot=Ingots: %d
@@ -9,11 +9,13 @@ info.thermalsmeltery.panel=Panels: %d
 info.thermalsmeltery.nugget=Nuggets: %d
 
 
-# ITEM NAMES
+# ITEMS
 item.thermalsmeltery:potatoesMashed.name=Mashed Potato
 item.thermalsmeltery:potatoesWedge.name=Potato Shard
 item.thermalsmeltery:upgradeparts.PerditioVoid.name=Null Voiding Touch
 
-# BLOCK NAMES
+# BLOCKS
 tile.thermalsmeltery.machine.stamper.name=Pattern Stamper
-tile.thermalsmeltery.machine.extruder.name=Extruder
+info.thermalsmeltery.machine.stamper=Stamps your ingots with a TCon Cast
+tile.thermalsmeltery.machine.extruder.name=Casting Extruder
+info.thermalsmeltery.machine.extruder=Turns your TCon molten metals into ingots and blocks
