@@ -35,7 +35,7 @@ public class TSmeltTE
 
         for (Map.Entry<ItemMetaWrapper, FluidStack> entry : smelteryMap.entrySet()) {
             ItemStack input = new ItemStack(entry.getKey().item, 1, entry.getKey().meta);
-            int energy = tempMap.get(entry.getKey()) * 10 * TSmeltConfig.multiplier;
+            int energy = tempMap.get(entry.getKey()) * TSmeltConfig.multiplier;
             TE4Helper.addCrucibleRecipe(energy, input, entry.getValue());
         }
 
