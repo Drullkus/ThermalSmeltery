@@ -36,9 +36,9 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     {
         defaultSideConfigSmeltery[TYPE] = new SideConfig();
         defaultSideConfigSmeltery[TYPE].numGroup = 4;
-        defaultSideConfigSmeltery[TYPE].slotGroups = new int[][]{new int[0], {0}, new int[0]};
-        defaultSideConfigSmeltery[TYPE].allowInsertion = new boolean[]{false, true, false, false, false};
-        defaultSideConfigSmeltery[TYPE].allowExtraction = new boolean[]{false, true, true, false, true};
+        defaultSideConfigSmeltery[TYPE].slotGroups = new int[][]{new int[0], new int[0], {0}, new int[0]};
+        defaultSideConfigSmeltery[TYPE].allowInsertion = new boolean[]{false, false, false, false};
+        defaultSideConfigSmeltery[TYPE].allowExtraction = new boolean[]{false, false, true, true};
         defaultSideConfigSmeltery[TYPE].sideTex = new int[]{0, 1, 2, 3};
         defaultSideConfigSmeltery[TYPE].defaultSides = new byte[]{(byte)3, (byte)1, (byte)2, (byte)2, (byte)2, (byte)2};
 //        int basePower = MathHelper.clampI(ThermalExpansion.config.get("block.tweak", "Machine.Crucible.BasePower", 400), 100, 500);

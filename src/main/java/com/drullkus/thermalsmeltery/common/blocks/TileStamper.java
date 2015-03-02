@@ -23,9 +23,9 @@ public class TileStamper extends TileSmelteryBase
     {
         defaultSideConfigSmeltery[TYPE] = new SideConfig();
         defaultSideConfigSmeltery[TYPE].numGroup = 7;
-        defaultSideConfigSmeltery[TYPE].slotGroups = new int[][]{new int[0], {0, 1}, {2, 3}, {0}, {1}, {2}, {3}};
+        defaultSideConfigSmeltery[TYPE].slotGroups = new int[][]{new int[0], {0, 1}, {2}, {3}, {2, 3}, {0}, {1}};
         defaultSideConfigSmeltery[TYPE].allowInsertion = new boolean[]{false, true, false, false, false, true, true};
-        defaultSideConfigSmeltery[TYPE].allowExtraction = new boolean[]{false, true, true, true, true, true, true};
+        defaultSideConfigSmeltery[TYPE].allowExtraction = new boolean[]{false, false, true, true, true, false, false};
         defaultSideConfigSmeltery[TYPE].sideTex = new int[]{0, 1, 2, 3, 4, 5, 6};
         defaultSideConfigSmeltery[TYPE].defaultSides = new byte[]{(byte)3, (byte)1, (byte)2, (byte)2, (byte)2, (byte)2};
 //        int basePower = MathHelper.clampI(ThermalExpansion.config.get("block.tweak", "Machine.Crucible.BasePower", 400), 100, 500);
@@ -68,12 +68,6 @@ public class TileStamper extends TileSmelteryBase
     protected void processStart()
     {
         MachineHelper.setProcessMax(this, getRecipeTime(getRecipe()));
-    }
-
-    @Override
-    public boolean isOutput(int side)
-    {
-        return super.isOutput(side) || this.sideCache[side] > 4;
     }
 
     @Override
