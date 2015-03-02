@@ -159,9 +159,11 @@ public abstract class TileSmelteryBase extends TileMachineBase
 
     private String getFaceString(int face)
     {
-        if (face == 0)return "bottom";
-        if (face == 1)return "top";
-        if (face == this.facing) return "";
+        switch(face)
+        {
+            case 0:return "bottom";
+            case 1:return "top";
+        }
         return "side";
     }
 
