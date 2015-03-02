@@ -31,6 +31,7 @@ import thermalexpansion.util.ReconfigurableHelper;
 
 import java.util.List;
 
+        //TODO: Remove this dependency. Needs immediate fixing before release.
 public class BlockSmeltery extends BlockTEBase
 {
     public static final String[] NAMES = new String[]{"extruder", "stamper"};
