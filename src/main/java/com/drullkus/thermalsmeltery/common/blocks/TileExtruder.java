@@ -4,6 +4,7 @@ import cofh.api.tileentity.ITileInfo;
 import cofh.core.network.PacketCoFHBase;
 import cofh.core.util.fluid.FluidTankAdv;
 import cofh.lib.util.helpers.StringHelper;
+import com.drullkus.thermalsmeltery.common.core.handler.TSmeltConfig;
 import com.drullkus.thermalsmeltery.common.gui.client.GuiExtruder;
 import com.drullkus.thermalsmeltery.common.gui.container.ContainerExtruder;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRegistry;
@@ -227,7 +228,11 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     private int getRecipeTime(CastingRecipe recipe)
     {
         if (recipe == null) return 0;
-        return recipe.coolTime * 500; //TODO: something sensible here;
+        return recipe.coolTime * 1000 * TSmeltConfig.StamperMultiplier;
+
+        /**
+        Controls the speed of the machine
+        */
     }
 
     @Override

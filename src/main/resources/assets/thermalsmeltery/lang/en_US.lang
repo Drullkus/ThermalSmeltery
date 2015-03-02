@@ -17,5 +17,5 @@ item.thermalsmeltery:upgradeparts.PerditioVoid.name=Null Voiding Touch
 # BLOCKS
 tile.thermalsmeltery.machine.stamper.name=Pattern Stamper
 info.thermalsmeltery.machine.stamper=Stamps your ingots with a TCon Cast
-tile.thermalsmeltery.machine.extruder.name=Casting Extruder
+tile.thermalsmeltery.machine.extruder.name=Auto-Caster
 info.thermalsmeltery.machine.extruder=Turns your TCon molten metals into ingots and blocks

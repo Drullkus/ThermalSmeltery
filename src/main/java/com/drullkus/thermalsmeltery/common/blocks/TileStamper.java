@@ -1,5 +1,6 @@
 package com.drullkus.thermalsmeltery.common.blocks;
 
+import com.drullkus.thermalsmeltery.common.core.handler.TSmeltConfig;
 import com.drullkus.thermalsmeltery.common.gui.client.GuiStamper;
 import com.drullkus.thermalsmeltery.common.gui.container.ContainerStamper;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRegistry;
@@ -117,7 +118,11 @@ public class TileStamper extends TileSmelteryBase
     private int getRecipeTime(StampingRecipe recipe)
     {
         if (recipe == null) return 0;
-        return recipe.coolTime * 500; //TODO: something sensible here;
+        return recipe.coolTime * 1000 * TSmeltConfig.StamperMultiplier;
+
+        /**
+        Controls the speed of the machine
+        */
     }
 
     @Override

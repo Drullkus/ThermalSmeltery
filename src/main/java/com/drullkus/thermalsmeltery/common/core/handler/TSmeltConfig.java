@@ -20,6 +20,8 @@ public class TSmeltConfig
         Configuration config = new Configuration(mainFile);
 
         multiplier = config.get("Thermal Expansion", "The Multiplier for RF Cost for Magma Crucible recipe adaptation", 5, "Only used if the Thermal Expansion Module on.").getInt(5);
+        StamperMultiplier = config.get("Thermal Expansion", "The Multiplier for RF Cost for Pattern Stamper recipe adaptation", 5, "Only used if the Thermal Expansion Module on.").getInt(5);
+        ExtruderMultiplier = config.get("Thermal Expansion", "The Multiplier for RF Cost for Auto-Caster recipe adaptation", 5, "Only used if the Thermal Expansion Module on.").getInt(5);
 
         TConSteelRecipe = config.get("Tinkers Smeltery", "Allow Steel to be made in the Smeltery", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
         TConYelloriumCasting = config.get("Tinkers Smeltery", "Allow Yellorium to be casted into the casting table/basin.", true, "Only used if the Tinker's construct Smeltery Module is enabled.")
@@ -30,8 +32,12 @@ public class TSmeltConfig
             config.save();
     }
 
-    // #Part of TE4
+    // # Part of TE4
     public static int multiplier;
+
+    // # Thermal Smeltery Machines
+    public static int StamperMultiplier;
+    public static int ExtruderMultiplier;
 
     // # TconSmeltery Addons
     public static boolean TConSteelRecipe;
