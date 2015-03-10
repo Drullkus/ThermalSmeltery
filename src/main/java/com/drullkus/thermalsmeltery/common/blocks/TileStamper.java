@@ -8,7 +8,7 @@ import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.StampingRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import thermalexpansion.block.machine.MachineHelper;
+import cofh.thermalexpansion.block.machine.MachineHelper;
 
 public class TileStamper extends TileSmelteryBase
 {

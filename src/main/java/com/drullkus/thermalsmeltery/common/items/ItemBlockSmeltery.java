@@ -9,8 +9,8 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
-import thermalexpansion.block.machine.BlockMachine;
-import thermalexpansion.util.ReconfigurableHelper;
+import cofh.thermalexpansion.block.machine.BlockMachine;
+import cofh.thermalexpansion.util.ReconfigurableHelper;
 
 import java.util.List;
 

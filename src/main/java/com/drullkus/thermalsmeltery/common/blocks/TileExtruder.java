@@ -21,7 +21,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import tconstruct.library.crafting.CastingRecipe;
-import thermalexpansion.block.machine.MachineHelper;
+import cofh.thermalexpansion.block.machine.MachineHelper;
 
 import java.util.List;
 

@@ -7,9 +7,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IIcon;
-import thermalexpansion.block.machine.MachineHelper;
-import thermalexpansion.block.machine.TileMachineBase;
-import thermalexpansion.core.TEProps;
+import cofh.thermalexpansion.block.machine.MachineHelper;
+import cofh.thermalexpansion.block.machine.TileMachineBase;
+import cofh.thermalexpansion.core.TEProps;
 
 public abstract class TileSmelteryBase extends TileMachineBase
 {

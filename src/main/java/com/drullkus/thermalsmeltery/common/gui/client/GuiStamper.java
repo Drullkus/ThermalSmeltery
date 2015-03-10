@@ -6,8 +6,8 @@ import com.drullkus.thermalsmeltery.common.gui.container.ContainerStamper;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import thermalexpansion.gui.client.GuiAugmentableBase;
-import thermalexpansion.gui.element.ElementSlotOverlay;
+import cofh.thermalexpansion.gui.client.GuiAugmentableBase;
+import cofh.thermalexpansion.gui.element.ElementSlotOverlay;
 
 public class GuiStamper extends GuiAugmentableBase
 {

@@ -12,8 +12,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import thermalexpansion.gui.client.GuiAugmentableBase;
-import thermalexpansion.gui.element.ElementSlotOverlay;
+import cofh.thermalexpansion.gui.client.GuiAugmentableBase;
+import cofh.thermalexpansion.gui.element.ElementSlotOverlay;
 
 public class GuiExtruder extends GuiAugmentableBase
 {

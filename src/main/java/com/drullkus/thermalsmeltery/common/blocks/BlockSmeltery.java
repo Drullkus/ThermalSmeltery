@@ -25,9 +25,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.IFluidHandler;
-import thermalexpansion.block.BlockTEBase;
-import thermalexpansion.item.TEAugments;
-import thermalexpansion.util.ReconfigurableHelper;
+import cofh.thermalexpansion.block.BlockTEBase;
+import cofh.thermalexpansion.item.TEAugments;
+import cofh.thermalexpansion.util.ReconfigurableHelper;
 
 import java.util.List;
 

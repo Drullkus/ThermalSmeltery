@@ -5,7 +5,7 @@ import cofh.lib.gui.slot.SlotRemoveOnly;
 import com.drullkus.thermalsmeltery.common.blocks.TileExtruder;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
-import thermalexpansion.gui.container.ContainerTEBase;
+import cofh.thermalexpansion.gui.container.ContainerTEBase;
 
 public class ContainerExtruder extends ContainerTEBase
 {

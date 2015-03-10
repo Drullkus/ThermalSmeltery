@@ -1,4 +1,4 @@
-package thermalexpansion.block.machine;
+package cofh.thermalexpansion.block.machine;
 
 public class MachineHelper
 {

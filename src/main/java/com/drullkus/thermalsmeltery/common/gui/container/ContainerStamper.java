@@ -9,7 +9,7 @@ import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRe
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import thermalexpansion.gui.container.ContainerTEBase;
+import cofh.thermalexpansion.gui.container.ContainerTEBase;
 
 public class ContainerStamper extends ContainerTEBase implements ISlotValidator
 {
