@@ -18,17 +18,21 @@ public class ModVoidTouch extends ModBoolean {
         //POTENTAL API CHANGE: ItemModifier.addIncompatibilitiy(<modifierKey>)
         //If Boni accepts PR, this change will then be implented
 
-        ToolCore toolitem = (ToolCore) tool.getItem();
-        if (!validType(toolitem)) return false;
+        if (tool.getItem() instanceof ToolCore)
+        {
+            ToolCore toolitem = (ToolCore) tool.getItem();
+            if (!validType(toolitem)) return false;
 
-        NBTTagCompound tags = tool.getTagCompound().getCompoundTag("InfiTool");
-        if (tags.getBoolean("Silk Touch"))
-            return false;
-        if (tags.getBoolean("Lava"))
-            return false;
-        if (tags.getBoolean("Core Touch"))
-            return false;
-        return tags.getInteger("Modifiers") > 0 && !tags.getBoolean(key); //Will fail if the modifier is false or the tag doesn't exist
+            NBTTagCompound tags = tool.getTagCompound().getCompoundTag("InfiTool");
+            if (tags.getBoolean("Silk Touch"))
+                return false;
+            if (tags.getBoolean("Lava"))
+                return false;
+            if (tags.getBoolean("Core Touch"))
+                return false;
+            return tags.getInteger("Modifiers") > 0 && !tags.getBoolean(key); //Will fail if the modifier is false or the tag doesn't exist
+        }
+        return false;
     }
 
     public boolean validType (ToolCore tool)
