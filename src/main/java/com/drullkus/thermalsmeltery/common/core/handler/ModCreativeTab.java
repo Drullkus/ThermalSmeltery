@@ -6,25 +6,27 @@ import net.minecraft.item.ItemStack;
 
 public class ModCreativeTab extends CreativeTabs
 {
-    ItemStack display;
+	ItemStack display;
 
-    public ModCreativeTab(String label)
-    {
-        super(label);
-    }
+	public ModCreativeTab(String label)
+	{
+		super(label);
+	}
 
-    public void init (ItemStack stack)
-    {
-        display = stack;
-    }
+	public void init(ItemStack stack)
+	{
+		this.display = stack;
+	}
 
-    public ItemStack getIconItemStack ()
-    {
-        return display;
-    }
+	@Override
+	public ItemStack getIconItemStack()
+	{
+		return this.display;
+	}
 
-    public Item getTabIconItem ()
-    {
-        return display.getItem();
-    }
+	@Override
+	public Item getTabIconItem()
+	{
+		return this.display.getItem();
+	}
 }

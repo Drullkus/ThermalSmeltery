@@ -4,4 +4,5 @@ itemGroup.ThermalSmeltery=Thermal Smeltery
 # ITEM NAMES
 item.thermalsmeltery:potatoesMashed.name=Mashed Potato
 item.thermalsmeltery:potatoesWedge.name=Potato Shard
-item.thermalsmeltery:upgradeparts.PerditioVoid.name=Null Voiding Touch
+item.thermalsmeltery:upgradeparts.Voiding.name=Null Voiding Touch
+ThermalSmeltery:upgradeparts.Voiding=Deletes Anything It Mines!
