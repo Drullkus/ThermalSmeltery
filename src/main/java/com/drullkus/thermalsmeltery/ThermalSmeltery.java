@@ -2,13 +2,14 @@ package com.drullkus.thermalsmeltery;
 
 import mantle.pulsar.config.ForgeCFG;
 import mantle.pulsar.control.PulseManager;
+import net.minecraft.creativetab.CreativeTabs;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.drullkus.thermalsmeltery.common.core.handler.ModCreativeTab;
+import com.drullkus.thermalsmeltery.common.core.handler.TSCreativeTab;
 import com.drullkus.thermalsmeltery.common.core.handler.TSmeltConfig;
-import com.drullkus.thermalsmeltery.common.items.ModItems;
+import com.drullkus.thermalsmeltery.common.items.TSItems;
 import com.drullkus.thermalsmeltery.common.lib.LibMisc;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.TConSmeltery;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.tools.TConToolModifiers;
@@ -27,18 +28,17 @@ public class ThermalSmeltery
 
 	public static PulseManager pulsar = new PulseManager(LibMisc.MOD_ID, new ForgeCFG("TSmeltModules", "Modules: Disabling these will disable a chunk of the mod"));
 
-	public static ModCreativeTab itemTab;
+	public static CreativeTabs itemTab = new TSCreativeTab("Items");
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		TSmeltConfig.initProps(event.getModConfigurationDirectory());
+		TSItems.preInit();
 
 		pulsar.registerPulse(new TSmeltTE());
 		pulsar.registerPulse(new TConSmeltery());
 		pulsar.registerPulse(new TConToolModifiers());
-
-		this.itemTab = new ModCreativeTab("ThermalSmeltery");
 
 		pulsar.preInit(event);
 	}
@@ -46,7 +46,7 @@ public class ThermalSmeltery
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		ModItems.init();
+		TSItems.initialize();
 
 		pulsar.init(event);
 	}
@@ -54,6 +54,7 @@ public class ThermalSmeltery
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
+		TSItems.postInit();
 		pulsar.postInit(event);
 
 		// logger.info("Oh no... I'm smelting! I better call Saul!"); RIP

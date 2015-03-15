@@ -1,8 +1,8 @@
 # MISC
-itemGroup.ThermalSmeltery=Thermal Smeltery
+itemGroup.thermalsmeltery.creativeTabItems=Thermal Smeltery
 
 # ITEM NAMES
-item.thermalsmeltery:potatoesMashed.name=Mashed Potato
-item.thermalsmeltery:potatoesWedge.name=Potato Shard
-item.thermalsmeltery:upgradeparts.Voiding.name=Null Voiding Touch
+item.thermalsmeltery.misc.potatoMashed.name=Mashed Potato
+item.thermalsmeltery.misc.potatoWedge.name=Potato Shard
+item.thermalsmeltery.misc.voiding.name=Null Voiding Touch
 ThermalSmeltery:upgradeparts.Voiding=Deletes Anything It Mines!
