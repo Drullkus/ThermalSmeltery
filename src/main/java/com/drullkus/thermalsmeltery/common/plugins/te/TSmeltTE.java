@@ -45,7 +45,7 @@ public class TSmeltTE
 		}
 
 		this.nullifier = new ItemStack(GameRegistry.findItem("ThermalExpansion", "Device"), 1, 5);
-		TE4Helper.addPulverizerRecipe(20000, this.nullifier, new ItemStack(TSItems.itemBase, 1, 2));
+		TE4Helper.addPulverizerRecipe(20000, this.nullifier, new ItemStack(TSItems.itemBase, 1, 0));
 		TE4Helper.addPulveriserRecipe(1337, new ItemStack(Items.potato), TSItems.potatoesMashed, ItemHelper.cloneStack(TSItems.potatoesWedge, 2), 10);
 	}
 }
