@@ -115,4 +115,8 @@ curse {
     relatedProject 'thermalexpansion': 'optionalLibrary'
 }
 
-sourceSets { main { output.resourcesDir = output.classesDir } }
+idea {
+    module {
+        inheritOutputDirs = true
+    }
+}
