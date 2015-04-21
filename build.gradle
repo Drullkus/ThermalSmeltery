@@ -21,15 +21,15 @@ minecraft {
 repositories {
     ivy {
         name "CoFHCore"
-        artifactPattern 'http://addons-origin.cursecdn.com/files/2229/536/[module]-[revision].[ext]'
+        artifactPattern 'http://addons-origin.cursecdn.com/files/2234/199/[module]-[revision].[ext]'
     }
     ivy {
         name "ThermalExpansion"
-        artifactPattern "http://addons-origin.cursecdn.com/files/2229/552/[module]-[revision].[ext]"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2233/797/[module]-[revision].[ext]"
     }
     ivy {
         name "ThermalFoundation"
-        artifactPattern "http://addons-origin.cursecdn.com/files/2229/339/[module]-[revision].[ext]"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2233/781/[module]-[revision].[ext]"
     }
     maven { url 'http://dvs1.progwml6.com/files/maven' } // Mantle
     maven { url "http://mobiusstrip.eu/maven" } // Waila
