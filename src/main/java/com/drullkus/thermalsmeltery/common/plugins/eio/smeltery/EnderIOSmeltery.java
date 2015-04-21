@@ -51,28 +51,28 @@ public class EnderIOSmeltery {
         buckets = new FilledBucket(BlockUtils.getBlockFromItem(buckets));
         GameRegistry.registerItem(buckets, "buckets");
 
-        moltenEnergeticFluid = FluidHelper.registerFluid("energeticAlloy");
+        moltenEnergeticFluid = FluidHelper.registerFluid("EnergeticAlloy");
         moltenEnergetic = moltenEnergeticFluid.getBlock();
 
-        moltenVibrantFluid = FluidHelper.registerFluid("vibrantAlloy");
+        moltenVibrantFluid = FluidHelper.registerFluid("PhasedGold");
         moltenVibrant = moltenVibrantFluid.getBlock();
 
-        moltenConductiveIronFluid = FluidHelper.registerFluid("conductiveIron");
+        moltenConductiveIronFluid = FluidHelper.registerFluid("ConductiveIron");
         moltenConductiveIron = moltenConductiveIronFluid.getBlock();
 
-        moltenPulsatingIronFluid = FluidHelper.registerFluid("pulsatingIron");
+        moltenPulsatingIronFluid = FluidHelper.registerFluid("PhasedIron");
         moltenPulsatingIron = moltenPulsatingIronFluid.getBlock();
 
-        moltenDarkSteelFluid = FluidHelper.registerFluid("darkSteel");
+        moltenDarkSteelFluid = FluidHelper.registerFluid("DarkSteel");
         moltenDarkSteel = moltenDarkSteelFluid.getBlock();
 
         fluids = new Fluid[] { moltenEnergeticFluid, moltenVibrantFluid, moltenConductiveIronFluid, moltenDarkSteelFluid};
         fluidBlocks = new Block[] { moltenEnergetic, moltenVibrant, moltenConductiveIron, moltenDarkSteel};
 
-        FluidType.registerFluidType("Energetic", GameRegistry.findBlock("EnderIO", "blockIngotStorage"), 1, 650, moltenEnergeticFluid, false);
-        FluidType.registerFluidType("Vibrant", GameRegistry.findBlock("EnderIO", "blockIngotStorage"), 2, 750, moltenVibrantFluid, false);
+        FluidType.registerFluidType("EnergeticAlloy", GameRegistry.findBlock("EnderIO", "blockIngotStorage"), 1, 650, moltenEnergeticFluid, false);
+        FluidType.registerFluidType("PhasedGold", GameRegistry.findBlock("EnderIO", "blockIngotStorage"), 2, 750, moltenVibrantFluid, false);
         FluidType.registerFluidType("ConductiveIron", GameRegistry.findBlock("EnderIO", "blockIngotStorage"), 4, 500, moltenConductiveIronFluid, false);
-        FluidType.registerFluidType("PulsatingIron", GameRegistry.findBlock("EnderIO", "blockIngotStorage"), 5, 500, moltenPulsatingIronFluid, false);
+        FluidType.registerFluidType("PhasedIron", GameRegistry.findBlock("EnderIO", "blockIngotStorage"), 5, 500, moltenPulsatingIronFluid, false);
         FluidType.registerFluidType("DarkSteel", GameRegistry.findBlock("EnderIO", "blockIngotStorage"), 6, 850, moltenDarkSteelFluid, false);
     }
 

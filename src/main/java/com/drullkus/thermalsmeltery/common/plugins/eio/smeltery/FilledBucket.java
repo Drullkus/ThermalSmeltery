@@ -156,7 +156,7 @@ public class FilledBucket extends ItemBucket {
         return getUnlocalizedName() + "." + materialNames[arr];
     }
 
-    public static final String[] materialNames = new String[] { "Energetic", "Vibrant", "ConductiveIron", "PulsatingIron", "DarkSteel" };
+    public static final String[] materialNames = new String[] { "EnergeticAlloy", "PhasedGold", "ConductiveIron", "PhasedIron", "DarkSteel" };
 
     public static final String[] textureNames = new String[] { "energetic", "vibrant", "conductiveIron", "pulsatingIron", "darkSteel" };
 
