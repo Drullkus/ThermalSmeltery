@@ -54,7 +54,7 @@ public class TConSmeltery
 				Smeltery.addAlloyMixing(
                         new FluidStack(FluidRegistry.getFluid("steel.molten"), TConstruct.ingotLiquidValue),
                         new FluidStack(FluidRegistry.getFluid("coal"), 200),
-                        new FluidStack(FluidRegistry.getFluid("steel.molten"), TConstruct.ingotLiquidValue));
+                        new FluidStack(FluidRegistry.getFluid("iron.molten"), TConstruct.ingotLiquidValue));
 			}
 		}
 		else

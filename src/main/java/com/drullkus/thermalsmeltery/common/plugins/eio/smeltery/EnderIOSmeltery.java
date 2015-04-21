@@ -97,7 +97,7 @@ public class EnderIOSmeltery {
 
             if (TSmeltConfig.EIOEnergeticAlloyRecipe && Loader.isModLoaded("EnderIO"))
             {
-                // Energetic AlloyingDat spa
+                // Energetic Alloying
 
             }
 
