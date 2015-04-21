@@ -146,7 +146,7 @@ public class FilledBucket extends ItemBucket {
         this.icons = new IIcon[textureNames.length];
 
         for (int i = 0; i < this.icons.length; ++i) {
-            this.icons[i] = iconRegister.registerIcon("thermalsmeltery:materials/bucket_" + textureNames[i]);
+            this.icons[i] = iconRegister.registerIcon("thermalsmeltery:bucket/bucket_" + textureNames[i]);
         }
     }
 

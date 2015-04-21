@@ -42,8 +42,8 @@ public class TSmeltFluid extends BlockFluidClassic {
     @Override
     public void registerBlockIcons (IIconRegister iconRegister)
     {
-        stillIcon = iconRegister.registerIcon("tinker:" + texture);
-        flowIcon = iconRegister.registerIcon("tinker:" + texture + "_flow");
+        stillIcon = iconRegister.registerIcon("thermalsmeltery:fluids/" + texture);
+        flowIcon = iconRegister.registerIcon("thermalsmeltery:fluids/" + texture + "_flow");
 
         if (overwriteFluidIcons)
             this.getFluid().setIcons(stillIcon, flowIcon);

@@ -25,7 +25,7 @@ import tconstruct.library.crafting.LiquidCasting;
 import tconstruct.smeltery.TinkerSmeltery;
 
 @GameRegistry.ObjectHolder(LibMisc.MOD_ID)
-@Pulse(id = "TSmelt EIO Smeltery", description = "TCon Smeltery Integration for EnderIO", modsRequired = "TConstruct; EnderIO")
+@Pulse(id = "TSmelt EIO Smeltery", description = "TCon Smeltery Integration for EnderIO", modsRequired = "TConstruct;EnderIO")
 public class EnderIOSmeltery {
 
     public static Item buckets;
@@ -48,8 +48,6 @@ public class EnderIOSmeltery {
     @Handler
     public void preInit(FMLPreInitializationEvent event)
     {
-        ThermalSmeltery.logger.info("Ender IO module activated!");
-
         buckets = new FilledBucket(BlockUtils.getBlockFromItem(buckets));
         GameRegistry.registerItem(buckets, "buckets");
 
@@ -99,7 +97,7 @@ public class EnderIOSmeltery {
 
             if (TSmeltConfig.EIOEnergeticAlloyRecipe && Loader.isModLoaded("EnderIO"))
             {
-                // Energetic Alloying
+                // Energetic AlloyingDat spa
 
             }
 
