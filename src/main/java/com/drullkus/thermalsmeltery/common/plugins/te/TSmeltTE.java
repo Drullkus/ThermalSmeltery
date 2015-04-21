@@ -23,7 +23,7 @@ import cpw.mods.fml.common.registry.GameRegistry.ObjectHolder;
 @Pulse(id = "TSmelt TE", description = "Thermal Expansion Integration", modsRequired = "ThermalExpansion")
 public class TSmeltTE
 {
-	ItemStack nullifier;
+	private ItemStack nullifier;
 
 	@Handler
 	public void preInit(FMLPreInitializationEvent event)

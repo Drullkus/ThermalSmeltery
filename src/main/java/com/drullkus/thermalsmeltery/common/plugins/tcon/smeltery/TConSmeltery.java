@@ -1,7 +1,10 @@
 package com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery;
 
+import cpw.mods.fml.common.Loader;
 import mantle.pulsar.pulse.Handler;
 import mantle.pulsar.pulse.Pulse;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -31,20 +34,27 @@ public class TConSmeltery
 			ItemStack ingotcast = new ItemStack(TinkerSmeltery.metalPattern, 1, 0);
 			LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
 			LiquidCasting basinCasting = TConstructRegistry.getBasinCasting();
+
 			if (TSmeltConfig.TConYelloriumCasting && FluidRegistry.getFluid("yellorium") != null)
 			{
 				//Yellorium Casting
 				//Ingot
-				tableCasting.addCastingRecipe(new ItemStack(GameRegistry.findItem("BigReactors", "BRIngot"), 1, 0), new FluidStack(FluidRegistry.getFluid("yellorium"), 1000), ingotcast, 50);
+				tableCasting.addCastingRecipe(
+                        new ItemStack(GameRegistry.findItem("BigReactors", "BRIngot"), 1, 0),
+                        new FluidStack(FluidRegistry.getFluid("yellorium"), 1000), ingotcast, 50);
 				//Basin
-				basinCasting.addCastingRecipe(new ItemStack(GameRegistry.findBlock("BigReactors", "BRMetalBlock"), 1, 0), new FluidStack(FluidRegistry.getFluid("yellorium"), 9000), 450);
+				basinCasting.addCastingRecipe(
+                        new ItemStack(GameRegistry.findBlock("BigReactors", "BRMetalBlock"), 1, 0),
+                        new FluidStack(FluidRegistry.getFluid("yellorium"), 9000), 450);
 			}
 
-			if (TSmeltConfig.TConSteelRecipe && FluidRegistry.getFluid("coal") != null)
+			if (TSmeltConfig.TConSteelRecipe&& FluidRegistry.getFluid("coal") != null)
 			{
 				//Steel Alloying
-				Smeltery.addAlloyMixing(new FluidStack(TinkerSmeltery.moltenSteelFluid, TConstruct.ingotLiquidValue), new FluidStack(FluidRegistry.getFluid("coal"), 200), new FluidStack(
-						TinkerSmeltery.moltenIronFluid, TConstruct.ingotLiquidValue));
+				Smeltery.addAlloyMixing(
+                        new FluidStack(FluidRegistry.getFluid("steel.molten"), TConstruct.ingotLiquidValue),
+                        new FluidStack(FluidRegistry.getFluid("coal"), 200),
+                        new FluidStack(FluidRegistry.getFluid("steel.molten"), TConstruct.ingotLiquidValue));
 			}
 		}
 		else

@@ -1,5 +1,6 @@
 package com.drullkus.thermalsmeltery;
 
+import com.drullkus.thermalsmeltery.common.plugins.eio.smeltery.EnderIOSmeltery;
 import mantle.pulsar.config.ForgeCFG;
 import mantle.pulsar.control.PulseManager;
 import net.minecraft.creativetab.CreativeTabs;
@@ -33,12 +34,13 @@ public class ThermalSmeltery
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		TSmeltConfig.initProps(event.getModConfigurationDirectory());
+        TSmeltConfig.initProps(event.getModConfigurationDirectory());
 		TSItems.preInit();
 
 		pulsar.registerPulse(new TSmeltTE());
 		pulsar.registerPulse(new TConSmeltery());
 		pulsar.registerPulse(new TConToolModifiers());
+        pulsar.registerPulse(new EnderIOSmeltery());
 
 		pulsar.preInit(event);
 	}
@@ -57,7 +59,7 @@ public class ThermalSmeltery
 		TSItems.postInit();
 		pulsar.postInit(event);
 
-		// logger.info("Oh no... I'm smelting! I better call Saul!"); RIP
+		logger.info("Oh no... I'm smelting!");
 	}
 
 }
