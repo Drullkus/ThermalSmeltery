@@ -1,10 +1,7 @@
 package com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery;
 
-import cpw.mods.fml.common.Loader;
 import mantle.pulsar.pulse.Handler;
 import mantle.pulsar.pulse.Pulse;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;

@@ -2,7 +2,6 @@ package com.drullkus.thermalsmeltery.common.plugins.eio.smeltery;
 
 import com.drullkus.thermalsmeltery.ThermalSmeltery;
 import com.drullkus.thermalsmeltery.common.core.handler.TSmeltConfig;
-import com.drullkus.thermalsmeltery.common.lib.FluidHelper;
 import com.drullkus.thermalsmeltery.common.lib.FluidType;
 import com.drullkus.thermalsmeltery.common.lib.LibMisc;
 import cpw.mods.fml.common.Loader;
@@ -22,6 +21,7 @@ import net.minecraftforge.fluids.FluidStack;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.LiquidCasting;
+import tconstruct.library.crafting.Smeltery;
 import tconstruct.smeltery.TinkerSmeltery;
 
 @GameRegistry.ObjectHolder(LibMisc.MOD_ID)
@@ -45,6 +45,16 @@ public class EnderIOSmeltery {
     public static Fluid[] fluids = new Fluid[5];
     public static Block[] fluidBlocks = new Block[5];
 
+    private static FluidStack moltenRedstoneDust;
+    private static FluidStack moltenGlowstoneDust;
+    private static FluidStack moltenEnder;
+
+    private static FluidStack moltenIronIngot;
+    private static FluidStack moltenGoldIngot;
+    private static FluidStack moltenSteelIngot;
+
+    private static ItemStack itemSiliconStack;
+
     @Handler
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -66,8 +76,8 @@ public class EnderIOSmeltery {
         moltenDarkSteelFluid = FluidHelper.registerFluid("DarkSteel");
         moltenDarkSteel = moltenDarkSteelFluid.getBlock();
 
-        fluids = new Fluid[] { moltenEnergeticFluid, moltenVibrantFluid, moltenConductiveIronFluid, moltenDarkSteelFluid};
-        fluidBlocks = new Block[] { moltenEnergetic, moltenVibrant, moltenConductiveIron, moltenDarkSteel};
+        fluids = new Fluid[] { moltenEnergeticFluid, moltenVibrantFluid, moltenConductiveIronFluid, moltenPulsatingIronFluid, moltenDarkSteelFluid};
+        fluidBlocks = new Block[] { moltenEnergetic, moltenVibrant, moltenConductiveIron, moltenPulsatingIron, moltenDarkSteel};
 
         FluidType.registerFluidType("EnergeticAlloy", GameRegistry.findBlock("EnderIO", "blockIngotStorage"), 1, 650, moltenEnergeticFluid, false);
         FluidType.registerFluidType("PhasedGold", GameRegistry.findBlock("EnderIO", "blockIngotStorage"), 2, 750, moltenVibrantFluid, false);
@@ -81,7 +91,14 @@ public class EnderIOSmeltery {
     {
         if (TConstruct.pulsar.isPulseLoaded("Tinkers' Smeltery"))
         {
-            ThermalSmeltery.logger.info("Ender IO module activated!");
+            moltenRedstoneDust = new FluidStack(FluidRegistry.getFluid("redstone"), 100);
+            moltenGlowstoneDust = new FluidStack(FluidRegistry.getFluid("glowstone"), 250);
+            moltenEnder = new FluidStack(FluidRegistry.getFluid("ender"), 250);
+            moltenIronIngot = new FluidStack(FluidRegistry.getFluid("iron.molten"), TConstruct.ingotLiquidValue);
+            moltenGoldIngot = new FluidStack(FluidRegistry.getFluid("gold.molten"), TConstruct.ingotLiquidValue);
+            moltenSteelIngot = new FluidStack(FluidRegistry.getFluid("steel.molten"), TConstruct.ingotLiquidValue);
+            itemSiliconStack = new ItemStack(GameRegistry.findItem("EnderIO", "itemMaterial"), 1, 0);
+
             ItemStack ingotcast = new ItemStack(TinkerSmeltery.metalPattern, 1, 0);
             LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
             LiquidCasting basinCasting = TConstructRegistry.getBasinCasting();
@@ -90,15 +107,66 @@ public class EnderIOSmeltery {
             {
                 // Making Electrical Steel ingots
                 tableCasting.addCastingRecipe(
-                        new ItemStack(GameRegistry.findItem("EnderIO", "itemAlloy"), 1, 0),
-                        new FluidStack(FluidRegistry.getFluid("steel.molten"), TConstruct.ingotLiquidValue),
-                        new ItemStack(GameRegistry.findItem("EnderIO", "itemMaterial"), 1, 0), true, 50);
+                        new ItemStack(GameRegistry.findItem("EnderIO", "itemAlloy"), 1, 0), // Electrical Steel
+                        moltenSteelIngot,
+                        itemSiliconStack,
+                        true, 50);
             }
 
             if (TSmeltConfig.EIOEnergeticAlloyRecipe && Loader.isModLoaded("EnderIO"))
             {
                 // Energetic Alloying
+                Smeltery.addAlloyMixing(
+                        new FluidStack(moltenEnergeticFluid, TConstruct.ingotLiquidValue),
+                        moltenGoldIngot,
+                        moltenRedstoneDust,
+                        moltenGlowstoneDust);
+            }
 
+            if (TSmeltConfig.EIOVibrantAlloyRecipe && Loader.isModLoaded("EnderIO"))
+            {
+                // Vibrant Alloying
+                Smeltery.addAlloyMixing(
+                        new FluidStack(moltenVibrantFluid, TConstruct.ingotLiquidValue),
+                        new FluidStack(moltenEnergeticFluid, TConstruct.ingotLiquidValue),
+                        moltenEnder);
+            }
+
+            if (TSmeltConfig.EIORedstoneAlloyCasting && Loader.isModLoaded("EnderIO"))
+            {
+                // Making Redstone Alloy ingots
+                tableCasting.addCastingRecipe(
+                        new ItemStack(GameRegistry.findItem("EnderIO", "itemAlloy"), 1, 3), // Redstone Alloy
+                        moltenRedstoneDust,
+                        itemSiliconStack,
+                        true, 50);
+            }
+
+            if (TSmeltConfig.EIOConductiveIronRecipe && Loader.isModLoaded("EnderIO"))
+            {
+                // Conductive Iron Alloying
+                Smeltery.addAlloyMixing(
+                        new FluidStack(moltenConductiveIronFluid, TConstruct.ingotLiquidValue),
+                        moltenIronIngot,
+                        moltenRedstoneDust);
+            }
+
+            if (TSmeltConfig.EIOPulsatingIronRecipe && Loader.isModLoaded("EnderIO"))
+            {
+                // Pulsating Iron Alloying
+                Smeltery.addAlloyMixing(
+                        new FluidStack(moltenPulsatingIronFluid, TConstruct.ingotLiquidValue),
+                        moltenIronIngot,
+                        moltenEnder);
+            }
+
+            if (TSmeltConfig.EIODarkSteelRecipe && Loader.isModLoaded("EnderIO"))
+            {
+                // Dark Steel Alloying
+                Smeltery.addAlloyMixing(
+                        new FluidStack(moltenDarkSteelFluid, TConstruct.ingotLiquidValue),
+                        moltenSteelIngot,
+                        moltenEnder);
             }
 
             if (TSmeltConfig.EIOSoulariumCasting && Loader.isModLoaded("EnderIO"))
@@ -106,7 +174,7 @@ public class EnderIOSmeltery {
                 // Making Soularium ingots
                 tableCasting.addCastingRecipe(
                         new ItemStack(GameRegistry.findItem("EnderIO", "itemAlloy"), 1, 7),
-                        new FluidStack(FluidRegistry.getFluid("gold.molten"), TConstruct.ingotLiquidValue),
+                        moltenGoldIngot,
                         new ItemStack(Blocks.soul_sand, 1, 0), true, 50);
             }
         }

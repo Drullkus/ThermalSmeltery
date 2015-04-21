@@ -1,7 +1,19 @@
 # MISC
 itemGroup.thermalsmeltery.creativeTabItems=Thermal Smeltery
 
+# FLUID NAMES
+tile.fluid.molten.ConductiveIron.name = Molten Conductive Iron
+tile.fluid.molten.DarkSteel.name = Molten Dark Steel
+tile.fluid.molten.EnergeticAlloy.name = Molten Energetic Alloy
+tile.fluid.molten.PhasedGold.name = Molten Vibrant Alloy
+tile.fluid.molten.PhasedIron.name = Molten Pulsating Iron
+
 # ITEM NAMES
+item.thermalsmeltery.bucket.ConductiveIron.name = Molten Conductive Iron Bucket
+item.thermalsmeltery.bucket.DarkSteel.name = Molten Dark Steel Bucket
+item.thermalsmeltery.bucket.EnergeticAlloy.name = Molten Energetic Alloy Bucket
+item.thermalsmeltery.bucket.PhasedGold.name = Molten Vibrant Alloy Bucket
+item.thermalsmeltery.bucket.PhasedIron.name = Molten Pulsating Iron Bucket
 item.thermalsmeltery.misc.potatoMashed.name=Mashed Potato
 item.thermalsmeltery.misc.potatoWedge.name=Potato Shard
 item.thermalsmeltery.misc.voiding.name=Null Voiding Touch

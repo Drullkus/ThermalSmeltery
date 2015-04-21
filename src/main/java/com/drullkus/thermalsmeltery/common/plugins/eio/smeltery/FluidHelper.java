@@ -1,6 +1,7 @@
-package com.drullkus.thermalsmeltery.common.lib;
+package com.drullkus.thermalsmeltery.common.plugins.eio.smeltery;
 
 import com.drullkus.thermalsmeltery.ThermalSmeltery;
+import com.drullkus.thermalsmeltery.common.lib.TSmeltFluid;
 import com.drullkus.thermalsmeltery.common.plugins.eio.smeltery.EnderIOSmeltery;
 import com.drullkus.thermalsmeltery.common.plugins.eio.smeltery.FilledBucket;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -53,7 +54,7 @@ public class FluidHelper {
         if (FluidContainerRegistry.fillFluidContainer(new FluidStack(fluid, 1000), new ItemStack(Items.bucket)) == null) {
             boolean reg = false;
             for(int i = 0; i < FilledBucket.textureNames.length; i++)
-                if(FilledBucket.textureNames[i].equals(name)) {
+                if(FilledBucket.materialNames[i].equals(name)) {
                     FluidContainerRegistry.registerFluidContainer(new FluidContainerRegistry.FluidContainerData(new FluidStack(fluid, 1000), new ItemStack(EnderIOSmeltery.buckets, 1, i), new ItemStack(Items.bucket)));
                     reg = true;
                 }

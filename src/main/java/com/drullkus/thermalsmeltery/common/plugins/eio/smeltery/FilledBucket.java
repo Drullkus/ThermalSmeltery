@@ -104,10 +104,14 @@ public class FilledBucket extends ItemBucket {
     }
 
     public boolean tryPlaceContainedLiquid(World world, int clickX, int clickY, int clickZ, int type) {
-        if (!WorldHelper.isAirBlock(world, clickX, clickY, clickZ) && world.getBlock(clickX, clickY, clickZ).getMaterial().isSolid()) {
+        if (!WorldHelper.isAirBlock(world, clickX, clickY, clickZ) && world.getBlock(clickX, clickY, clickZ).getMaterial().isSolid())
+        {
             return false;
-        } else {
-            try {
+        }
+        else
+        {
+            try
+            {
                 if (EnderIOSmeltery.fluidBlocks[type] == null)
                     return false;
 
@@ -116,8 +120,10 @@ public class FilledBucket extends ItemBucket {
                     metadata = 7;
 
                 world.setBlock(clickX, clickY, clickZ, EnderIOSmeltery.fluidBlocks[type], metadata, 3);
-            } catch (ArrayIndexOutOfBoundsException ex) {
-                ThermalSmeltery.logger.warn("AIOBE occured when placing bucket into world; " + ex);
+            }
+            catch (ArrayIndexOutOfBoundsException ex)
+            {
+                ThermalSmeltery.logger.warn("AIOBE occured when placing bucket into world; " + ex + " The perpetrator is " + materialNames[type]);
                 return false;
             }
 
