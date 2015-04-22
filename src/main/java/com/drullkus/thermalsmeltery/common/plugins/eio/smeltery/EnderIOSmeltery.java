@@ -18,6 +18,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import tconstruct.TConstruct;
 import tconstruct.library.TConstructRegistry;
 import tconstruct.library.crafting.LiquidCasting;
@@ -27,6 +30,8 @@ import tconstruct.smeltery.TinkerSmeltery;
 @GameRegistry.ObjectHolder(LibMisc.MOD_ID)
 @Pulse(id = "TSmelt EIO Smeltery", description = "TCon Smeltery Integration for EnderIO", modsRequired = "TConstruct;EnderIO")
 public class EnderIOSmeltery {
+
+    public static final Logger logger = LogManager.getLogger(LibMisc.MOD_ID);
 
     public static Item buckets;
 
@@ -91,6 +96,10 @@ public class EnderIOSmeltery {
     {
         if (TConstruct.pulsar.isPulseLoaded("Tinkers' Smeltery"))
         {
+            logger.info("Entering TSmelt EIO Module Init!");
+
+            String[] fluidNames = new String[] { "EnergeticAlloy", "PhasedGold", "ConductiveIron", "PhasedIron", "DarkSteel"};
+
             moltenRedstoneDust = new FluidStack(FluidRegistry.getFluid("redstone"), 100);
             moltenGlowstoneDust = new FluidStack(FluidRegistry.getFluid("glowstone"), 250);
             moltenEnder = new FluidStack(FluidRegistry.getFluid("ender"), 250);
@@ -103,6 +112,36 @@ public class EnderIOSmeltery {
             LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
             LiquidCasting basinCasting = TConstructRegistry.getBasinCasting();
 
+            for (int c = 0; c < fluids.length; c++)
+            {
+                if (OreDictionary.doesOreNameExist("ingot" + fluidNames[c]))
+                {
+                    tableCasting.addCastingRecipe(
+                            OreDictionary.getOres("ingot" + fluidNames[c]).get(0),
+                            new FluidStack(FluidRegistry.getFluid(fluidNames[c]), TConstruct.ingotLiquidValue),
+                            ingotcast, 50);
+
+                    logger.info("Added block" + fluidNames[c] + " to TCon Casting Table");
+                }
+                else
+                {
+                    logger.warn("Skipping registration of casting ingot" + fluidNames[c]);
+                }
+
+                if (OreDictionary.doesOreNameExist("block" + fluidNames[c]))
+                {
+                    basinCasting.addCastingRecipe(
+                            OreDictionary.getOres("block" + fluidNames[c]).get(0),
+                            new FluidStack(FluidRegistry.getFluid(fluidNames[c]), TConstruct.blockLiquidValue), 150);
+
+                    logger.info("Added block" + fluidNames[c] + " to TCon Casting Basin");
+                }
+                else
+                {
+                    logger.warn("Skipping registration of casting block" + fluidNames[c]);
+                }
+            }
+
             if (TSmeltConfig.EIOElectricalSteelCasting && Loader.isModLoaded("EnderIO"))
             {
                 // Making Electrical Steel ingots
@@ -110,7 +149,7 @@ public class EnderIOSmeltery {
                         new ItemStack(GameRegistry.findItem("EnderIO", "itemAlloy"), 1, 0), // Electrical Steel
                         moltenSteelIngot,
                         itemSiliconStack,
-                        true, 50);
+                        true, 60);
             }
 
             if (TSmeltConfig.EIOEnergeticAlloyRecipe && Loader.isModLoaded("EnderIO"))
@@ -166,7 +205,8 @@ public class EnderIOSmeltery {
                 Smeltery.addAlloyMixing(
                         new FluidStack(moltenDarkSteelFluid, TConstruct.ingotLiquidValue),
                         moltenSteelIngot,
-                        moltenEnder);
+                        new FluidStack(FluidRegistry.getFluid("obsidian.molten"), TConstruct.ingotLiquidValue * 2));
+                        //Obby is 288mb per block
             }
 
             if (TSmeltConfig.EIOSoulariumCasting && Loader.isModLoaded("EnderIO"))
@@ -175,7 +215,7 @@ public class EnderIOSmeltery {
                 tableCasting.addCastingRecipe(
                         new ItemStack(GameRegistry.findItem("EnderIO", "itemAlloy"), 1, 7),
                         moltenGoldIngot,
-                        new ItemStack(Blocks.soul_sand, 1, 0), true, 50);
+                        new ItemStack(Blocks.soul_sand, 1, 0), true, 75);
             }
         }
         else
