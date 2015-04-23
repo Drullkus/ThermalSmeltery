@@ -2,11 +2,11 @@
 itemGroup.thermalsmeltery.creativeTabItems=Thermal Smeltery
 
 # FLUID NAMES
-fluid.ConductiveIron.molten=Molten Conductive Iron
-fluid.DarkSteel.molten=Molten Dark Steel
-fluid.EnergeticAlloy.molten=Molten Energetic Alloy
-fluid.PhasedGold.molten=Molten Vibrant Alloy
-fluid.PhasedIron.molten=Molten Pulsating Iron
+fluid.ConductiveIron=Molten Conductive Iron
+fluid.DarkSteel=Molten Dark Steel
+fluid.EnergeticAlloy=Molten Energetic Alloy
+fluid.PhasedGold=Molten Vibrant Alloy
+fluid.PhasedIron=Molten Pulsating Iron
 tile.fluid.molten.ConductiveIron.name=Molten Conductive Iron
 tile.fluid.molten.DarkSteel.name=Molten Dark Steel
 tile.fluid.molten.EnergeticAlloy.name=Molten Energetic Alloy

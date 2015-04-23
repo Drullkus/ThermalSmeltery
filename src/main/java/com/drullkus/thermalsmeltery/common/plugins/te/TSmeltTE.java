@@ -19,7 +19,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.ObjectHolder;
 
-@ObjectHolder(LibMisc.MOD_ID)
+//@ObjectHolder(LibMisc.MOD_ID)
 @Pulse(id = "TSmelt TE", description = "Thermal Expansion Integration", modsRequired = "ThermalExpansion")
 public class TSmeltTE
 {

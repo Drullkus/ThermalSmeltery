@@ -2,8 +2,6 @@ package com.drullkus.thermalsmeltery.common.plugins.eio.smeltery;
 
 import com.drullkus.thermalsmeltery.ThermalSmeltery;
 import com.drullkus.thermalsmeltery.common.lib.TSmeltFluid;
-import com.drullkus.thermalsmeltery.common.plugins.eio.smeltery.EnderIOSmeltery;
-import com.drullkus.thermalsmeltery.common.plugins.eio.smeltery.FilledBucket;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Items;
@@ -20,7 +18,7 @@ public class FluidHelper {
     }
 
     public static Fluid registerFluid(String name, String texture) {
-        return registerFluid(name, name + ".molten", "fluid.molten." + name, texture, 3000, 6000, 1300, Material.lava);
+        return registerFluid(name, name, "fluid.molten." + name, texture, 3000, 6000, 1300, Material.lava);
     }
 
     public static Fluid registerFluid(String name, String fluidName, String blockName, String texture, int density, int viscosity, int temperature, Material material)

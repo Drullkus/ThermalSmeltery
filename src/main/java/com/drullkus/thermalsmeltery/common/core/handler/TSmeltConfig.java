@@ -30,6 +30,7 @@ public class TSmeltConfig
         EIOPulsatingIronRecipe = config.get("Tinkers Smeltery", "Allow Resonant Ender Fluid and Molten Iron to be mixed, creating molten Energetic Alloy", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
         EIODarkSteelRecipe = config.get("Tinkers Smeltery", "Allow Molten Steel and Molten Obsidian to be mixed, creating molten Energetic Alloy", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
         EIOSoulariumCasting = config.get("Tinkers Smeltery", "Allow Molten Gold to be casted onto a Soulsand Block, creating EnderIO's Soularium ingot", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
+        EIOAddMetalCasting = config.get("Tinkers Smeltery", "Allow all EnderIO Metals to be casted into Casting Table/Basins", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
 
 		/* Save the configuration file only if it has changed */
 		if (config.hasChanged())
@@ -50,6 +51,7 @@ public class TSmeltConfig
             EIOConductiveIronRecipe,
             EIOPulsatingIronRecipe,
             EIODarkSteelRecipe,
-            EIOSoulariumCasting;
+            EIOSoulariumCasting,
+            EIOAddMetalCasting;
 
 }

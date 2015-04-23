@@ -41,13 +41,13 @@ public class FluidType
         return fluidTypes.get(typeName);
     }
 
-    public static FluidType getFluidType (Fluid searchedFluid)
+    public static FluidType getFluidType (Fluid inputFluid)
     {
         Iterator iter = fluidTypes.entrySet().iterator();
         while (iter.hasNext())
         {
             Map.Entry pairs = (Map.Entry) iter.next();
-            if (((FluidType) pairs.getValue()).fluid.equals(searchedFluid))
+            if (((FluidType) pairs.getValue()).fluid.equals(inputFluid))
                 return (FluidType) pairs.getValue();
         }
         return null;

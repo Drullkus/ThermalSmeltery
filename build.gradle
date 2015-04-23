@@ -113,6 +113,7 @@ curse {
     relatedProject 'tinkers-construct': 'requiredLibrary'
     relatedProject 'mantle': 'requiredLibrary'
     relatedProject 'thermalexpansion': 'optionalLibrary'
+    relatedProject 'ender-io': 'optionalLibrary'
 }
 
 sourceSets { main { output.resourcesDir = output.classesDir } }

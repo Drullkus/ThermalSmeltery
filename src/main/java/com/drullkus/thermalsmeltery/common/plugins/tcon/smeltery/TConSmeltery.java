@@ -19,7 +19,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.ObjectHolder;
 
-@ObjectHolder(LibMisc.MOD_ID)
+//@ObjectHolder(LibMisc.MOD_ID)
 @Pulse(id = "TSmelt TCon Smeltery", description = "Tinkers Construct's Smeltery Integration", modsRequired = "TConstruct")
 public class TConSmeltery
 {
