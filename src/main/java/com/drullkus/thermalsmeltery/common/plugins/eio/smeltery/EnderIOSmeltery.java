@@ -95,8 +95,6 @@ public class EnderIOSmeltery {
     {
         if (TConstruct.pulsar.isPulseLoaded("Tinkers' Smeltery"))
         {
-            ThermalSmeltery.logger.info("Entering TSmelt EIO Module Init!");
-
             moltenRedstoneDust = new FluidStack(FluidRegistry.getFluid("redstone"), 100);
             moltenGlowstoneDust = new FluidStack(FluidRegistry.getFluid("glowstone"), 250);
             moltenEnder = new FluidStack(FluidRegistry.getFluid("ender"), 250);
@@ -121,11 +119,11 @@ public class EnderIOSmeltery {
                             new FluidStack(fluids[c], TConstruct.ingotLiquidValue),
                             ingotcast, 50);
 
-                    ThermalSmeltery.logger.info("Added block" + fluidNames[c] + " to TCon Casting Table");
+                    //ThermalSmeltery.logger.info("Added block" + fluidNames[c] + " to TCon Casting Table");
                 }
                 else
                 {
-                    ThermalSmeltery.logger.warn("Skipping registration of casting ingot" + fluidNames[c]);
+                    ThermalSmeltery.logger.info("Skipping registration of casting ingot" + fluidNames[c]);
                 }
 
                 if (OreDictionary.doesOreNameExist("block" + fluidNames[c]))
@@ -135,22 +133,22 @@ public class EnderIOSmeltery {
                             new FluidStack(fluids[c], TConstruct.blockLiquidValue),
                             150);
 
-                    ThermalSmeltery.logger.info("Added block" + fluidNames[c] + " to TCon Casting Basin");
+                    //ThermalSmeltery.logger.info("Added block" + fluidNames[c] + " to TCon Casting Basin");
                 }
                 else
                 {
-                    ThermalSmeltery.logger.warn("Skipping registration of casting block" + fluidNames[c]);
+                    ThermalSmeltery.logger.info("Skipping registration of casting block" + fluidNames[c]);
                 }
 
                 for (int i = 0; i < orePrefix.length; i++)
                 {
                     if (OreDictionary.doesOreNameExist(orePrefix[i] + fluidNames[c]))
                     {
-                        ThermalSmeltery.logger.info("Going to use " + fluids[c].getName());
+                        //ThermalSmeltery.logger.info("Going to use " + fluids[c].getName());
 
                         Smeltery.addDictionaryMelting(orePrefix[i] + fluidNames[c], tconstruct.library.crafting.FluidType.getFluidType(fluids[c]) , 0, oreAmounts[i]);
 
-                        ThermalSmeltery.logger.info("Added " + orePrefix[i] + fluidNames[c] + " to TCon melting maps to give " + oreAmounts[i]);
+                        //ThermalSmeltery.logger.info("Added " + orePrefix[i] + fluidNames[c] + " to TCon melting maps to give " + oreAmounts[i]);
                     }
                 }
 
