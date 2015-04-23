@@ -111,53 +111,56 @@ public class EnderIOSmeltery {
             int[] oreAmounts = new int[] { TConstruct.blockLiquidValue, TConstruct.nuggetLiquidValue, TConstruct.ingotLiquidValue };
             String[] fluidNames = new String[] { "EnergeticAlloy", "PhasedGold", "ConductiveIron", "PhasedIron", "DarkSteel"};
 
-            for (int c = 0; c < fluidNames.length; c++)
+            if (TSmeltConfig.EIOAddMetalCasting)
             {
-                if (OreDictionary.doesOreNameExist("ingot" + fluidNames[c])) {
-                    tableCasting.addCastingRecipe(
-                            OreDictionary.getOres("ingot" + fluidNames[c]).get(0),
-                            new FluidStack(fluids[c], TConstruct.ingotLiquidValue),
-                            ingotcast, 50);
-
-                    //ThermalSmeltery.logger.info("Added block" + fluidNames[c] + " to TCon Casting Table");
-                }
-                else
+                for (int c = 0; c < fluidNames.length; c++)
                 {
-                    ThermalSmeltery.logger.info("Skipping registration of casting ingot" + fluidNames[c]);
-                }
+                    if (OreDictionary.doesOreNameExist("ingot" + fluidNames[c])) {
+                        tableCasting.addCastingRecipe(
+                                OreDictionary.getOres("ingot" + fluidNames[c]).get(0),
+                                new FluidStack(fluids[c], TConstruct.ingotLiquidValue),
+                                ingotcast, 50);
 
-                if (OreDictionary.doesOreNameExist("block" + fluidNames[c]))
-                {
-                    basinCasting.addCastingRecipe(
-                            OreDictionary.getOres("block" + fluidNames[c]).get(0),
-                            new FluidStack(fluids[c], TConstruct.blockLiquidValue),
-                            150);
-
-                    //ThermalSmeltery.logger.info("Added block" + fluidNames[c] + " to TCon Casting Basin");
-                }
-                else
-                {
-                    ThermalSmeltery.logger.info("Skipping registration of casting block" + fluidNames[c]);
-                }
-
-                for (int i = 0; i < orePrefix.length; i++)
-                {
-                    if (OreDictionary.doesOreNameExist(orePrefix[i] + fluidNames[c]))
-                    {
-                        //ThermalSmeltery.logger.info("Going to use " + fluids[c].getName());
-
-                        Smeltery.addDictionaryMelting(orePrefix[i] + fluidNames[c], tconstruct.library.crafting.FluidType.getFluidType(fluids[c]) , 0, oreAmounts[i]);
-
-                        //ThermalSmeltery.logger.info("Added " + orePrefix[i] + fluidNames[c] + " to TCon melting maps to give " + oreAmounts[i]);
+                        //ThermalSmeltery.logger.info("Added block" + fluidNames[c] + " to TCon Casting Table");
                     }
-                }
+                    else
+                    {
+                        ThermalSmeltery.logger.info("Skipping registration of casting ingot" + fluidNames[c]);
+                    }
 
-                // Making Buckets!
-                tableCasting.addCastingRecipe(
-                        new ItemStack(GameRegistry.findItem("ThermalSmeltery", "buckets"), 1, c), // Buckets
-                        new FluidStack(fluids[c], 1000),
-                        new ItemStack(Items.bucket, 1, 0),
-                        true, 50);
+                    if (OreDictionary.doesOreNameExist("block" + fluidNames[c]))
+                    {
+                        basinCasting.addCastingRecipe(
+                                OreDictionary.getOres("block" + fluidNames[c]).get(0),
+                                new FluidStack(fluids[c], TConstruct.blockLiquidValue),
+                                150);
+
+                        //ThermalSmeltery.logger.info("Added block" + fluidNames[c] + " to TCon Casting Basin");
+                    }
+                    else
+                    {
+                        ThermalSmeltery.logger.info("Skipping registration of casting block" + fluidNames[c]);
+                    }
+
+                    for (int i = 0; i < orePrefix.length; i++)
+                    {
+                        if (OreDictionary.doesOreNameExist(orePrefix[i] + fluidNames[c]))
+                        {
+                            //ThermalSmeltery.logger.info("Going to use " + fluids[c].getName());
+
+                            Smeltery.addDictionaryMelting(orePrefix[i] + fluidNames[c], tconstruct.library.crafting.FluidType.getFluidType(fluids[c]) , 0, oreAmounts[i]);
+
+                            //ThermalSmeltery.logger.info("Added " + orePrefix[i] + fluidNames[c] + " to TCon melting maps to give " + oreAmounts[i]);
+                        }
+                    }
+
+                    // Making Buckets!
+                    tableCasting.addCastingRecipe(
+                            new ItemStack(GameRegistry.findItem("ThermalSmeltery", "buckets"), 1, c), // Buckets
+                            new FluidStack(fluids[c], 1000),
+                            new ItemStack(Items.bucket, 1, 0),
+                            true, 50);
+                }
             }
 
             if (TSmeltConfig.EIOElectricalSteelCasting && Loader.isModLoaded("EnderIO"))
