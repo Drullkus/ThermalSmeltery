@@ -1,6 +1,7 @@
 package com.drullkus.thermalsmeltery;
 
 import com.drullkus.thermalsmeltery.common.plugins.eio.smeltery.EnderIOSmeltery;
+import com.drullkus.thermalsmeltery.common.plugins.tcon.ThermalConstruct.ThermalConstruct;
 import mantle.pulsar.config.ForgeCFG;
 import mantle.pulsar.control.PulseManager;
 import net.minecraft.creativetab.CreativeTabs;
@@ -31,6 +32,9 @@ public class ThermalSmeltery
 
 	public static CreativeTabs itemTab = new TSCreativeTab("Items");
 
+    @Mod.Instance(LibMisc.MOD_ID)
+    public static ThermalSmeltery instance;
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
@@ -41,6 +45,7 @@ public class ThermalSmeltery
 		pulsar.registerPulse(new TConSmeltery());
 		pulsar.registerPulse(new TConToolModifiers());
         pulsar.registerPulse(new EnderIOSmeltery());
+        pulsar.registerPulse(new ThermalConstruct());
 
 		pulsar.preInit(event);
 	}
