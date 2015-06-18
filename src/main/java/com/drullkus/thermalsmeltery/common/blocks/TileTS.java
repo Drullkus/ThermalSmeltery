@@ -1,5 +1,6 @@
 package com.drullkus.thermalsmeltery.common.blocks;
 
+import buildcraft.api.transport.IInjectable;
 import buildcraft.api.transport.IPipeTile;
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
@@ -47,7 +48,7 @@ import java.util.UUID;
         value = {"cofh.lib.audio.ISoundSource"},
         side = CoFHSide.SERVER
 )
-public abstract class TileTS extends TileCoFHBase implements
+public class TileTS extends TileCoFHBase implements
         ITileInfoPacketHandler,
         ITilePacketHandler,
         IPortableData,
@@ -1160,13 +1161,13 @@ public abstract class TileTS extends TileCoFHBase implements
     }
 
     public static int addToPipeTile(TileEntity tileEntity, int var1, ItemStack var2) {
-        return bcPipeExists?addToPipeTile_do(tileEntity, var1, var2):0;
+        return bcPipeExists ? addToPipeTile_do(tileEntity, var1, var2) : 0;
     }
 
     private static int addToPipeTile_do(TileEntity tileEntity, int var1, ItemStack var2) {
         if (tileEntity instanceof IPipeTile)
         {
-            int var3 = ((IPipeTile)tileEntity).injectItem(var2, true, ForgeDirection.VALID_DIRECTIONS[var1 ^ 1]);
+            int var3 = ((IInjectable)tileEntity).injectItem(var2, true, ForgeDirection.VALID_DIRECTIONS[var1 ^ 1], null);
             return var3;
         }
         else

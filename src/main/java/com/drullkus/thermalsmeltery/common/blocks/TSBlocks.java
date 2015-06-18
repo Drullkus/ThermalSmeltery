@@ -9,6 +9,11 @@ public class TSBlocks {
     public static Block TSMachine;
     public static String[] machineTypes = {"extruder", "stamper"};
 
+    public static enum Types {
+        EXTRUDER,
+        STAMPER
+    }
+
     public static void preInit() {}
 
     public static void init()
@@ -19,10 +24,5 @@ public class TSBlocks {
     }
 
     public static void postInit() {}
-
-    public static enum Types {
-        EXTRUDER,
-        STAMPER;
-    }
 
 }

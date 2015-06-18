@@ -3,11 +3,10 @@ package com.drullkus.thermalsmeltery.common.blocks;
 import cofh.api.energy.EnergyStorage;
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.ServerHelper;
-import cofh.thermalexpansion.block.machine.BlockMachine;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.item.ItemStack;
 
-public class TileTSMachine extends TileTS {
+public abstract class TileTSMachine extends TileTS {
 
     protected static final TileTS.SideConfig[] defaultSideConfig = new TileTS.SideConfig[TSBlocks.Types.values().length];
     protected static final TileTS.EnergyConfig[] defaultEnergyConfig = new TileTS.EnergyConfig[TSBlocks.Types.values().length];

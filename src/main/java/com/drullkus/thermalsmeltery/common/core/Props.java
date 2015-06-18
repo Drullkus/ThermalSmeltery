@@ -6,8 +6,5 @@ public class Props {
         GUI,
         FLUID,
         MODE;
-
-        private PacketID() {
-        }
     }
 }

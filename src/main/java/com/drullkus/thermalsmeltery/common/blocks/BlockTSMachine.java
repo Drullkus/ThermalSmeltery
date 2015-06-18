@@ -1,6 +1,7 @@
 package com.drullkus.thermalsmeltery.common.blocks;
 
 import cofh.core.block.BlockCoFHBase;
+import com.drullkus.thermalsmeltery.common.core.Props;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +12,8 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class BlockTSMachine extends BlockCoFHBase {
+public class BlockTSMachine extends BlockCoFHBase
+{
 
     public static String[] machineNames;
 
@@ -20,6 +22,26 @@ public class BlockTSMachine extends BlockCoFHBase {
         machineNames = machineVariants;
         setBlockName(name);
         setCreativeTab(creativeTab);
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
+        if (meta >= TSBlocks.Types.values().length)
+        {
+            return null;
+        }
+        else
+        {
+            switch(TSBlocks.Types.values()[meta])
+            {
+                case EXTRUDER:
+                    return new TileCastExtruder();
+                case STAMPER:
+                    return new TilePatternStamper();
+                default:
+                    return null;
+            }
+        }
     }
 
     @Override
@@ -35,10 +57,5 @@ public class BlockTSMachine extends BlockCoFHBase {
     @Override
     public boolean postInit() {
         return false;
-    }
-
-    @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-        return null;
     }
 }

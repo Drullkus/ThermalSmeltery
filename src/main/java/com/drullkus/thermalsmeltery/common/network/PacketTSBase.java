@@ -38,6 +38,6 @@ public class PacketTSBase extends PacketCoFHBase
         SECURITY_UPDATE,
         TAB_AUGMENT,
         TAB_SCHEMATIC,
-        CONFIG_SYNC;
+        CONFIG_SYNC
     }
 }
