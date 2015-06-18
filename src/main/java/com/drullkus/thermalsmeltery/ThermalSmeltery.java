@@ -1,5 +1,6 @@
 package com.drullkus.thermalsmeltery;
 
+import com.drullkus.thermalsmeltery.common.blocks.TSBlocks;
 import com.drullkus.thermalsmeltery.common.plugins.eio.smeltery.EnderIOSmeltery;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.ThermalConstruct.ThermalConstruct;
 import mantle.pulsar.config.ForgeCFG;
@@ -53,7 +54,8 @@ public class ThermalSmeltery
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
-		TSItems.initialize();
+        TSBlocks.init();
+        TSItems.initialize();
 
 		pulsar.init(event);
 	}
@@ -61,6 +63,7 @@ public class ThermalSmeltery
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
+        TSBlocks.postInit();
 		TSItems.postInit();
 		pulsar.postInit(event);
 
