@@ -101,7 +101,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
     @Override
     public boolean openGui(EntityPlayer player)
     {
-        if (this.canPlayerAccess(player.getCommandSenderName()))
+        if (this.canPlayerAccess(player))
         {
             player.openGui(ThermalSmeltery.instance, 0, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
         } else
@@ -403,7 +403,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
             {
                 PacketHandler.sendTo(packet, (EntityPlayer)player);
             }
-            player.sendProgressBarUpdate(container, 0, this.canPlayerAccess(((EntityPlayer)player).getCommandSenderName()) ? 1 : 0);
+            player.sendProgressBarUpdate(container, 0, this.canPlayerAccess(((EntityPlayer)player)) ? 1 : 0);
         }
     }
 
@@ -695,7 +695,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
     @Override
     public void readPortableData(EntityPlayer player, NBTTagCompound tag)
     {
-        if (this.canPlayerAccess(player.getCommandSenderName()))
+        if (this.canPlayerAccess(player))
         {
             if (this.augmentRedstoneControl)
             {
@@ -731,7 +731,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
     @Override
     public void writePortableData(EntityPlayer player, NBTTagCompound tag)
     {
-        if (this.canPlayerAccess(player.getCommandSenderName()))
+        if (this.canPlayerAccess(player))
         {
             RedstoneControlHelper.setItemStackTagRS(tag, this);
             MachineHelper.setItemStackTagReconfig(tag, this);
@@ -1025,8 +1025,9 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
         if (ServerHelper.isClientWorld(this.worldObj))
         {
             //TODO: Fix this
-//            PacketTEBase.sendRSConfigUpdatePacketToServer(this, this.xCoord, this.yCoord, this.zCoord);
-        } else
+            //PacketTEBase.sendRSConfigUpdatePacketToServer(this, this.xCoord, this.yCoord, this.zCoord);
+        }
+        else
         {
             this.sendUpdatePacket(Side.CLIENT);
         }
