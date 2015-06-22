@@ -3,14 +3,13 @@ package com.drullkus.thermalsmeltery.common.items;
 import cofh.api.tileentity.IRedstoneControl;
 import cofh.core.item.ItemBlockBase;
 import cofh.lib.util.helpers.*;
-import com.drullkus.thermalsmeltery.common.blocks.BlockSmeltery;
-import com.drullkus.thermalsmeltery.common.blocks.TileSmelteryBase;
+import com.drullkus.thermalsmeltery.common.blocks.BlockMachine;
+import com.drullkus.thermalsmeltery.common.blocks.MachineHelper;
+import com.drullkus.thermalsmeltery.common.blocks.TileMachineBase;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
-import cofh.thermalexpansion.block.machine.BlockMachine;
-import cofh.thermalexpansion.util.ReconfigurableHelper;
 
 import java.util.List;
 
@@ -25,8 +24,8 @@ public class ItemBlockSmeltery extends ItemBlockBase
 
     public static ItemStack setDefaultTag(ItemStack stack, byte level)
     {
-        ReconfigurableHelper.setFacing(stack, 3);
-        ReconfigurableHelper.setSideCache(stack, TileSmelteryBase.defaultSideConfigSmeltery[stack.getItemDamage() % 2].defaultSides);
+        MachineHelper.setFacing(stack, 3);
+        MachineHelper.setSideCache(stack, TileMachineBase.defaultSideConfigSmeltery[stack.getItemDamage() % 2].defaultSides);
         RedstoneControlHelper.setControl(stack, IRedstoneControl.ControlMode.DISABLED);
         EnergyHelper.setDefaultEnergyTag(stack, 0);
         stack.stackTagCompound.setByte("Level", level);
@@ -42,6 +41,7 @@ public class ItemBlockSmeltery extends ItemBlockBase
         this.setNoRepair();
     }
 
+    @Override
     public String getItemStackDisplayName(ItemStack stack)
     {
         return StringHelper.localize(this.getUnlocalizedName(stack)) + " (" + StringHelper.localize("info.thermalexpansion." + NAMES[getLevel(stack)]) + ")";
@@ -49,7 +49,7 @@ public class ItemBlockSmeltery extends ItemBlockBase
 
     public String getUnlocalizedName(ItemStack stack)
     {
-        return "tile.thermalsmeltery.machine." + BlockSmeltery.NAMES[ItemHelper.getItemDamage(stack)] + ".name";
+        return "tile.thermalsmeltery.machine." + BlockMachine.NAMES[ItemHelper.getItemDamage(stack)] + ".name";
     }
 
     public static byte getLevel(ItemStack stack) {
@@ -60,6 +60,7 @@ public class ItemBlockSmeltery extends ItemBlockBase
         return stack.stackTagCompound.getByte("Level");
     }
 
+    @Override
     public EnumRarity getRarity(ItemStack stack)
     {
         switch (getLevel(stack))
@@ -73,6 +74,8 @@ public class ItemBlockSmeltery extends ItemBlockBase
         }
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean var4)
     {
         SecurityHelper.addOwnerInformation(stack, list);
@@ -84,7 +87,7 @@ public class ItemBlockSmeltery extends ItemBlockBase
         if (StringHelper.isShiftKeyDown())
         {
             SecurityHelper.addAccessInformation(stack, list);
-            list.add(StringHelper.getInfoText("info.thermalsmeltery.machine." + BlockSmeltery.NAMES[ItemHelper.getItemDamage(stack)]));
+            list.add(StringHelper.getInfoText("info.thermalsmeltery.machine." + BlockMachine.NAMES[ItemHelper.getItemDamage(stack)]));
         }
     }
 }

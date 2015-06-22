@@ -8,16 +8,15 @@ import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.StampingRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import cofh.thermalexpansion.block.machine.MachineHelper;
 
-public class TileStamper extends TileSmelteryBase
+public class TileStamper extends TileMachineBase
 {
-    static final int TYPE = BlockSmeltery.Types.STAMPER.ordinal();
+    static final int TYPE = 1;
 
     @Override
     public int getType()
     {
-        return 1;
+        return TYPE;
     }
 
     public static void initialize()
@@ -29,8 +28,6 @@ public class TileStamper extends TileSmelteryBase
         defaultSideConfigSmeltery[TYPE].allowExtraction = new boolean[]{false, false, true, true, true, false, false};
         defaultSideConfigSmeltery[TYPE].sideTex = new int[]{0, 1, 2, 3, 4, 5, 6};
         defaultSideConfigSmeltery[TYPE].defaultSides = new byte[]{(byte)3, (byte)1, (byte)2, (byte)2, (byte)2, (byte)2};
-//        int basePower = MathHelper.clampI(ThermalExpansion.config.get("block.tweak", "Machine.Crucible.BasePower", 400), 100, 500);
-//        ThermalExpansion.config.set("block.tweak", "Machine.Crucible.BasePower", var0);
         int basePower = 400;
         defaultEnergyConfigSmeltery[TYPE] = new EnergyConfig();
         defaultEnergyConfigSmeltery[TYPE].setParams(basePower / 10, basePower, Math.max(480000, basePower * 1200));
@@ -41,7 +38,12 @@ public class TileStamper extends TileSmelteryBase
 
     public TileStamper()
     {
-        this.inventory = new ItemStack[5];
+    }
+
+    @Override
+    protected int getInventorySize()
+    {
+        return 5;
     }
 
     @Override
@@ -68,7 +70,8 @@ public class TileStamper extends TileSmelteryBase
     @Override
     protected void processStart()
     {
-        MachineHelper.setProcessMax(this, getRecipeTime(getRecipe()));
+        processMax = getRecipeTime(getRecipe());
+        processRem = processMax;
     }
 
     @Override
@@ -118,11 +121,11 @@ public class TileStamper extends TileSmelteryBase
     private int getRecipeTime(StampingRecipe recipe)
     {
         if (recipe == null) return 0;
-        return recipe.coolTime * 1000 * TSmeltConfig.StamperMultiplier;
+        return recipe.coolTime * 1000 * TSmeltConfig.stamperMultiplier;
 
         /**
-        Controls the speed of the machine
-        */
+         Controls the speed of the machine
+         */
     }
 
     @Override

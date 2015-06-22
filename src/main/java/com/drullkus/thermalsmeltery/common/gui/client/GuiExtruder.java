@@ -6,20 +6,17 @@ import cofh.lib.gui.element.ElementEnergyStored;
 import cofh.lib.gui.element.ElementFluid;
 import com.drullkus.thermalsmeltery.common.blocks.TileExtruder;
 import com.drullkus.thermalsmeltery.common.gui.container.ContainerExtruder;
+import com.drullkus.thermalsmeltery.common.gui.elements.ElementSlotBorder;
 import com.drullkus.thermalsmeltery.common.gui.elements.ElementTinkersTank;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import cofh.thermalexpansion.gui.client.GuiAugmentableBase;
-import cofh.thermalexpansion.gui.element.ElementSlotOverlay;
 
-public class GuiExtruder extends GuiAugmentableBase
+public class GuiExtruder extends GuiMachineBase
 {
     public static final ResourceLocation TEXTURE = new ResourceLocation("thermalsmeltery:textures/gui/castingExtruderGui.png");
-    ElementSlotOverlay[] tankOverlay = new ElementSlotOverlay[2];
-    ElementSlotOverlay outputOverlay;
+    ElementSlotBorder[] tankOverlay = new ElementSlotBorder[2];
+    ElementSlotBorder outputOverlay;
     ElementButton block;
     ElementFluid progressFluid;
     ElementDualScaled progressOverlay;
@@ -37,10 +34,10 @@ public class GuiExtruder extends GuiAugmentableBase
     {
         super.initGui();
         this.addElement(new ElementEnergyStored(this, 8, 8, this.extruder.getEnergyStorage()));
-        this.tankOverlay[0] = (ElementSlotOverlay)this.addElement((new ElementSlotOverlay(this, 40, 9)).setSlotInfo(0, 3, 2).setVisible(false));
-        this.tankOverlay[1] = (ElementSlotOverlay)this.addElement((new ElementSlotOverlay(this, 40, 9)).setSlotInfo(2, 3, 1).setVisible(false));
+        this.tankOverlay[0] = (ElementSlotBorder)this.addElement((new ElementSlotBorder(this, 40, 9)).setSlotInfo(0, 3, 2).setVisible(false));
+        this.tankOverlay[1] = (ElementSlotBorder)this.addElement((new ElementSlotBorder(this, 40, 9)).setSlotInfo(2, 3, 1).setVisible(false));
         this.addElement((new ElementTinkersTank(this, 40, 9, this.extruder.getTank())).setGauge(1));
-        this.outputOverlay = (ElementSlotOverlay)this.addElement((new ElementSlotOverlay(this, 122, 26)).setSlotInfo(1, 1, 2).setVisible(true));
+        this.outputOverlay = (ElementSlotBorder)this.addElement((new ElementSlotBorder(this, 122, 26)).setSlotInfo(1, 1, 2).setVisible(true));
         this.block = (ElementButton)this.addElement(new ElementButton(this, 125, 54, "Block", 184, 0, 184, 20, 184, 40, 20, 20, "thermalsmeltery:textures/gui/castingExtruderGui.png"));
         this.progressFluid = (ElementFluid)this.addElement((new ElementFluid(this, 76, 27)).setFluid(extruder.getTank().getFluid()).setSize(24, 16));
         this.progressOverlay = (ElementDualScaled)this.addElement((new ElementDualScaled(this, 76, 27)).setMode(1).setBackground(false).setSize(24, 16).setTexture("cofh:textures/gui/elements/Progress_Fluid_Right.png", 48, 16));
@@ -53,14 +50,16 @@ public class GuiExtruder extends GuiAugmentableBase
         tankOverlay[0].setVisible(this.extruder.hasSide(1));
         tankOverlay[1].setVisible(this.extruder.hasSide(3));
         outputOverlay.setVisible(this.extruder.hasSide(2));
-        if(!this.extruder.hasSide(1)) {
+        if (!this.extruder.hasSide(1))
+        {
             this.tankOverlay[1].slotRender = 2;
-        } else {
+        } else
+        {
             this.tankOverlay[1].slotRender = 1;
         }
-        if(this.extruder.block)
+        if (this.extruder.block)
         {
-            if(!this.extruder.blockFlag)
+            if (!this.extruder.blockFlag)
             {
                 this.block.setToolTip("info.thermalexpansion.toggleWait");
                 this.block.setDisabled();
@@ -71,7 +70,7 @@ public class GuiExtruder extends GuiAugmentableBase
                 this.block.setHoverX(184);
                 this.block.setActive();
             }
-        } else if(this.extruder.blockFlag)
+        } else if (this.extruder.blockFlag)
         {
             this.block.setToolTip("info.thermalexpansion.toggleWait");
             this.block.setDisabled();
@@ -88,11 +87,15 @@ public class GuiExtruder extends GuiAugmentableBase
     }
 
     @Override
-    public void handleElementButtonClick(String var1, int var2) {
-        if(var1.equals("Block") && this.extruder.block == this.extruder.blockFlag) {
-            if(this.extruder.block) {
+    public void handleElementButtonClick(String var1, int var2)
+    {
+        if (var1.equals("Block") && this.extruder.block == this.extruder.blockFlag)
+        {
+            if (this.extruder.block)
+            {
                 playSound("random.click", 1.0F, 0.8F);
-            } else {
+            } else
+            {
                 playSound("random.click", 1.0F, 0.6F);
             }
 
