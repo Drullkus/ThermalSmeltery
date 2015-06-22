@@ -23,12 +23,12 @@ public class GuiMachineBase extends GuiBaseAdv
     protected TabBase redstoneTab;
     protected TabBase configTab;
 
-    public GuiMachineBase(Container var1, TileEntity var2, EntityPlayer var3, ResourceLocation var4)
+    public GuiMachineBase(Container container, TileEntity tile, EntityPlayer player, ResourceLocation texture)
     {
-        super(var1, var4);
-        this.myTile = (TileMachineBase)var2;
+        super(container, texture);
+        this.myTile = (TileMachineBase)tile;
         this.name = this.myTile.getInventoryName();
-        this.playerUUID = var3.getGameProfile().getId();
+        this.playerUUID = player.getGameProfile().getId();
         if (this.myTile.enableSecurity() && this.myTile.isSecured())
         {
             this.myTutorial = this.myTutorial + "\n\n" + StringHelper.tutorialTabSecurity();

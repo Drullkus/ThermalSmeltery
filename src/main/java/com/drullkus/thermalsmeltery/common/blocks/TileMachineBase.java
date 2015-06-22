@@ -48,7 +48,6 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
                                                                       ISecurable, IRedstoneControl, ISoundSource, IEnergyReceiver, IReconfigurableFacing,
                                                                       IReconfigurableSides, ISidedTexture, IAugmentable, IEnergyInfo
 {
-    protected static final int RATE = 500;
     protected static final int[] AUGMENT_COUNT = new int[]{3, 4, 5, 6};
     protected static final int[] ENERGY_CAPACITY = new int[]{2, 3, 4, 5};
     protected static final int[] ENERGY_TRANSFER = new int[]{3, 6, 12, 24};
@@ -981,7 +980,6 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
                     }).start();
                 }
                 this.markChunkDirty();
-
                 return true;
             }
         }
@@ -992,7 +990,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
     @Override
     public GameProfile getOwner()
     {
-        return this.owner;
+        return owner;
     }
 
     @Override
@@ -1521,11 +1519,6 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
         return null;
     }
 
-    public FluidStack getTankFluid()
-    {
-        return null;
-    }
-
     public static class SideConfig
     {
         public int numGroup;
@@ -1582,38 +1575,6 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
             this.maxPowerLevel = maxEnergy * 8 / 10;
             this.energyRamp = maxPower > 0 ? this.maxPowerLevel / maxPower : 0;
             this.minPowerLevel = minPower * this.energyRamp;
-            return true;
-        }
-
-        public boolean setParamsPower(int maxPower)
-        {
-            return this.setParams(maxPower / 4, maxPower, maxPower * 1200);
-        }
-
-        public boolean setParamsPower(int maxPower, int energyMult)
-        {
-            return this.setParams(maxPower / 4, maxPower, maxPower * 1200 * energyMult);
-        }
-
-        public boolean setParamsEnergy(int maxEnergy)
-        {
-            return this.setParams(maxEnergy / 4800, maxEnergy / 1200, maxEnergy);
-        }
-
-        public boolean setParamsEnergy(int maxEnergy, int energyMult)
-        {
-            maxEnergy *= energyMult;
-            return this.setParams(maxEnergy / 4800, maxEnergy / 1200, maxEnergy);
-        }
-
-        public boolean setParamsDefault(int maxPower)
-        {
-            this.maxPower = maxPower;
-            this.minPower = maxPower / 10;
-            this.maxEnergy = maxPower * 500;
-            this.minPowerLevel = this.maxEnergy / 10;
-            this.maxPowerLevel = 9 * this.maxEnergy / 10;
-            this.energyRamp = this.maxPowerLevel / maxPower;
             return true;
         }
     }

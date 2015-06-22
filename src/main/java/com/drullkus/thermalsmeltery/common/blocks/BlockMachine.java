@@ -334,10 +334,4 @@ public class BlockMachine extends BlockCoFHBase
     {
         return true;
     }
-
-    static
-    {
-        enable[0] = true;
-        enable[1] = true;
-    }
 }

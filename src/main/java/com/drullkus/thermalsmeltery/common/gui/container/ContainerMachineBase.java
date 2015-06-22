@@ -48,20 +48,20 @@ public class ContainerMachineBase extends Container implements IAugmentableConta
 
     }
 
-    protected void addPlayerInventory(InventoryPlayer player)
+    protected void addPlayerInventory(InventoryPlayer inventory)
     {
         int i;
         for (i = 0; i < 3; ++i)
         {
-            for (int j = 0; j < 9; ++j)
+            for (int column = 0; column < 9; ++column)
             {
-                this.addSlotToContainer(new Slot(player, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlotToContainer(new Slot(inventory, column + i * 9 + 9, 8 + column * 18, 84 + i * 18));
             }
         }
 
         for (i = 0; i < 9; ++i)
         {
-            this.addSlotToContainer(new Slot(player, i, 8 + i * 18, 142));
+            this.addSlotToContainer(new Slot(inventory, i, 8 + i * 18, 142));
         }
 
     }

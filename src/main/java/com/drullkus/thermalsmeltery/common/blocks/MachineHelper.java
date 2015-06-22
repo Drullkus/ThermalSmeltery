@@ -40,9 +40,6 @@ public class MachineHelper
     public static ItemStack toolMultimeter;
     public static ItemStack toolDebugger;
 
-    public static final byte DEFAULT_FACING = 3;
-    public static final byte[] DEFAULT_SIDES = new byte[]{(byte)0, (byte)0, (byte)0, (byte)0, (byte)0, (byte)0};
-
     public static void initialize()
     {
         generalAutoTransfer = getCustomStack(GENERAL_AUTO_TRANSFER);
@@ -92,11 +89,6 @@ public class MachineHelper
         }
     }
 
-    public static boolean hasReconfigInfo(ItemStack stack)
-    {
-        return stack.stackTagCompound != null && stack.stackTagCompound.hasKey("Facing") && stack.stackTagCompound.hasKey("SideCache");
-    }
-
     public static boolean setFacing(ItemStack stack, int facing)
     {
         if (facing >= 0 && facing <= 5)
@@ -134,18 +126,6 @@ public class MachineHelper
     public static byte getFacing(ItemStack stack)
     {
         return stack.stackTagCompound != null && stack.stackTagCompound.hasKey("Facing") ? stack.stackTagCompound.getByte("Facing") : 3;
-    }
-
-    public static byte[] getSideCache(ItemStack stack)
-    {
-        if (stack.stackTagCompound == null)
-        {
-            return DEFAULT_SIDES.clone();
-        } else
-        {
-            byte[] sideCache = stack.stackTagCompound.getByteArray("SideCache");
-            return sideCache.length < 6 ? DEFAULT_SIDES.clone() : sideCache;
-        }
     }
 
     public static byte[] getSideCache(ItemStack stack, byte[] sideCache)
