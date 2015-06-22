@@ -16,7 +16,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import thermalexpansion.network.PacketTEBase;
 
 public class ContainerMachineBase extends Container implements IAugmentableContainer
 {
@@ -25,24 +24,15 @@ public class ContainerMachineBase extends Container implements IAugmentableConta
     protected boolean[] augmentStatus = new boolean[0];
     protected boolean augmentLock = true;
 
-    public ContainerMachineBase()
+    public ContainerMachineBase(InventoryPlayer player, TileEntity tile)
     {
-    }
-
-    public ContainerMachineBase(TileEntity var1)
-    {
-        this.baseTile = (TileCoFHBase)var1;
-    }
-
-    public ContainerMachineBase(InventoryPlayer var1, TileEntity var2)
-    {
-        if (var2 instanceof TileCoFHBase)
+        if (tile instanceof TileCoFHBase)
         {
-            this.baseTile = (TileCoFHBase)var2;
+            this.baseTile = (TileCoFHBase)tile;
         }
 
         this.addAugmentSlots();
-        this.addPlayerInventory(var1);
+        this.addPlayerInventory(player);
     }
 
     protected void addAugmentSlots()
@@ -59,42 +49,45 @@ public class ContainerMachineBase extends Container implements IAugmentableConta
 
     }
 
-    protected void addPlayerInventory(InventoryPlayer var1)
+    protected void addPlayerInventory(InventoryPlayer inventory)
     {
-        int var2;
-        for (var2 = 0; var2 < 3; ++var2)
+        int i;
+        for (i = 0; i < 3; ++i)
         {
-            for (int var3 = 0; var3 < 9; ++var3)
+            for (int column = 0; column < 9; ++column)
             {
-                this.addSlotToContainer(new Slot(var1, var3 + var2 * 9 + 9, 8 + var3 * 18, 84 + var2 * 18));
+                this.addSlotToContainer(new Slot(inventory, column + i * 9 + 9, 8 + column * 18, 84 + i * 18));
             }
         }
 
-        for (var2 = 0; var2 < 9; ++var2)
+        for (i = 0; i < 9; ++i)
         {
-            this.addSlotToContainer(new Slot(var1, var2, 8 + var2 * 18, 142));
+            this.addSlotToContainer(new Slot(inventory, i, 8 + i * 18, 142));
         }
 
     }
 
+    @Override
     public boolean canInteractWith(EntityPlayer var1)
     {
-        return this.baseTile == null ? true : this.baseTile.isUseable(var1);
+        return this.baseTile == null || this.baseTile.isUseable(var1);
     }
 
+    @Override
     public void detectAndSendChanges()
     {
         super.detectAndSendChanges();
         if (this.baseTile != null)
         {
-            for (int var1 = 0; var1 < this.crafters.size(); ++var1)
+            for (Object crafter : this.crafters)
             {
-                this.baseTile.sendGuiNetworkData(this, (ICrafting)this.crafters.get(var1));
+                this.baseTile.sendGuiNetworkData(this, (ICrafting)crafter);
             }
 
         }
     }
 
+    @Override
     public void updateProgressBar(int var1, int var2)
     {
         if (this.baseTile != null)
@@ -103,104 +96,107 @@ public class ContainerMachineBase extends Container implements IAugmentableConta
         }
     }
 
-    public ItemStack transferStackInSlot(EntityPlayer var1, int var2)
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotID)
     {
-        ItemStack var3 = null;
-        Slot var4 = (Slot)this.inventorySlots.get(var2);
-        int var5 = this.augmentSlots.length;
-        int var6 = var5 + 27;
-        int var7 = var6 + 9;
-        int var8 = var7 + (this.baseTile == null ? 0 : this.baseTile.getInvSlotCount());
-        if (var4 != null && var4.getHasStack())
+        ItemStack stack = null;
+        Slot slot = (Slot)this.inventorySlots.get(slotID);
+        int augLength = this.augmentSlots.length;
+        int playerMain = augLength + 27;
+        int playerTool = playerMain + 9;
+        int tileMain = playerTool + (this.baseTile == null ? 0 : this.baseTile.getInvSlotCount());
+        if (slot != null && slot.getHasStack())
         {
-            ItemStack var9 = var4.getStack();
-            var3 = var9.copy();
-            if (var2 < var5)
+            ItemStack slotStack = slot.getStack();
+            stack = slotStack.copy();
+            if (slotID < augLength)
             {
-                if (!this.mergeItemStack(var9, var5, var7, true))
+                if (!this.mergeItemStack(slotStack, augLength, playerTool, true))
                 {
                     return null;
                 }
-            } else if (var2 < var7)
+            } else if (slotID < playerTool)
             {
-                if (!this.augmentLock && var5 > 0 && AugmentHelper.isAugmentItem(var9))
+                if (!this.augmentLock && augLength > 0 && AugmentHelper.isAugmentItem(slotStack))
                 {
-                    if (!this.mergeItemStack(var9, 0, var5, false))
+                    if (!this.mergeItemStack(slotStack, 0, augLength, false))
                     {
                         return null;
                     }
-                } else if (!this.mergeItemStack(var9, var7, var8, false))
+                } else if (!this.mergeItemStack(slotStack, playerTool, tileMain, false))
                 {
                     return null;
                 }
-            } else if (!this.mergeItemStack(var9, var5, var7, true))
+            } else if (!this.mergeItemStack(slotStack, augLength, playerTool, true))
             {
                 return null;
             }
 
-            if (var9.stackSize <= 0)
+            if (slotStack.stackSize <= 0)
             {
-                var4.putStack((ItemStack)null);
+                slot.putStack(null);
             } else
             {
-                var4.onSlotChanged();
+                slot.onSlotChanged();
             }
 
-            if (var9.stackSize == var3.stackSize)
+            if (slotStack.stackSize == stack.stackSize)
             {
                 return null;
             }
         }
 
-        return var3;
+        return stack;
     }
 
-    public ItemStack slotClick(int var1, int var2, int var3, EntityPlayer var4)
+    @Override
+    public ItemStack slotClick(int slotID, int mouse, int var3, EntityPlayer player)
     {
-        Slot var5 = var1 < 0 ? null : (Slot)this.inventorySlots.get(var1);
-        if (var5 instanceof SlotFalseCopy)
+        Slot slot = slotID < 0 ? null : (Slot)this.inventorySlots.get(slotID);
+        if (slot instanceof SlotFalseCopy)
         {
-            if (var2 == 2)
+            if (mouse == 2)
             {
-                var5.putStack((ItemStack)null);
-                var5.onSlotChanged();
+                slot.putStack(null);
+                slot.onSlotChanged();
             } else
             {
-                var5.putStack(var4.inventory.getItemStack() == null ? null : var4.inventory.getItemStack().copy());
+                slot.putStack(player.inventory.getItemStack() == null ? null : player.inventory.getItemStack().copy());
             }
 
-            return var4.inventory.getItemStack();
+            return player.inventory.getItemStack();
         } else
         {
-            return super.slotClick(var1, var2, var3, var4);
+            return super.slotClick(slotID, mouse, var3, player);
         }
     }
 
-    protected boolean mergeItemStack(ItemStack var1, int var2, int var3, boolean var4)
+    @Override
+    protected boolean mergeItemStack(ItemStack stack, int var2, int var3, boolean var4)
     {
         boolean var5 = false;
         int var6 = var4 ? var3 - 1 : var2;
         Slot var7;
         ItemStack var8;
-        if (var1.isStackable())
+        if (stack.isStackable())
         {
-            for (; var1.stackSize > 0 && (!var4 && var6 < var3 || var4 && var6 >= var2); var6 += var4 ? -1 : 1)
+            for (; stack.stackSize > 0 && (!var4 && var6 < var3 || var4 && var6 >= var2); var6 += var4 ? -1 : 1)
             {
                 var7 = (Slot)this.inventorySlots.get(var6);
                 var8 = var7.getStack();
-                if (var7.isItemValid(var1) && ItemHelper.itemsEqualWithMetadata(var1, var8, true))
+                if (var7.isItemValid(stack) && ItemHelper.itemsEqualWithMetadata(stack, var8, true))
                 {
-                    int var9 = var8.stackSize + var1.stackSize;
-                    int var10 = Math.min(var1.getMaxStackSize(), var7.getSlotStackLimit());
+                    int var9 = var8.stackSize + stack.stackSize;
+                    int var10 = Math.min(stack.getMaxStackSize(), var7.getSlotStackLimit());
                     if (var9 <= var10)
                     {
-                        var1.stackSize = 0;
+                        stack.stackSize = 0;
                         var8.stackSize = var9;
                         var7.onSlotChanged();
                         var5 = true;
                     } else if (var8.stackSize < var10)
                     {
-                        var1.stackSize -= var10 - var8.stackSize;
+                        stack.stackSize -= var10 - var8.stackSize;
                         var8.stackSize = var10;
                         var7.onSlotChanged();
                         var5 = true;
@@ -209,19 +205,19 @@ public class ContainerMachineBase extends Container implements IAugmentableConta
             }
         }
 
-        if (var1.stackSize > 0)
+        if (stack.stackSize > 0)
         {
             for (var6 = var4 ? var3 - 1 : var2; !var4 && var6 < var3 || var4 && var6 >= var2; var6 += var4 ? -1 : 1)
             {
                 var7 = (Slot)this.inventorySlots.get(var6);
                 var8 = var7.getStack();
-                if (var7.isItemValid(var1) && var8 == null)
+                if (var7.isItemValid(stack) && var8 == null)
                 {
-                    var7.putStack(ItemHelper.cloneStack(var1, Math.min(var1.stackSize, var7.getSlotStackLimit())));
+                    var7.putStack(ItemHelper.cloneStack(stack, Math.min(stack.stackSize, var7.getSlotStackLimit())));
                     var7.onSlotChanged();
                     if (var7.getStack() != null)
                     {
-                        var1.stackSize -= var7.getStack().stackSize;
+                        stack.stackSize -= var7.getStack().stackSize;
                         var5 = true;
                     }
                     break;
@@ -232,12 +228,13 @@ public class ContainerMachineBase extends Container implements IAugmentableConta
         return var5;
     }
 
-    public void setAugmentLock(boolean var1)
+    public void setAugmentLock(boolean lock)
     {
-        this.augmentLock = var1;
+        this.augmentLock = lock;
         if (ServerHelper.isClientWorld(this.baseTile.getWorldObj()))
         {
-            PacketTEBase.sendTabAugmentPacketToServer(var1);
+            //TODO: Fix this
+//            PacketTEBase.sendTabAugmentPacketToServer(var1);
         }
 
     }
