@@ -8,6 +8,7 @@ import cofh.api.item.IAugmentItem;
 import cofh.api.tileentity.*;
 import cofh.asm.relauncher.CoFHSide;
 import cofh.asm.relauncher.Strippable;
+import cofh.core.CoFHProps;
 import cofh.core.block.TileCoFHBase;
 import cofh.core.network.*;
 import cofh.core.render.IconRegistry;
@@ -17,6 +18,8 @@ import cofh.lib.audio.SoundTile;
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.*;
 import com.drullkus.thermalsmeltery.ThermalSmeltery;
+import com.google.common.base.Strings;
+import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.audio.ISound;
@@ -27,11 +30,15 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.UUID;
 
 @Strippable(
         value = {"cofh.api.audio.ISoundSource"},
@@ -41,7 +48,6 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
                                                                       ISecurable, IRedstoneControl, ISoundSource, IEnergyReceiver, IReconfigurableFacing,
                                                                       IReconfigurableSides, ISidedTexture, IAugmentable, IEnergyInfo
 {
-    protected static final int RATE = 500;
     protected static final int[] AUGMENT_COUNT = new int[]{3, 4, 5, 6};
     protected static final int[] ENERGY_CAPACITY = new int[]{2, 3, 4, 5};
     protected static final int[] ENERGY_TRANSFER = new int[]{3, 6, 12, 24};
@@ -53,7 +59,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
     public static boolean[] enableSecurity = new boolean[]{true, true};
     int outputTracker;
     protected String tileName = "";
-    protected String owner = "[None]";
+    protected GameProfile owner;
     protected AccessMode access;
     protected boolean canAccess;
     public ItemStack[] inventory;
@@ -82,6 +88,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
 
     public TileMachineBase()
     {
+        this.owner = CoFHProps.DEFAULT_OWNER;
         this.sideConfig = getDefaultSideConfig();
         this.energyConfig = getDefaultEnergyConfig().copy();
         this.setDefaultSides();
@@ -94,11 +101,10 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
     @Override
     public boolean openGui(EntityPlayer player)
     {
-        if (this.canPlayerAccess( player.getCommandSenderName() ))
+        if (this.canPlayerAccess(player.getCommandSenderName()))
         {
             player.openGui(ThermalSmeltery.instance, 0, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-        }
-        else
+        } else
         {
             if (ServerHelper.isServerWorld(this.worldObj))
             {
@@ -397,13 +403,8 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
             {
                 PacketHandler.sendTo(packet, (EntityPlayer)player);
             }
-            player.sendProgressBarUpdate(container, 0, this.canPlayerAccess( ((EntityPlayer) player).getCommandSenderName()) ? 1 : 0);
+            player.sendProgressBarUpdate(container, 0, this.canPlayerAccess(((EntityPlayer)player).getCommandSenderName()) ? 1 : 0);
         }
-    }
-
-    //TODO @Hilburn
-    private boolean canPlayerAccess(String commandSenderName) {
-        return false;
     }
 
     public PacketCoFHBase getGuiPacket()
@@ -487,7 +488,15 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
             this.tileName = tag.getString("Name");
         }
         this.access = AccessMode.values()[tag.getByte("Access")];
-        this.owner = tag.getString("Owner");
+        String uuid = tag.getString("OwnerUUID");
+        String owner = tag.getString("Owner");
+        if (!Strings.isNullOrEmpty(uuid))
+        {
+            this.setOwner(new GameProfile(UUID.fromString(uuid), owner));
+        } else
+        {
+            this.setOwnerName(owner);
+        }
         if (!this.enableSecurity())
         {
             this.access = AccessMode.PUBLIC;
@@ -525,7 +534,8 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
             tag.setString("Name", this.tileName);
         }
         tag.setByte("Access", (byte)this.access.ordinal());
-        tag.setString("Owner", this.owner);
+        tag.setString("OwnerUUID", this.owner.getId().toString());
+        tag.setString("Owner", this.owner.getName());
         this.writeInventoryToNBT(tag, inventory, "Inventory");
         tag.setInteger("Tracker", this.outputTracker);
         tag.setBoolean("Active", this.isActive);
@@ -548,7 +558,8 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
         PacketCoFHBase packet = super.getPacket();
         packet.addString(this.tileName);
         packet.addByte((byte)this.access.ordinal());
-        packet.addString(this.owner);
+        packet.addUUID(this.owner.getId());
+        packet.addString(this.owner.getName());
         packet.addBool(this.isPowered);
         packet.addByte(this.rsMode.ordinal());
         packet.addBool(this.isActive);
@@ -574,9 +585,11 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
         this.access = AccessMode.values()[packet.getByte()];
         if (!isServer)
         {
-            this.owner = packet.getString();
+            this.owner = CoFHProps.DEFAULT_OWNER;
+            this.setOwner(new GameProfile(packet.getUUID(), packet.getString()));
         } else
         {
+            packet.getUUID();
             packet.getString();
         }
         this.isPowered = packet.getBool();
@@ -935,11 +948,13 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
     @Override
     public boolean setOwnerName(String owner)
     {
-        if (this.owner.equals("[None]"))
+        if (MinecraftServer.getServer() == null)
         {
-            this.owner = owner;
-            this.markChunkDirty();
-            return true;
+            return false;
+        } else if (!Strings.isNullOrEmpty(owner) && !CoFHProps.DEFAULT_OWNER.getName().equalsIgnoreCase(owner))
+        {
+            String uuid = PreYggdrasilConverter.func_152719_a(owner);
+            return !Strings.isNullOrEmpty(uuid) && this.setOwner(new GameProfile(UUID.fromString(uuid), owner));
         } else
         {
             return false;
@@ -947,9 +962,42 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
     }
 
     @Override
+    public boolean setOwner(GameProfile var1)
+    {
+        if (this.owner.getId().variant() == 0)
+        {
+            this.owner = var1;
+            if (this.owner.getId().variant() != 0)
+            {
+                if (MinecraftServer.getServer() != null)
+                {
+                    (new Thread("CoFH User Loader")
+                    {
+                        public void run()
+                        {
+                            TileMachineBase.this.owner = SecurityHelper.getProfile(TileMachineBase.this.owner.getId(), TileMachineBase.this.owner.getName());
+                        }
+                    }).start();
+                }
+                this.markChunkDirty();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public GameProfile getOwner()
+    {
+        return owner;
+    }
+
+    @Override
     public String getOwnerName()
     {
-        return this.owner;
+        String name = this.owner.getName();
+        return name == null ? StringHelper.localize("info.cofh.anotherplayer") : name;
     }
 
     @Override
@@ -1471,11 +1519,6 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
         return null;
     }
 
-    public FluidStack getTankFluid()
-    {
-        return null;
-    }
-
     public static class SideConfig
     {
         public int numGroup;
@@ -1532,38 +1575,6 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
             this.maxPowerLevel = maxEnergy * 8 / 10;
             this.energyRamp = maxPower > 0 ? this.maxPowerLevel / maxPower : 0;
             this.minPowerLevel = minPower * this.energyRamp;
-            return true;
-        }
-
-        public boolean setParamsPower(int maxPower)
-        {
-            return this.setParams(maxPower / 4, maxPower, maxPower * 1200);
-        }
-
-        public boolean setParamsPower(int maxPower, int energyMult)
-        {
-            return this.setParams(maxPower / 4, maxPower, maxPower * 1200 * energyMult);
-        }
-
-        public boolean setParamsEnergy(int maxEnergy)
-        {
-            return this.setParams(maxEnergy / 4800, maxEnergy / 1200, maxEnergy);
-        }
-
-        public boolean setParamsEnergy(int maxEnergy, int energyMult)
-        {
-            maxEnergy *= energyMult;
-            return this.setParams(maxEnergy / 4800, maxEnergy / 1200, maxEnergy);
-        }
-
-        public boolean setParamsDefault(int maxPower)
-        {
-            this.maxPower = maxPower;
-            this.minPower = maxPower / 10;
-            this.maxEnergy = maxPower * 500;
-            this.minPowerLevel = this.maxEnergy / 10;
-            this.maxPowerLevel = 9 * this.maxEnergy / 10;
-            this.energyRamp = this.maxPowerLevel / maxPower;
             return true;
         }
     }

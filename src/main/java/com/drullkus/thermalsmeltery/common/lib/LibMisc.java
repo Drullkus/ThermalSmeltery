@@ -9,7 +9,7 @@ public class LibMisc
 
 	public static final String NETWORK_CHANNEL = MOD_ID;
 
-	public static final String DEPENDENCIES = "after:BigReactors;after:EnderIO;after:ThermalExpansion;required-after:TConstruct";
+	public static final String DEPENDENCIES = "after:BigReactors;required-after:TConstruct";
 
 	public static final String COMMON_PROXY = "xxx";
 

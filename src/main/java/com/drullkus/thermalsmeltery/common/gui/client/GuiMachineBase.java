@@ -12,21 +12,23 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.UUID;
+
 public class GuiMachineBase extends GuiBaseAdv
 {
     protected TileMachineBase myTile;
-    protected String playerName;
+    protected UUID playerUUID;
     public String myInfo = "";
     public String myTutorial = StringHelper.tutorialTabAugment();
     protected TabBase redstoneTab;
     protected TabBase configTab;
 
-    public GuiMachineBase(Container var1, TileEntity var2, EntityPlayer var3, ResourceLocation var4)
+    public GuiMachineBase(Container container, TileEntity tile, EntityPlayer player, ResourceLocation texture)
     {
-        super(var1, var4);
-        this.myTile = (TileMachineBase)var2;
+        super(container, texture);
+        this.myTile = (TileMachineBase)tile;
         this.name = this.myTile.getInventoryName();
-        this.playerName = var3.getCommandSenderName();
+        this.playerUUID = player.getGameProfile().getId();
         if (this.myTile.enableSecurity() && this.myTile.isSecured())
         {
             this.myTutorial = this.myTutorial + "\n\n" + StringHelper.tutorialTabSecurity();
@@ -66,8 +68,7 @@ public class GuiMachineBase extends GuiBaseAdv
         this.addTab(new TabAugment(this, (IAugmentableContainer)this.inventorySlots));
         if (this.myTile.enableSecurity() && this.myTile.isSecured())
         {
-            //TODO @hilburn Change playerName String obj to UUID obj
-            this.addTab(new TabSecurity(this, this.myTile, this.playerName));
+            this.addTab(new TabSecurity(this, this.myTile, this.playerUUID));
         }
 
         this.redstoneTab = this.addTab(new TabRedstone(this, this.myTile));

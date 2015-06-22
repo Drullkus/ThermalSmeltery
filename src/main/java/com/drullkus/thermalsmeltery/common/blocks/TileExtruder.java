@@ -8,7 +8,6 @@ import com.drullkus.thermalsmeltery.common.core.handler.TSmeltConfig;
 import com.drullkus.thermalsmeltery.common.gui.client.GuiExtruder;
 import com.drullkus.thermalsmeltery.common.gui.container.ContainerExtruder;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRegistry;
-import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -307,17 +306,5 @@ public class TileExtruder extends TileMachineBase implements IFluidHandler, ITil
     public Object getGuiServer(InventoryPlayer inventoryPlayer)
     {
         return new ContainerExtruder(inventoryPlayer, this);
-    }
-
-    //TODO @Hilburn Implement these somewhere
-
-    @Override
-    public boolean setOwner(GameProfile gameProfile) {
-        return false;
-    }
-
-    @Override
-    public GameProfile getOwner() {
-        return null;
     }
 }

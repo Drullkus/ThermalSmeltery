@@ -1,17 +1,8 @@
 package com.drullkus.thermalsmeltery;
 
-import com.drullkus.thermalsmeltery.common.plugins.eio.smeltery.EnderIOSmeltery;
-import com.drullkus.thermalsmeltery.common.plugins.tcon.ThermalConstruct.ThermalConstruct;
-import mantle.pulsar.config.ForgeCFG;
-import mantle.pulsar.control.PulseManager;
-import net.minecraft.creativetab.CreativeTabs;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.drullkus.thermalsmeltery.common.core.handler.TSCreativeTab;
 import com.drullkus.thermalsmeltery.common.core.handler.TSmeltConfig;
-import com.drullkus.thermalsmeltery.common.items.TSItems;
+import com.drullkus.thermalsmeltery.common.core.handler.ModCreativeTab;
+import com.drullkus.thermalsmeltery.common.items.ModItems;
 import com.drullkus.thermalsmeltery.common.lib.LibMisc;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.TConSmeltery;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.tools.TConToolModifiers;
@@ -22,50 +13,52 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import mantle.pulsar.config.ForgeCFG;
+import mantle.pulsar.control.PulseManager;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = LibMisc.MOD_ID, name = LibMisc.MOD_NAME, dependencies = LibMisc.DEPENDENCIES)
 public class ThermalSmeltery
 {
-	public static final Logger logger = LogManager.getLogger(LibMisc.MOD_ID);
+    @Mod.Instance(value = LibMisc.MOD_ID)
+    public static ThermalSmeltery instance = new ThermalSmeltery();
 
-	public static PulseManager pulsar = new PulseManager(LibMisc.MOD_ID, new ForgeCFG("TSmeltModules", "Modules: Disabling these will disable a chunk of the mod"));
+    public static final Logger logger = LogManager.getLogger(LibMisc.MOD_ID);
 
-	public static CreativeTabs itemTab = new TSCreativeTab("Items");
+    public static PulseManager pulsar = new PulseManager(LibMisc.MOD_ID, new ForgeCFG("TSmeltModules", "Modules: Disabling these will disable a chunk of the mod"));
 
-    @Mod.Instance(LibMisc.MOD_ID)
-    public static ThermalSmeltery instance;
+    public static ModCreativeTab itemTab;
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
+    @EventHandler
+    public void preInit (FMLPreInitializationEvent event)
+    {
+        TSmeltConfig.initProps(event.getModConfigurationDirectory());
 
-		TSmeltConfig.initProps(event.getModConfigurationDirectory());
+        pulsar.registerPulse(new TSmeltTE());
+        pulsar.registerPulse(new TConSmeltery());
+        pulsar.registerPulse(new TConToolModifiers());
 
-		TSItems.preInit();
+        itemTab = new ModCreativeTab("ThermalSmeltery");
 
-		pulsar.registerPulse(new TSmeltTE());
-		pulsar.registerPulse(new TConSmeltery());
-		pulsar.registerPulse(new TConToolModifiers());
-        pulsar.registerPulse(new EnderIOSmeltery());
-        pulsar.registerPulse(new ThermalConstruct());
+        pulsar.preInit(event);
+    }
 
-		pulsar.preInit(event);
-	}
+    @EventHandler
+    public void init (FMLInitializationEvent event)
+    {
+        ModItems.init();
 
-	@EventHandler
-	public void init(FMLInitializationEvent event)
-	{
-		TSItems.initialize();
+        pulsar.init(event);
+    }
 
-		pulsar.init(event);
-	}
+    @EventHandler
+    public void postInit (FMLPostInitializationEvent event)
+    {
+        pulsar.postInit(event);
 
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event)
-	{
-		TSItems.postInit();
-		pulsar.postInit(event);
-
-		logger.info("Oh no... I'm smelting!");
-	}
+        // logger.info("Oh no... I'm smelting! I better call Saul!"); RIP
+    }
 
 }

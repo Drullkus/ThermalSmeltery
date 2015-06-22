@@ -5,7 +5,6 @@ import com.drullkus.thermalsmeltery.common.gui.client.GuiStamper;
 import com.drullkus.thermalsmeltery.common.gui.container.ContainerStamper;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRegistry;
 import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.StampingRecipe;
-import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -139,17 +138,5 @@ public class TileStamper extends TileMachineBase
     public Object getGuiServer(InventoryPlayer inventoryPlayer)
     {
         return new ContainerStamper(inventoryPlayer, this);
-    }
-
-    //TODO @Hilburn
-
-    @Override
-    public boolean setOwner(GameProfile gameProfile) {
-        return false;
-    }
-
-    @Override
-    public GameProfile getOwner() {
-        return null;
     }
 }

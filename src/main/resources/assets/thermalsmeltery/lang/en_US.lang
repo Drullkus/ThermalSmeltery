@@ -1,13 +1,5 @@
 # MISC
-itemGroup.thermalsmeltery.creativeTabItems=Thermal Smeltery
-
-
-# BLOCKS
-tile.thermalsmeltery.machine.stamper.name=Pattern Stamper
-info.thermalsmeltery.machine.stamper=Stamps your ingots with a TCon Cast
-tile.thermalsmeltery.machine.extruder.name=Auto-Caster
-info.thermalsmeltery.machine.extruder=Turns your TCon molten metals into ingots and blocks
-
+itemGroup.ThermalSmeltery=Thermal Smeltery
 info.thermalsmeltery.toggleIngot=Toggle Ingots
 info.thermalsmeltery.toggleBlock=Toggle Blocks
 info.thermalsmeltery.block=Blocks: %d
@@ -17,26 +9,13 @@ info.thermalsmeltery.panel=Panels: %d
 info.thermalsmeltery.nugget=Nuggets: %d
 
 
-# FLUID NAMES
-fluid.ConductiveIron=Molten Conductive Iron
-fluid.DarkSteel=Molten Dark Steel
-fluid.EnergeticAlloy=Molten Energetic Alloy
-fluid.PhasedGold=Molten Vibrant Alloy
-fluid.PhasedIron=Molten Pulsating Iron
-tile.fluid.molten.ConductiveIron.name=Molten Conductive Iron
-tile.fluid.molten.DarkSteel.name=Molten Dark Steel
-tile.fluid.molten.EnergeticAlloy.name=Molten Energetic Alloy
-tile.fluid.molten.PhasedGold.name=Molten Vibrant Alloy
-tile.fluid.molten.PhasedIron.name=Molten Pulsating Iron
+# ITEMS
+item.thermalsmeltery:potatoesMashed.name=Mashed Potato
+item.thermalsmeltery:potatoesWedge.name=Potato Shard
+item.thermalsmeltery:upgradeparts.PerditioVoid.name=Null Voiding Touch
 
-
-# ITEM NAMES
-item.thermalsmeltery.bucket.ConductiveIron.name=Molten Conductive Iron Bucket
-item.thermalsmeltery.bucket.DarkSteel.name=Molten Dark Steel Bucket
-item.thermalsmeltery.bucket.EnergeticAlloy.name=Molten Energetic Alloy Bucket
-item.thermalsmeltery.bucket.PhasedGold.name=Molten Vibrant Alloy Bucket
-item.thermalsmeltery.bucket.PhasedIron.name=Molten Pulsating Iron Bucket
-item.thermalsmeltery.misc.potatoMashed.name=Mashed Potato
-item.thermalsmeltery.misc.potatoWedge.name=Potato Shard
-item.thermalsmeltery.misc.voiding.name=Null Voiding Touch
-ThermalSmeltery:upgradeparts.Voiding=Deletes Anything It Mines!
+# BLOCKS
+tile.thermalsmeltery.machine.stamper.name=Pattern Stamper
+info.thermalsmeltery.machine.stamper=Stamps your ingots with a TCon Cast
+tile.thermalsmeltery.machine.extruder.name=Auto-Caster
+info.thermalsmeltery.machine.extruder=Turns your TCon molten metals into ingots and blocks
