@@ -36,9 +36,10 @@ public class ThermalSmeltery
     public static ThermalSmeltery instance;
 
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
-        TSmeltConfig.initProps(event.getModConfigurationDirectory());
+	public void preInit(FMLPreInitializationEvent event) {
+
+		TSmeltConfig.initProps(event.getModConfigurationDirectory());
+
 		TSItems.preInit();
 
 		pulsar.registerPulse(new TSmeltTE());

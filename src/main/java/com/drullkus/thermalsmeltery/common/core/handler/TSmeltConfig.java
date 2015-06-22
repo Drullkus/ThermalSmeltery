@@ -6,17 +6,21 @@ import net.minecraftforge.common.config.Configuration;
 
 public class TSmeltConfig
 {
+    public static void initProps(File location)
+    {
+        File mainFile = new File(location + "/ThermalSmeltery.cfg");
 
-	public static void initProps(File location)
-	{
-		File mainFile = new File(location + "/ThermalSmeltery.cfg");
+        Configuration config = new Configuration(mainFile);
 
-		Configuration config = new Configuration(mainFile);
-
-		multiplier = config.get("Thermal Expansion", "The Multiplier for RF Cost for Magma Crucible recipe adaptation", 5, "Only used if the Thermal Expansion Module on.").getInt(5);
+        multiplier = config.get("Thermal Expansion", "The Multiplier for RF Cost for Magma Crucible recipe adaptation", 5, "Only used if the Thermal Expansion Module on.").getInt(5);
 
         // Base
-		TConSteelRecipe = config.get("Tinkers Smeltery", "Allow Steel to be made in the Smeltery", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
+        TConSteelRecipe = config.get("Tinkers Smeltery", "Allow Steel to be made in the Smeltery", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
+
+        // Thermal Expansion
+        stamperMultiplier = config.get("Thermal Expansion", "The Multiplier for RF Cost for Pattern Stamper recipe adaptation", 5, "Only used if the Thermal Expansion Module on.").getInt(5);
+        extruderMultiplier = config.get("Thermal Expansion", "The Multiplier for RF Cost for Auto-Caster recipe adaptation", 5, "Only used if the Thermal Expansion Module on.").getInt(5);
+
 
         // Big Reactors
         TConYelloriumCasting = config.get("Tinkers Smeltery", "Allow Yellorium to be casted into the casting table/basin.", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
@@ -33,15 +37,16 @@ public class TSmeltConfig
         EIOAddMetalCasting = config.get("Tinkers Smeltery", "Allow all EnderIO Metals to be casted into Casting Table/Basins", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
 
 		/* Save the configuration file only if it has changed */
-		if (config.hasChanged())
-		{
-			config.save();
-		}
-	}
+        if (config.hasChanged()) {
+            config.save();
+        }
+    }
 
-	public static int multiplier;
+    public static int multiplier,
+            stamperMultiplier,
+            extruderMultiplier;
 
-	public static boolean
+    public static boolean
             TConSteelRecipe,
             TConYelloriumCasting,
             EIOElectricalSteelCasting,
@@ -53,5 +58,4 @@ public class TSmeltConfig
             EIODarkSteelRecipe,
             EIOSoulariumCasting,
             EIOAddMetalCasting;
-
 }

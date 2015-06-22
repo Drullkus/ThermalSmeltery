@@ -1,6 +1,22 @@
 # MISC
 itemGroup.thermalsmeltery.creativeTabItems=Thermal Smeltery
 
+
+# BLOCKS
+tile.thermalsmeltery.machine.stamper.name=Pattern Stamper
+info.thermalsmeltery.machine.stamper=Stamps your ingots with a TCon Cast
+tile.thermalsmeltery.machine.extruder.name=Auto-Caster
+info.thermalsmeltery.machine.extruder=Turns your TCon molten metals into ingots and blocks
+
+info.thermalsmeltery.toggleIngot=Toggle Ingots
+info.thermalsmeltery.toggleBlock=Toggle Blocks
+info.thermalsmeltery.block=Blocks: %d
+info.thermalsmeltery.brick=Bricks: %d
+info.thermalsmeltery.ingot=Ingots: %d
+info.thermalsmeltery.panel=Panels: %d
+info.thermalsmeltery.nugget=Nuggets: %d
+
+
 # FLUID NAMES
 fluid.ConductiveIron=Molten Conductive Iron
 fluid.DarkSteel=Molten Dark Steel

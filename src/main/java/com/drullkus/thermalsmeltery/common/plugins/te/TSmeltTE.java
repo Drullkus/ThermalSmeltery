@@ -2,6 +2,11 @@ package com.drullkus.thermalsmeltery.common.plugins.te;
 
 import java.util.Map;
 
+import com.drullkus.thermalsmeltery.ThermalSmeltery;
+import com.drullkus.thermalsmeltery.common.blocks.ModBlocks;
+import com.drullkus.thermalsmeltery.common.gui.GuiHandler;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import mantle.pulsar.pulse.Handler;
 import mantle.pulsar.pulse.Pulse;
 import mantle.utils.ItemMetaWrapper;
@@ -23,17 +28,24 @@ import cpw.mods.fml.common.registry.GameRegistry.ObjectHolder;
 @Pulse(id = "TSmelt TE", description = "Thermal Expansion Integration", modsRequired = "ThermalExpansion")
 public class TSmeltTE
 {
+	//public static final GuiHandler guiHandler = new GuiHandler();
 	private ItemStack nullifier;
 
 	@Handler
-	public void preInit(FMLPreInitializationEvent event)
-	{
+	public void preInit (FMLPostInitializationEvent event) {
+		ModBlocks.initialize();
+	}
 
+	@Handler
+	public void init (FMLInitializationEvent event)
+	{
+		NetworkRegistry.INSTANCE.registerGuiHandler(ThermalSmeltery.instance, new GuiHandler());
 	}
 
 	@Handler
 	public void postInit(FMLPostInitializationEvent event)
 	{
+
 		Map<ItemMetaWrapper, FluidStack> smelteryMap = tconstruct.library.crafting.Smeltery.getSmeltingList();
 		Map<ItemMetaWrapper, Integer> tempMap = tconstruct.library.crafting.Smeltery.getTemperatureList();
 
