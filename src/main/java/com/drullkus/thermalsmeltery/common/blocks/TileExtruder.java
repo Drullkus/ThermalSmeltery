@@ -21,13 +21,12 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
 import tconstruct.library.crafting.CastingRecipe;
-import cofh.thermalexpansion.block.machine.MachineHelper;
 
 import java.util.List;
 
-public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITileInfo
+public class TileExtruder extends TileMachineBase implements IFluidHandler, ITileInfo
 {
-    static final int TYPE = BlockSmeltery.Types.EXTRUDER.ordinal();
+    static final int TYPE = 0;
     FluidTankAdv tank = new FluidTankAdv(10000);
     FluidStack renderFluid;
     public boolean block;
@@ -42,36 +41,37 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
         defaultSideConfigSmeltery[TYPE].allowExtraction = new boolean[]{false, false, true, true};
         defaultSideConfigSmeltery[TYPE].sideTex = new int[]{0, 1, 2, 3};
         defaultSideConfigSmeltery[TYPE].defaultSides = new byte[]{(byte)3, (byte)1, (byte)2, (byte)2, (byte)2, (byte)2};
-//        int basePower = MathHelper.clampI(ThermalExpansion.config.get("block.tweak", "Machine.Crucible.BasePower", 400), 100, 500);
-//        ThermalExpansion.config.set("block.tweak", "Machine.Crucible.BasePower", var0);
         int basePower = 400;
         defaultEnergyConfigSmeltery[TYPE] = new EnergyConfig();
         defaultEnergyConfigSmeltery[TYPE].setParams(basePower / 10, basePower, Math.max(480000, basePower * 1200));
-//        sounds[TYPE] = CoreUtils.getSoundName("ThermalExpansion", "blockMachineCrucible");
-//        enableSound[TYPE] = CoFHCore.configClient.get("sound", "Machine.Crucible", true);
         GameRegistry.registerTileEntity(TileExtruder.class, "thermalsmeltery.Extruder");
     }
 
     public TileExtruder()
     {
-        this.inventory = new ItemStack[2];
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound)
+    protected int getInventorySize()
     {
-        super.writeToNBT(tagCompound);
-        tagCompound.setBoolean("craftBlock", block);
-        this.tank.writeToNBT(tagCompound);
+        return 2;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tagCompound)
+    public void writeToNBT(NBTTagCompound tag)
     {
-        super.readFromNBT(tagCompound);
-        block = tagCompound.getBoolean("craftBlock");
+        super.writeToNBT(tag);
+        tag.setBoolean("craftBlock", block);
+        this.tank.writeToNBT(tag);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag)
+    {
+        super.readFromNBT(tag);
+        block = tag.getBoolean("craftBlock");
         blockFlag = this.block;
-        this.tank.readFromNBT(tagCompound);
+        this.tank.readFromNBT(tag);
         if (this.tank.getFluid() != null)
         {
             this.renderFluid = this.tank.getFluid();
@@ -128,10 +128,10 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     }
 
     @Override
-    public void handleTilePacket(PacketCoFHBase packet, boolean var2)
+    public void handleTilePacket(PacketCoFHBase packet, boolean isServer)
     {
-        super.handleTilePacket(packet, var2);
-        if (!var2)
+        super.handleTilePacket(packet, isServer);
+        if (!isServer)
         {
             this.renderFluid = packet.getFluidStack();
         } else
@@ -197,7 +197,8 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     @Override
     protected void processStart()
     {
-        MachineHelper.setProcessMax(this, getRecipeTime(getRecipe()));
+        processMax = getRecipeTime(getRecipe());
+        processRem = processMax;
     }
 
     @Override
@@ -228,11 +229,11 @@ public class TileExtruder extends TileSmelteryBase implements IFluidHandler, ITi
     private int getRecipeTime(CastingRecipe recipe)
     {
         if (recipe == null) return 0;
-        return recipe.coolTime * 1000 * TSmeltConfig.StamperMultiplier;
+        return recipe.coolTime * 1000 * TSmeltConfig.stamperMultiplier;
 
         /**
-        Controls the speed of the machine
-        */
+         Controls the speed of the machine
+         */
     }
 
     @Override

@@ -34,18 +34,16 @@ public class ElementTinkersTank extends ElementFluidTank
                 if (panels > 0)
                     list.add(StatCollector.translateToLocalFormatted("info.thermalsmeltery.panel", panels));
                 junk = (fluid.amount % 1000) % 250;
-            }
-            else if (fluid.getFluid() == TinkerSmeltery.moltenStoneFluid)
+            } else if (fluid.getFluid() == TinkerSmeltery.moltenStoneFluid)
             {
                 int blocks = fluid.amount / TConstruct.ingotLiquidValue;
                 if (blocks > 0)
                     list.add(StatCollector.translateToLocalFormatted("info.thermalsmeltery.block", blocks));
-                int bricks = (fluid.amount % (TConstruct.ingotLiquidValue/4))*4/TConstruct.ingotLiquidValue;
+                int bricks = (fluid.amount % (TConstruct.ingotLiquidValue / 4)) * 4 / TConstruct.ingotLiquidValue;
                 if (bricks > 0)
                     list.add(StatCollector.translateToLocalFormatted("info.thermalsmeltery.brick", bricks));
                 junk = fluid.amount % TConstruct.ingotLiquidValue;
-            }
-            else
+            } else
             {
                 int ingots = fluid.amount / TConstruct.ingotLiquidValue;
                 if (ingots > 0)

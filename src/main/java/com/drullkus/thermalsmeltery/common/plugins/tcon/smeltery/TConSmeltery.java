@@ -31,7 +31,7 @@ public class TConSmeltery
             ItemStack ingotcast = new ItemStack(TinkerSmeltery.metalPattern, 1, 0);
             LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
             LiquidCasting basinCasting = TConstructRegistry.getBasinCasting();
-            if (TSmeltConfig.TConYelloriumCasting && FluidRegistry.getFluid("yellorium") != null)
+            if (TSmeltConfig.tConYelloriumCasting && FluidRegistry.getFluid("yellorium") != null)
             {
                 //Yellorium Casting
                 //Ingot
@@ -40,7 +40,7 @@ public class TConSmeltery
                 basinCasting.addCastingRecipe(new ItemStack(GameRegistry.findBlock("BigReactors", "BRMetalBlock"), 1, 0), new FluidStack(FluidRegistry.getFluid("yellorium"), 9000), 450);
             }
 
-            if (TSmeltConfig.TConSteelRecipe && FluidRegistry.getFluid("coal") != null)
+            if (TSmeltConfig.tConSteelRecipe && FluidRegistry.getFluid("coal") != null)
             {
                 //Steel Alloying
                 Smeltery.addAlloyMixing(new FluidStack(TinkerSmeltery.moltenSteelFluid, TConstruct.ingotLiquidValue), new FluidStack(FluidRegistry.getFluid("coal"), 200), new FluidStack(

@@ -9,12 +9,11 @@ import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRe
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import cofh.thermalexpansion.gui.container.ContainerTEBase;
 
-public class ContainerStamper extends ContainerTEBase implements ISlotValidator
+public class ContainerStamper extends ContainerMachineBase implements ISlotValidator
 {
     public TileStamper stamper;
-    
+
     public ContainerStamper(InventoryPlayer inventoryPlayer, TileEntity entity)
     {
         super(inventoryPlayer, entity);
@@ -25,7 +24,7 @@ public class ContainerStamper extends ContainerTEBase implements ISlotValidator
         this.addSlotToContainer(new SlotRemoveOnly(this.stamper, 3, 127, 54));
         this.addSlotToContainer(new SlotEnergy(this.stamper, this.stamper.getChargeSlot(), 8, 53));
     }
-    
+
     @Override
     public boolean isItemValid(ItemStack itemStack)
     {

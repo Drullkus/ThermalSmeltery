@@ -1,6 +1,7 @@
 package com.drullkus.thermalsmeltery.common.gui;
 
 import cofh.core.block.TileCoFHBase;
+import com.drullkus.thermalsmeltery.common.blocks.TileMachineBase;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -22,13 +23,13 @@ public class GuiHandler implements IGuiHandler
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
-        switch(ID)
+        switch (ID)
         {
             case 0:
-                TileEntity var7 = world.getTileEntity(x, y, z);
-                if (var7 instanceof TileCoFHBase)
+                TileEntity tile = world.getTileEntity(x, y, z);
+                if (tile instanceof TileMachineBase)
                 {
-                    return ((TileCoFHBase)var7).getGuiServer(player.inventory);
+                    return ((TileMachineBase)tile).getGuiServer(player.inventory);
                 }
         }
         return null;
@@ -50,13 +51,13 @@ public class GuiHandler implements IGuiHandler
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
-        switch(ID)
+        switch (ID)
         {
             case 0:
-                TileEntity var7 = world.getTileEntity(x, y, z);
-                if (var7 instanceof TileCoFHBase)
+                TileEntity tile = world.getTileEntity(x, y, z);
+                if (tile instanceof TileMachineBase)
                 {
-                    return ((TileCoFHBase)var7).getGuiClient(player.inventory);
+                    return ((TileMachineBase)tile).getGuiClient(player.inventory);
                 }
         }
         return null;
