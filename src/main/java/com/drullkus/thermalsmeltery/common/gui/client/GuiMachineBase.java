@@ -12,10 +12,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.UUID;
+
 public class GuiMachineBase extends GuiBaseAdv
 {
     protected TileMachineBase myTile;
-    protected String playerName;
+    protected UUID playerUUID;
     public String myInfo = "";
     public String myTutorial = StringHelper.tutorialTabAugment();
     protected TabBase redstoneTab;
@@ -26,7 +28,7 @@ public class GuiMachineBase extends GuiBaseAdv
         super(var1, var4);
         this.myTile = (TileMachineBase)var2;
         this.name = this.myTile.getInventoryName();
-        this.playerName = var3.getCommandSenderName();
+        this.playerUUID = var3.getGameProfile().getId();
         if (this.myTile.enableSecurity() && this.myTile.isSecured())
         {
             this.myTutorial = this.myTutorial + "\n\n" + StringHelper.tutorialTabSecurity();
@@ -66,7 +68,7 @@ public class GuiMachineBase extends GuiBaseAdv
         this.addTab(new TabAugment(this, (IAugmentableContainer)this.inventorySlots));
         if (this.myTile.enableSecurity() && this.myTile.isSecured())
         {
-            this.addTab(new TabSecurity(this, this.myTile, this.playerName));
+            this.addTab(new TabSecurity(this, this.myTile, this.playerUUID));
         }
 
         this.redstoneTab = this.addTab(new TabRedstone(this, this.myTile));

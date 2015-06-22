@@ -29,7 +29,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fluids.IFluidHandler;
-import thermalexpansion.block.TileTEBase;
 
 import java.util.ArrayList;
 import java.util.List;

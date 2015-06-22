@@ -3,6 +3,7 @@ package com.drullkus.thermalsmeltery.common.blocks;
 import cofh.api.item.IAugmentItem;
 import cofh.api.item.IToolHammer;
 import cofh.api.transport.IItemDuct;
+import cofh.lib.util.helpers.AugmentHelper;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.InventoryHelper;
 import cofh.lib.util.helpers.ItemHelper;
@@ -178,7 +179,7 @@ public class MachineHelper
 
     public static boolean isAugmentItem(ItemStack stack)
     {
-        return stack != null && stack.getItem() instanceof IAugmentItem;
+        return AugmentHelper.isAugmentItem(stack);
     }
 
     public static boolean isHoldingMultimeter(EntityPlayer player)

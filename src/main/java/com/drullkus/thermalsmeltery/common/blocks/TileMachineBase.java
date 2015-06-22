@@ -8,6 +8,7 @@ import cofh.api.item.IAugmentItem;
 import cofh.api.tileentity.*;
 import cofh.asm.relauncher.CoFHSide;
 import cofh.asm.relauncher.Strippable;
+import cofh.core.CoFHProps;
 import cofh.core.block.TileCoFHBase;
 import cofh.core.network.*;
 import cofh.core.render.IconRegistry;
@@ -17,6 +18,8 @@ import cofh.lib.audio.SoundTile;
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.*;
 import com.drullkus.thermalsmeltery.ThermalSmeltery;
+import com.google.common.base.Strings;
+import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.audio.ISound;
@@ -27,11 +30,15 @@ import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+
+import java.util.UUID;
 
 @Strippable(
         value = {"cofh.api.audio.ISoundSource"},
@@ -53,7 +60,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
     public static boolean[] enableSecurity = new boolean[]{true, true};
     int outputTracker;
     protected String tileName = "";
-    protected String owner = "[None]";
+    protected GameProfile owner;
     protected AccessMode access;
     protected boolean canAccess;
     public ItemStack[] inventory;
@@ -82,6 +89,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
 
     public TileMachineBase()
     {
+        this.owner = CoFHProps.DEFAULT_OWNER;
         this.sideConfig = getDefaultSideConfig();
         this.energyConfig = getDefaultEnergyConfig().copy();
         this.setDefaultSides();
@@ -481,7 +489,15 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
             this.tileName = tag.getString("Name");
         }
         this.access = AccessMode.values()[tag.getByte("Access")];
-        this.owner = tag.getString("Owner");
+        String uuid = tag.getString("OwnerUUID");
+        String owner = tag.getString("Owner");
+        if (!Strings.isNullOrEmpty(uuid))
+        {
+            this.setOwner(new GameProfile(UUID.fromString(uuid), owner));
+        } else
+        {
+            this.setOwnerName(owner);
+        }
         if (!this.enableSecurity())
         {
             this.access = AccessMode.PUBLIC;
@@ -519,7 +535,8 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
             tag.setString("Name", this.tileName);
         }
         tag.setByte("Access", (byte)this.access.ordinal());
-        tag.setString("Owner", this.owner);
+        tag.setString("OwnerUUID", this.owner.getId().toString());
+        tag.setString("Owner", this.owner.getName());
         this.writeInventoryToNBT(tag, inventory, "Inventory");
         tag.setInteger("Tracker", this.outputTracker);
         tag.setBoolean("Active", this.isActive);
@@ -542,7 +559,8 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
         PacketCoFHBase packet = super.getPacket();
         packet.addString(this.tileName);
         packet.addByte((byte)this.access.ordinal());
-        packet.addString(this.owner);
+        packet.addUUID(this.owner.getId());
+        packet.addString(this.owner.getName());
         packet.addBool(this.isPowered);
         packet.addByte(this.rsMode.ordinal());
         packet.addBool(this.isActive);
@@ -568,9 +586,11 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
         this.access = AccessMode.values()[packet.getByte()];
         if (!isServer)
         {
-            this.owner = packet.getString();
+            this.owner = CoFHProps.DEFAULT_OWNER;
+            this.setOwner(new GameProfile(packet.getUUID(), packet.getString()));
         } else
         {
+            packet.getUUID();
             packet.getString();
         }
         this.isPowered = packet.getBool();
@@ -929,11 +949,13 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
     @Override
     public boolean setOwnerName(String owner)
     {
-        if (this.owner.equals("[None]"))
+        if (MinecraftServer.getServer() == null)
         {
-            this.owner = owner;
-            this.markChunkDirty();
-            return true;
+            return false;
+        } else if (!Strings.isNullOrEmpty(owner) && !CoFHProps.DEFAULT_OWNER.getName().equalsIgnoreCase(owner))
+        {
+            String uuid = PreYggdrasilConverter.func_152719_a(owner);
+            return !Strings.isNullOrEmpty(uuid) && this.setOwner(new GameProfile(UUID.fromString(uuid), owner));
         } else
         {
             return false;
@@ -941,9 +963,43 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
     }
 
     @Override
-    public String getOwnerName()
+    public boolean setOwner(GameProfile var1)
+    {
+        if (this.owner.getId().variant() == 0)
+        {
+            this.owner = var1;
+            if (this.owner.getId().variant() != 0)
+            {
+                if (MinecraftServer.getServer() != null)
+                {
+                    (new Thread("CoFH User Loader")
+                    {
+                        public void run()
+                        {
+                            TileMachineBase.this.owner = SecurityHelper.getProfile(TileMachineBase.this.owner.getId(), TileMachineBase.this.owner.getName());
+                        }
+                    }).start();
+                }
+                this.markChunkDirty();
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public GameProfile getOwner()
     {
         return this.owner;
+    }
+
+    @Override
+    public String getOwnerName()
+    {
+        String name = this.owner.getName();
+        return name == null ? StringHelper.localize("info.cofh.anotherplayer") : name;
     }
 
     @Override
