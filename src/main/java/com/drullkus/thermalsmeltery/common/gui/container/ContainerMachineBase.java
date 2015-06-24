@@ -8,6 +8,7 @@ import cofh.lib.gui.slot.SlotFalseCopy;
 import cofh.lib.util.helpers.AugmentHelper;
 import cofh.lib.util.helpers.ItemHelper;
 import cofh.lib.util.helpers.ServerHelper;
+import com.drullkus.thermalsmeltery.common.network.PacketThermalSmeltery;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -233,8 +234,7 @@ public class ContainerMachineBase extends Container implements IAugmentableConta
         this.augmentLock = lock;
         if (ServerHelper.isClientWorld(this.baseTile.getWorldObj()))
         {
-//            TODO: Fix this
-//            PacketTEBase.sendTabAugmentPacketToServer(lock);
+            PacketThermalSmeltery.sendTabAugmentPacketToServer(lock);
         }
 
     }
