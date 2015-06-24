@@ -3,9 +3,11 @@ package com.drullkus.thermalsmeltery.common.plugins.te;
 import java.util.Map;
 
 import com.drullkus.thermalsmeltery.ThermalSmeltery;
+import com.drullkus.thermalsmeltery.common.blocks.MachineHelper;
 import com.drullkus.thermalsmeltery.common.blocks.ModBlocks;
 import com.drullkus.thermalsmeltery.common.gui.GuiHandler;
 import com.drullkus.thermalsmeltery.common.items.ModItems;
+import com.drullkus.thermalsmeltery.common.network.PacketThermalSmeltery;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -39,7 +41,9 @@ public class TSmeltTE
             TE4Helper.addCrucibleRecipe(energy, input, entry.getValue());
         }
 
+        MachineHelper.initialize();
         ModBlocks.initialize();
+        PacketThermalSmeltery.initialize();
 
         nullifier = new ItemStack(GameRegistry.findItem("ThermalExpansion", "Device"), 1, 5);
         TE4Helper.addPulverizerRecipe(20000, nullifier, new ItemStack(ModItems.Tool_Mod_Void, 1, 0));

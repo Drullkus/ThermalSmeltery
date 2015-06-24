@@ -302,7 +302,6 @@ public class BlockMachine extends BlockCoFHBase
     @Override
     public boolean initialize()
     {
-        MachineHelper.initialize();
         TileStamper.initialize();
         TileExtruder.initialize();
 

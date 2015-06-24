@@ -18,6 +18,7 @@ import cofh.lib.audio.SoundTile;
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.*;
 import com.drullkus.thermalsmeltery.ThermalSmeltery;
+import com.drullkus.thermalsmeltery.common.network.PacketThermalSmeltery;
 import com.google.common.base.Strings;
 import com.mojang.authlib.GameProfile;
 import cpw.mods.fml.relauncher.Side;
@@ -36,7 +37,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.UUID;
 
@@ -1024,8 +1024,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
         this.rsMode = var1;
         if (ServerHelper.isClientWorld(this.worldObj))
         {
-            //TODO: Fix this
-            //PacketTEBase.sendRSConfigUpdatePacketToServer(this, this.xCoord, this.yCoord, this.zCoord);
+            PacketThermalSmeltery.sendRSConfigUpdatePacketToServer(this, this.xCoord, this.yCoord, this.zCoord);
         }
         else
         {
@@ -1065,8 +1064,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
         this.isPowered = this.worldObj.isBlockIndirectlyGettingPowered(this.xCoord, this.yCoord, this.zCoord);
         if (this.wasPowered != this.isPowered && this.sendRedstoneUpdates())
         {
-//            PacketTEBase.sendRSPowerUpdatePacketToClients(this, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-            //TODO: Fix this
+            PacketThermalSmeltery.sendRSPowerUpdatePacketToClients(this, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
             this.onRedstoneUpdate();
         }
 
