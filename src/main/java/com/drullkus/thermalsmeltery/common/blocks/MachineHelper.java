@@ -51,7 +51,7 @@ public class MachineHelper
 
     private static ItemStack getCustomStack(String name)
     {
-        return GameRegistry.findItemStack("thermalexpansion", name, 1);
+        return GameRegistry.findItemStack("ThermalExpansion", name, 1);
     }
 
     public static NBTTagCompound setItemStackTagReconfig(NBTTagCompound tag, TileMachineBase tile)

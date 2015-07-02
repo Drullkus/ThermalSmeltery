@@ -745,20 +745,20 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
 
     public boolean isSecured()
     {
-        return !this.owner.equals("[None]");
+        return !SecurityHelper.isDefaultUUID(this.owner.getId());
     }
 
     public boolean transferItem(int slot, int amount, int side)
     {
         if (this.inventory[slot] != null && slot <= this.inventory.length)
         {
-            ItemStack var4 = this.inventory[slot].copy();
-            amount = Math.min(amount, var4.stackSize);
-            var4.stackSize = amount;
+            ItemStack output = this.inventory[slot].copy();
+            amount = Math.min(amount, output.stackSize);
+            output.stackSize = amount;
             TileEntity tile = BlockHelper.getAdjacentTileEntity(this, side);
             if (MachineHelper.isInventory(tile, side))
             {
-                this.inventory[slot].stackSize -= amount - MachineHelper.addToInventory(tile, side, var4);
+                this.inventory[slot].stackSize -= amount - MachineHelper.addToInventory(tile, side, output);
                 if (this.inventory[slot].stackSize <= 0)
                 {
                     this.inventory[slot] = null;
