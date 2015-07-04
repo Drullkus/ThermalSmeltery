@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiExtruder extends GuiMachineBase
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("thermalsmeltery:textures/gui/castingExtruderGui.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation("thermalsmeltery:textures/gui/castingExtruderGui.v3.png");
     ElementSlotBorder[] tankOverlay = new ElementSlotBorder[2];
     ElementSlotBorder outputOverlay;
     ElementButton block;
@@ -33,14 +33,29 @@ public class GuiExtruder extends GuiMachineBase
     public void initGui()
     {
         super.initGui();
+
         this.addElement(new ElementEnergyStored(this, 8, 8, this.extruder.getEnergyStorage()));
-        this.tankOverlay[0] = (ElementSlotBorder)this.addElement((new ElementSlotBorder(this, 40, 9)).setSlotInfo(0, 3, 2).setVisible(false));
-        this.tankOverlay[1] = (ElementSlotBorder)this.addElement((new ElementSlotBorder(this, 40, 9)).setSlotInfo(2, 3, 1).setVisible(false));
+        this.tankOverlay[0] = (ElementSlotBorder)this.addElement((new ElementSlotBorder(this, 34, 9)).setSlotInfo(0, 3, 2).setVisible(false));
+        this.tankOverlay[1] = (ElementSlotBorder)this.addElement((new ElementSlotBorder(this, 34, 9)).setSlotInfo(2, 3, 1).setVisible(false));
         this.addElement((new ElementTinkersTank(this, 40, 9, this.extruder.getTank())).setGauge(1));
-        this.outputOverlay = (ElementSlotBorder)this.addElement((new ElementSlotBorder(this, 122, 26)).setSlotInfo(1, 1, 2).setVisible(true));
-        this.block = (ElementButton)this.addElement(new ElementButton(this, 125, 54, "Block", 184, 0, 184, 20, 184, 40, 20, 20, "thermalsmeltery:textures/gui/castingExtruderGui.png"));
-        this.progressFluid = (ElementFluid)this.addElement((new ElementFluid(this, 76, 27)).setFluid(extruder.getTank().getFluid()).setSize(24, 16));
-        this.progressOverlay = (ElementDualScaled)this.addElement((new ElementDualScaled(this, 76, 27)).setMode(1).setBackground(false).setSize(24, 16).setTexture("cofh:textures/gui/elements/Progress_Fluid_Right.png", 48, 16));
+
+        this.outputOverlay = (ElementSlotBorder)this
+                .addElement((new ElementSlotBorder(this, 122, 26)).setSlotInfo(1, 1, 2).setVisible(true));
+
+        this.block = (ElementButton)this
+                .addElement(new ElementButton(this, 124, 54, "Block", 184, 0, 184, 20, 184, 40, 20, 20, "thermalsmeltery:textures/gui/castingExtruderGui.v5.png"));
+
+        this.progressFluid = (ElementFluid)this
+                .addElement((new ElementFluid(this, 75, 29))
+                        .setFluid(extruder.getTank().getFluid())
+                        .setSize(24, 17));
+
+        this.progressOverlay = (ElementDualScaled)this
+                .addElement((new ElementDualScaled(this, 75, 29))
+                        .setMode(1)
+                        .setBackground(false)
+                        .setSize(24, 17)
+                        .setTexture("thermalsmeltery:textures/gui/castingExtruderGui.v5.png", 208, 60));
     }
 
     @Override
@@ -50,6 +65,7 @@ public class GuiExtruder extends GuiMachineBase
         tankOverlay[0].setVisible(this.extruder.hasSide(1));
         tankOverlay[1].setVisible(this.extruder.hasSide(3));
         outputOverlay.setVisible(this.extruder.hasSide(2));
+
         if (!this.extruder.hasSide(1))
         {
             this.tankOverlay[1].slotRender = 2;
