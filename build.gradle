@@ -25,7 +25,7 @@ repositories {
     }
     ivy {
         name "ThermalExpansion"
-        artifactPattern "http://addons-origin.cursecdn.com/files/2233/797/[module]-[revision].[ext]"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2246/932/[module]-[revision].[ext]"
     }
     ivy {
         name "ThermalFoundation"
