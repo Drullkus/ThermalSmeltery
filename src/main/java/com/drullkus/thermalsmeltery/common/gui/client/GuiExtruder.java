@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiExtruder extends GuiMachineBase
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("thermalsmeltery:textures/gui/castingExtruderGui.v3.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation("thermalsmeltery:textures/gui/castingExtruderGui.v5.png");
     ElementSlotBorder[] tankOverlay = new ElementSlotBorder[2];
     ElementSlotBorder outputOverlay;
     ElementButton block;
@@ -37,7 +37,7 @@ public class GuiExtruder extends GuiMachineBase
         this.addElement(new ElementEnergyStored(this, 8, 8, this.extruder.getEnergyStorage()));
         this.tankOverlay[0] = (ElementSlotBorder)this.addElement((new ElementSlotBorder(this, 34, 9)).setSlotInfo(0, 3, 2).setVisible(false));
         this.tankOverlay[1] = (ElementSlotBorder)this.addElement((new ElementSlotBorder(this, 34, 9)).setSlotInfo(2, 3, 1).setVisible(false));
-        this.addElement((new ElementTinkersTank(this, 40, 9, this.extruder.getTank())).setGauge(1));
+        this.addElement((new ElementTinkersTank(this, 34, 9, this.extruder.getTank())).setGauge(1));
 
         this.outputOverlay = (ElementSlotBorder)this
                 .addElement((new ElementSlotBorder(this, 122, 26)).setSlotInfo(1, 1, 2).setVisible(true));
@@ -50,12 +50,12 @@ public class GuiExtruder extends GuiMachineBase
                         .setFluid(extruder.getTank().getFluid())
                         .setSize(24, 17));
 
-        this.progressOverlay = (ElementDualScaled)this
-                .addElement((new ElementDualScaled(this, 75, 29))
-                        .setMode(1)
-                        .setBackground(false)
-                        .setSize(24, 17)
-                        .setTexture("thermalsmeltery:textures/gui/castingExtruderGui.v5.png", 208, 60));
+        this.progressOverlay = (ElementDualScaled)this.addElement((new ElementDualScaled(this, 75, 29))
+                .setMode(1)
+                .setBackground(false)
+                .setSize(24, 16)
+                .setTexture("thermalsmeltery:textures/gui/elementProgressFluidArrow.png", 48, 16));
+
     }
 
     @Override
@@ -100,6 +100,8 @@ public class GuiExtruder extends GuiMachineBase
         this.progressFluid.setFluid(this.extruder.getTank().getFluid());
         this.progressFluid.setSize(this.extruder.getScaledProgress(24), 16);
         this.progressOverlay.setQuantity(this.extruder.getScaledProgress(24));
+
+        //System.out.println("width " + progressOverlay.getWidth() + " height " + progressOverlay.getHeight());
     }
 
     @Override

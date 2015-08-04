@@ -37,7 +37,7 @@ public class GuiStamper extends GuiMachineBase
         this.slotSecondaryOutput[0] = (ElementSlotBorder)this.addElement((new ElementSlotBorder(this, 127, 54)).setSlotInfo(3, 0, 2));
         this.slotSecondaryOutput[1] = (ElementSlotBorder)this.addElement((new ElementSlotBorder(this, 127, 54)).setSlotInfo(2, 0, 1));
         this.addElement(new ElementEnergyStored(this, 8, 8, this.myTile.getEnergyStorage()));
-        this.progress = (ElementDualScaled)this.addElement((new ElementDualScaled(this, 84, 34)).setMode(1).setSize(24, 16).setTexture("cofh:textures/gui/elements/Progress_Arrow_Right.png", 48, 16));
+        this.progress = (ElementDualScaled)this.addElement((new ElementDualScaled(this, 84, 34)).setMode(1).setSize(24, 16).setTexture("cofh:textures/gui/elements/Progress_Arrow_Right.png", 64, 16));
         //this.speed = (ElementDualScaled)this.addElement((new ElementDualScaled(this, 44, 44)).setSize(16, 16).setTexture("cofh:textures/gui/elements/Scale_Flame.png", 32, 16));
     }
 
