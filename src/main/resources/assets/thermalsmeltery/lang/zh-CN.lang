@@ -1,0 +1,26 @@
+# MISC
+itemGroup.thermalsmeltery.creativeTabItems=Thermal Smeltery
+
+# FLUID NAMES
+fluid.ConductiveIron=熔融导电铁
+fluid.DarkSteel=熔融玄钢
+fluid.EnergeticAlloy=熔融充能合金
+fluid.PhasedGold=熔融脉冲合金
+fluid.PhasedIron=熔融脉冲铁
+tile.fluid.molten.ConductiveIron.name=熔融导电铁
+tile.fluid.molten.DarkSteel.name=熔融玄钢
+tile.fluid.molten.EnergeticAlloy.name=熔融充能合金
+tile.fluid.molten.PhasedGold.name=熔融脉冲合金
+tile.fluid.molten.PhasedIron.name=熔融脉冲铁
+
+
+# ITEM NAMES
+item.thermalsmeltery.bucket.ConductiveIron.name=桶装熔融导电铁
+item.thermalsmeltery.bucket.DarkSteel.name=桶装熔融玄钢
+item.thermalsmeltery.bucket.EnergeticAlloy.name=桶装熔融充能合金
+item.thermalsmeltery.bucket.PhasedGold.name=桶装熔融脉冲合金
+item.thermalsmeltery.bucket.PhasedIron.name=桶装熔融脉冲铁
+item.thermalsmeltery.misc.potatoMashed.name=土豆泥
+item.thermalsmeltery.misc.potatoWedge.name=马铃薯碎片
+item.thermalsmeltery.misc.voiding.name=虚空之触
+ThermalSmeltery:upgradeparts.Voiding=挖掘的一切都会消失!
