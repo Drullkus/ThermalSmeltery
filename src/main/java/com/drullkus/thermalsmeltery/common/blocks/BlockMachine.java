@@ -307,7 +307,7 @@ public class BlockMachine extends BlockCoFHBase
 
         if (defaultAutoTransfer)
         {
-            defaultAugments[0] = ItemHelper.cloneStack(MachineHelper.generalAutoTransfer);
+            defaultAugments[0] = ItemHelper.cloneStack(MachineHelper.generalAutoOutput);
         }
 
         if (defaultRedstoneControl)

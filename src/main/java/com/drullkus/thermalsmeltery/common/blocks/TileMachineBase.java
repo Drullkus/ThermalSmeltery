@@ -1460,7 +1460,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
             install = true;
         }
 
-        if (item.getAugmentLevel(this.augments[slot], MachineHelper.GENERAL_AUTO_TRANSFER) > 0)
+        if (item.getAugmentLevel(this.augments[slot], MachineHelper.GENERAL_AUTO_OUTPUT) > 0)
         {
             this.augmentAutoTransfer = true;
             install = true;
