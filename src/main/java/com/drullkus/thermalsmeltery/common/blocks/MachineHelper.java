@@ -6,6 +6,9 @@ import cofh.lib.util.helpers.AugmentHelper;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.InventoryHelper;
 import cofh.lib.util.helpers.ItemHelper;
+import cofh.thermalexpansion.plugins.nei.handlers.NEIRecipeWrapper;
+import cofh.thermalexpansion.util.crafting.RecipeMachine;
+import cofh.thermalexpansion.util.crafting.TECraftingHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -33,6 +36,10 @@ public class MachineHelper
     public static String MACHINE_SPEED = "machineSpeed";
     public static String TOOL_MULTIMETER = "multimeter";
     public static String TOOL_DEBUGGER = "debugger";
+    public static ItemStack coilGold;
+    public static String GOLD_COIL = "powerCoilGold";
+    public static String MACHINE_FRAME = "thermalexpansion:machineFrame";
+    public static String COPPER_GEAR = "thermalexpansion:machineCopper";
     public static ItemStack generalAutoOutput;
     public static ItemStack generalReconfigSides;
     public static ItemStack generalRedstoneControl;
@@ -46,6 +53,7 @@ public class MachineHelper
         generalRedstoneControl = getCustomStack(GENERAL_REDSTONE_CONTROL);
         toolMultimeter = getCustomStack(TOOL_MULTIMETER);
         toolDebugger = getCustomStack(TOOL_DEBUGGER);
+        coilGold = getCustomStack(GOLD_COIL);
     }
 
     private static ItemStack getCustomStack(String name)
@@ -184,5 +192,14 @@ public class MachineHelper
         {
             ((IToolHammer)item).toolUsed(player.getCurrentEquippedItem(), player, x, y, z);
         }
+    }
+
+    //This is the only method with direct references to ThermalExpansion classes which might require modification with
+    //TE updates, however I think it's probably worth it rather than reproducing the code ala TileMachineBase.
+    public static void registerRecipes(ItemStack machine, Object[] args)
+    {
+        NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(machine, BlockMachine.defaultAugments, args));
+        TECraftingHandler.addMachineUpgradeRecipes(machine);
+        TECraftingHandler.addSecureRecipe(machine);
     }
 }

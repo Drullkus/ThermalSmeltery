@@ -55,5 +55,9 @@ public class TSmeltTE
         NetworkRegistry.INSTANCE.registerGuiHandler(ThermalSmeltery.instance, new GuiHandler());
     }
 
-
+    @Handler
+    public void postInit (FMLPostInitializationEvent event)
+    {
+        ModBlocks.postInit();
+    }
 }
