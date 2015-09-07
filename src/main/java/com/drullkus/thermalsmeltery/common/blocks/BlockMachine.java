@@ -8,6 +8,7 @@ import cofh.core.util.CoreUtils;
 import cofh.lib.util.helpers.*;
 import com.drullkus.thermalsmeltery.ThermalSmeltery;
 import com.drullkus.thermalsmeltery.common.items.ItemBlockSmeltery;
+import com.drullkus.thermalsmeltery.common.plugins.tcon.smeltery.TConSmeltery;
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -307,7 +308,7 @@ public class BlockMachine extends BlockCoFHBase
 
         if (defaultAutoTransfer)
         {
-            defaultAugments[0] = ItemHelper.cloneStack(MachineHelper.generalAutoTransfer);
+            defaultAugments[0] = ItemHelper.cloneStack(MachineHelper.generalAutoOutput);
         }
 
         if (defaultRedstoneControl)
@@ -324,13 +325,14 @@ public class BlockMachine extends BlockCoFHBase
         stamper = ItemBlockSmeltery.setDefaultTag(new ItemStack(this, 1, 1));
         GameRegistry.registerCustomItemStack("extruder", extruder);
         GameRegistry.registerCustomItemStack("stamper", stamper);
-
         return true;
     }
 
     @Override
     public boolean postInit()
     {
+        MachineHelper.registerRecipes(extruder, new Object[]{" X ", "YCY", "IPI", 'C', MachineHelper.MACHINE_FRAME, 'P', MachineHelper.coilGold, 'I', MachineHelper.COPPER_GEAR, 'X', TConSmeltery.CASTING_BASIN, 'Y', TConSmeltery.SMELTERY_BRICK});
+        MachineHelper.registerRecipes(stamper, new Object[]{" X ", "YCY", "IPI", 'C', MachineHelper.MACHINE_FRAME, 'P', MachineHelper.coilGold, 'I', MachineHelper.COPPER_GEAR, 'X', TConSmeltery.TOOL_FORGE, 'Y', TConSmeltery.SMELTERY_BRICK});
         return true;
     }
 }

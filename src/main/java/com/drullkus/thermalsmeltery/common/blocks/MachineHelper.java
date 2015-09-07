@@ -1,12 +1,14 @@
 package com.drullkus.thermalsmeltery.common.blocks;
 
-import cofh.api.item.IAugmentItem;
 import cofh.api.item.IToolHammer;
 import cofh.api.transport.IItemDuct;
 import cofh.lib.util.helpers.AugmentHelper;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.lib.util.helpers.InventoryHelper;
 import cofh.lib.util.helpers.ItemHelper;
+import cofh.thermalexpansion.plugins.nei.handlers.NEIRecipeWrapper;
+import cofh.thermalexpansion.util.crafting.RecipeMachine;
+import cofh.thermalexpansion.util.crafting.TECraftingHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -26,15 +28,19 @@ public class MachineHelper
     public static final int[] MACHINE_SPEED_ENERGY_MOD = new int[]{1, 3, 8, 20};
     public static final int[] MACHINE_SPEED_SECONDARY_MOD = new int[]{0, 5, 10, 15};
     public static final int[] MACHINE_SECONDARY_MOD = new int[]{0, 10, 15, 20};
-    public static final String ENERGY_STORAGE = "energyStorage";
-    public static final String GENERAL_AUTO_TRANSFER = "generalAutoTransfer";
-    public static final String GENERAL_RECONFIG_SIDES = "generalReconfigSides";
-    public static final String GENERAL_REDSTONE_CONTROL = "generalRedstoneControl";
-    public static final String MACHINE_SECONDARY = "machineSecondary";
-    public static final String MACHINE_SPEED = "machineSpeed";
-    public static final String TOOL_MULTIMETER = "multimeter";
-    public static final String TOOL_DEBUGGER = "debugger";
-    public static ItemStack generalAutoTransfer;
+    public static String ENERGY_STORAGE = "energyStorage";
+    public static String GENERAL_AUTO_OUTPUT = "generalAutoOutput";
+    public static String GENERAL_RECONFIG_SIDES = "generalReconfigSides";
+    public static String GENERAL_REDSTONE_CONTROL = "generalRedstoneControl";
+    public static String MACHINE_SECONDARY = "machineSecondary";
+    public static String MACHINE_SPEED = "machineSpeed";
+    public static String TOOL_MULTIMETER = "multimeter";
+    public static String TOOL_DEBUGGER = "debugger";
+    public static ItemStack coilGold;
+    public static String GOLD_COIL = "powerCoilGold";
+    public static String MACHINE_FRAME = "thermalexpansion:machineFrame";
+    public static String COPPER_GEAR = "thermalexpansion:machineCopper";
+    public static ItemStack generalAutoOutput;
     public static ItemStack generalReconfigSides;
     public static ItemStack generalRedstoneControl;
     public static ItemStack toolMultimeter;
@@ -42,11 +48,12 @@ public class MachineHelper
 
     public static void initialize()
     {
-        generalAutoTransfer = getCustomStack(GENERAL_AUTO_TRANSFER);
+        generalAutoOutput = getCustomStack(GENERAL_AUTO_OUTPUT);
         generalReconfigSides = getCustomStack(GENERAL_RECONFIG_SIDES);
         generalRedstoneControl = getCustomStack(GENERAL_REDSTONE_CONTROL);
         toolMultimeter = getCustomStack(TOOL_MULTIMETER);
         toolDebugger = getCustomStack(TOOL_DEBUGGER);
+        coilGold = getCustomStack(GOLD_COIL);
     }
 
     private static ItemStack getCustomStack(String name)
@@ -185,5 +192,14 @@ public class MachineHelper
         {
             ((IToolHammer)item).toolUsed(player.getCurrentEquippedItem(), player, x, y, z);
         }
+    }
+
+    //This is the only method with direct references to ThermalExpansion classes which might require modification with
+    //TE updates, however I think it's probably worth it rather than reproducing the code ala TileMachineBase.
+    public static void registerRecipes(ItemStack machine, Object[] args)
+    {
+        NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(machine, BlockMachine.defaultAugments, args));
+        TECraftingHandler.addMachineUpgradeRecipes(machine);
+        TECraftingHandler.addSecureRecipe(machine);
     }
 }
