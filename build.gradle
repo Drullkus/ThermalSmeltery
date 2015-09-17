@@ -41,10 +41,10 @@ repositories {
 }
 
 dependencies {
-    compile group: 'cofh', name: 'CoFHCore', version: "[$minecraft_version]$cofhcore_version-dev", ext: 'jar'
-    compile group: 'cofh', name: 'ThermalDynamics', version: "[$minecraft_version]$thermaldynamics_version-dev", ext: 'jar'
-    compile group: 'cofh', name: 'ThermalExpansion', version: "[$minecraft_version]$thermalexpansion_version-dev", ext: 'jar'
-    compile group: 'cofh', name: 'ThermalFoundation', version: "[$minecraft_version]$thermalfoundation_version-dev", ext: 'jar'
+    //compile group: 'cofh', name: 'CoFHCore', version: "[$minecraft_version]$cofhcore_version-dev", ext: 'jar'
+    //compile group: 'cofh', name: 'ThermalDynamics', version: "[$minecraft_version]$thermaldynamics_version-dev", ext: 'jar'
+    //compile group: 'cofh', name: 'ThermalExpansion', version: "[$minecraft_version]$thermalexpansion_version-dev", ext: 'jar'
+    //compile group: 'cofh', name: 'ThermalFoundation', version: "[$minecraft_version]$thermalfoundation_version-dev", ext: 'jar'
 
     compile "mantle:Mantle:$minecraft_version-$mantle_version:deobf"
     compile "tconstruct:TConstruct:$minecraft_version-$tconstruct_version:deobf"
