@@ -81,19 +81,19 @@ repositories {
 
     ivy {
         name "CoFHCore"
-        artifactPattern 'http://addons-origin.cursecdn.com/files/2272/734/CoFHCore-[revision].[ext]'
+        artifactPattern 'http://addons-origin.cursecdn.com/files/2272/735/[module]-[revision].[ext]'
     }
     ivy {
         name "ThermalDynamics"
-        artifactPattern "http://addons-origin.cursecdn.com/files/2246/949/ThermalDynamics-[revision].[ext]"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2246/951/[module]-[revision].[ext]"
     }
     ivy {
         name "ThermalExpansion"
-        artifactPattern "http://addons-origin.cursecdn.com/files/2272/731/ThermalExpansion-[revision].[ext]"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2272/732/[module]-[revision].[ext]"
     }
     ivy {
         name "ThermalFoundation"
-        artifactPattern "http://addons-origin.cursecdn.com/files/2272/737/ThermalFoundation-[revision].[ext]"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2272/738/[module]-[revision].[ext]"
     }
 }
 
@@ -106,10 +106,10 @@ dependencies {
     compile "tconstruct:TConstruct:$minecraft_version-$tconstruct_version:deobf"
     compile "mcp.mobius.waila:Waila:${waila_version}_$minecraft_version:dev"
 
-    //compile group: 'cofh', name: 'CoFHCore', version: "[$minecraft_version]$cofhcore_version-dev", ext: 'jar'
-    //compile group: 'cofh', name: 'ThermalDynamics', version: "[$minecraft_version]$thermaldynamics_version-dev", ext: 'jar'
-    //compile group: 'cofh', name: 'ThermalExpansion', version: "[$minecraft_version]$thermalexpansion_version-dev", ext: 'jar'
-    //compile group: 'cofh', name: 'ThermalFoundation', version: "[$minecraft_version]$thermalfoundation_version-dev", ext: 'jar'
+    compile group: 'cofh', name: 'CoFHCore', version: "[$minecraft_version]$cofhcore_version-dev", ext: 'jar'
+    compile group: 'cofh', name: 'ThermalDynamics', version: "[$minecraft_version]$thermaldynamics_version-dev", ext: 'jar'
+    compile group: 'cofh', name: 'ThermalExpansion', version: "[$minecraft_version]$thermalexpansion_version-dev", ext: 'jar'
+    compile group: 'cofh', name: 'ThermalFoundation', version: "[$minecraft_version]$thermalfoundation_version-dev", ext: 'jar'
 }
 
 processResources {
