@@ -9,10 +9,17 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        /*maven {
+            name = "CurseForge"
+            url = "https://minecraft.curseforge.com/api/" + project.curseforge_key
+        }*/
     }
+
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
         classpath 'org.ajoberstar:gradle-git:0.10.1'
+
+        //compile "cofhcore:CoFHCore-[1.7.10]3.1.0B1-322:latest:dev"
     }
 }
 
@@ -68,25 +75,25 @@ repositories {
     }
 
     maven {
-        name 'mantle'
-        url 'http://dvs1.progwml6.com/files/maven'
-    } // Mantle
+        name 'DVS1 Maven FS'
+        url "http://dvs1.progwml6.com/files/maven"
+    }
 
     ivy {
         name "CoFHCore"
-        artifactPattern 'http://addons-origin.cursecdn.com/files/2234/199/[module]-[revision].[ext]'
+        artifactPattern 'http://addons-origin.cursecdn.com/files/2272/734/CoFHCore-[revision].[ext]'
     }
     ivy {
         name "ThermalDynamics"
-        artifactPattern "http://addons-origin.cursecdn.com/files/2246/949/[module]-[revision].[ext]"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2246/949/ThermalDynamics-[revision].[ext]"
     }
     ivy {
         name "ThermalExpansion"
-        artifactPattern "http://addons-origin.cursecdn.com/files/2246/924/[module]-[revision].[ext]"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2272/731/ThermalExpansion-[revision].[ext]"
     }
     ivy {
         name "ThermalFoundation"
-        artifactPattern "http://addons-origin.cursecdn.com/files/2246/921/[module]-[revision].[ext]"
+        artifactPattern "http://addons-origin.cursecdn.com/files/2272/737/ThermalFoundation-[revision].[ext]"
     }
 }
 
