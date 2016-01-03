@@ -79,6 +79,11 @@ repositories {
         url "http://dvs1.progwml6.com/files/maven"
     }
 
+    maven {
+        name 'tterrag Maven'
+        url "http://maven.tterrag.com"
+    }
+
     ivy {
         name "CoFHCore"
         artifactPattern 'http://addons-origin.cursecdn.com/files/2272/735/[module]-[revision].[ext]'
@@ -105,6 +110,8 @@ dependencies {
     compile "mantle:Mantle:$minecraft_version-$mantle_version:deobf"
     compile "tconstruct:TConstruct:$minecraft_version-$tconstruct_version:deobf"
     compile "mcp.mobius.waila:Waila:${waila_version}_$minecraft_version:dev"
+    compile "com.enderio.core:EnderCore:$minecraft_version-$endercore_version:dev"
+    compile "com.enderio:EnderIO:$minecraft_version-$enderio_version:dev"
 
     compile group: 'cofh', name: 'CoFHCore', version: "[$minecraft_version]$cofhcore_version-dev", ext: 'jar'
     compile group: 'cofh', name: 'ThermalDynamics', version: "[$minecraft_version]$thermaldynamics_version-dev", ext: 'jar'
