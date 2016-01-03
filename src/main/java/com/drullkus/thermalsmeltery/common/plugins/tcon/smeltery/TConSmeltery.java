@@ -28,9 +28,7 @@ import tconstruct.tools.TinkerTools;
 	modsRequired = "TConstruct")
 public class TConSmeltery {
 	public static String CASTING_BASIN = "castingTable";
-
 	public static String SMELTERY_BRICK = "smelteryBrick";
-
 	public static String TOOL_FORGE = "toolForge";
 
 	@Handler
