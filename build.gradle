@@ -46,14 +46,14 @@ ext.buildnumber = 0
 project.buildnumber = System.getenv('BUILD_NUMBER') == null ? "CUSTOM" : System.getenv('BUILD_NUMBER')
 
 version = dev ? "${branchname}-${buildnumber}-${project.ext.gitHash}" : "${mod_version}.${buildnumber}"
-group = "us.drullk.shizzel" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "Shizzel"
+group = "us.drullk.ThermalSmeltery" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "ThermalSmeltery"
 
 minecraft {
     version = "${minecraft_version}-${forge_version}"
     runDir = "run"
 
-    replaceIn "Shizzel.java"
+    replaceIn "ThermalSmeltery.java"
     replace "@VERSION@", project.version
 }
 
@@ -109,9 +109,11 @@ dependencies {
 
     compile "mantle:Mantle:$minecraft_version-$mantle_version:deobf"
     compile "tconstruct:TConstruct:$minecraft_version-$tconstruct_version:deobf"
-    compile "mcp.mobius.waila:Waila:${waila_version}_$minecraft_version:dev"
-    compile "com.enderio.core:EnderCore:$minecraft_version-$endercore_version:dev"
-    compile "com.enderio:EnderIO:$minecraft_version-$enderio_version:dev"
+    //compile "mcp.mobius.waila:Waila:${waila_version}_$minecraft_version:dev"
+    compile ("com.enderio.core:EnderCore:$minecraft_version-$endercore_version:dev")
+    compile ("com.enderio:EnderIO:$minecraft_version-$enderio_version:dev") {
+        transitive = false
+    }
 
     compile group: 'cofh', name: 'CoFHCore', version: "[$minecraft_version]$cofhcore_version-dev", ext: 'jar'
     compile group: 'cofh', name: 'ThermalDynamics', version: "[$minecraft_version]$thermaldynamics_version-dev", ext: 'jar'
