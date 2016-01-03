@@ -1,24 +1,77 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url = "http://files.minecraftforge.net/maven" }
-        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
     }
-    dependencies { classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT' }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'org.ajoberstar:gradle-git:0.10.1'
+    }
+}
+
+plugins {
+    id 'com.matthewprenger.cursegradle' version '1.0.3'
 }
 
 apply plugin: 'forge'
-apply plugin: 'curseforge'
+apply plugin: 'maven-publish'
 
-version = "$minecraft_version-$version"
+import org.ajoberstar.grgit.Grgit
+
+def repo = Grgit.open(project.file('.'))
+project.ext.gitHash = repo.log().find().abbreviatedId
+def branchname = repo.branch.getCurrent().fullName
+if (branchname.contains('HEAD')) {
+    branchname = System.getenv("GIT_BRANCH")
+}
+branchname = branchname.substring(branchname.lastIndexOf('/') + 1)
+
+boolean dev = System.getenv("RELEASE") == null || System.getenv("RELEASE").equalsIgnoreCase("false")
+
+ext.buildnumber = 0
+project.buildnumber = System.getenv('BUILD_NUMBER') == null ? "CUSTOM" : System.getenv('BUILD_NUMBER')
+
+version = dev ? "${branchname}-${buildnumber}-${project.ext.gitHash}" : "${mod_version}.${buildnumber}"
+group = "us.drullk.shizzel" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "Shizzel"
 
 minecraft {
-    version = "$minecraft_version-$forge_version"
-    //mappings = mcp_mappings_version
+    version = "${minecraft_version}-${forge_version}"
     runDir = "run"
+
+    replaceIn "Shizzel.java"
+    replace "@VERSION@", project.version
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
+    compile.extendsFrom exportedCompile
 }
 
 repositories {
+    maven {
+        name 'Chicken Bones Repo'
+        url "http://chickenbones.net/maven/"
+    }
+
+    maven {
+        name 'Prof Mobius Repo'
+        url "http://mobiusstrip.eu/maven"
+    }
+
+    maven {
+        name 'mantle'
+        url 'http://dvs1.progwml6.com/files/maven'
+    } // Mantle
+
     ivy {
         name "CoFHCore"
         artifactPattern 'http://addons-origin.cursecdn.com/files/2234/199/[module]-[revision].[ext]'
@@ -35,94 +88,154 @@ repositories {
         name "ThermalFoundation"
         artifactPattern "http://addons-origin.cursecdn.com/files/2246/921/[module]-[revision].[ext]"
     }
-    maven { url 'http://dvs1.progwml6.com/files/maven' } // Mantle
-    maven { url "http://mobiusstrip.eu/maven" } // Waila
-    maven { url "http://chickenbones.net/maven/" } // CodeChicken Stuff
 }
 
 dependencies {
+    compile "codechicken:CodeChickenLib:${minecraft_version}-${ccl_version}:dev"
+    compile "codechicken:CodeChickenCore:${minecraft_version}-${ccc_version}:dev"
+    compile "codechicken:NotEnoughItems:${minecraft_version}-${nei_version}:dev"
+
+    compile "mantle:Mantle:$minecraft_version-$mantle_version:deobf"
+    compile "tconstruct:TConstruct:$minecraft_version-$tconstruct_version:deobf"
+    compile "mcp.mobius.waila:Waila:${waila_version}_$minecraft_version:dev"
+
     //compile group: 'cofh', name: 'CoFHCore', version: "[$minecraft_version]$cofhcore_version-dev", ext: 'jar'
     //compile group: 'cofh', name: 'ThermalDynamics', version: "[$minecraft_version]$thermaldynamics_version-dev", ext: 'jar'
     //compile group: 'cofh', name: 'ThermalExpansion', version: "[$minecraft_version]$thermalexpansion_version-dev", ext: 'jar'
     //compile group: 'cofh', name: 'ThermalFoundation', version: "[$minecraft_version]$thermalfoundation_version-dev", ext: 'jar'
-
-    compile "mantle:Mantle:$minecraft_version-$mantle_version:deobf"
-    compile "tconstruct:TConstruct:$minecraft_version-$tconstruct_version:deobf"
-    compile "codechicken:CodeChickenLib:$minecraft_version-$cclib_version:dev"
-    compile "codechicken:CodeChickenCore:$minecraft_version-$ccc_version:dev"
-    compile "codechicken:NotEnoughItems:$minecraft_version-$nei_version:dev"
-    compile "mcp.mobius.waila:Waila:${waila_version}_$minecraft_version:dev"
 }
 
 processResources {
+    // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
-    inputs.property "description", project.description
 
+    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include '**/*.info'
-        include '**/*.properties'
+        include 'mcmod.info'
 
-        expand([
-                'version'    : project.version,
-                'mcversion'  : project.minecraft.version,
-                'description': project.description
-        ])
-
+        // replace version and mcversion
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
 
+    // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.info'
-        exclude '**/*.properties'
+        exclude 'mcmod.info'
     }
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
+jar {
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**', '*.info'
+        }
+    }
+
+    manifest {
+        attributes 'FMLAT': 'chisel_compile_at.cfg'
+    }
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    from javadoc.destinationDir
-    classifier = 'javadoc'
-}
-
+// Create deobf dev jars
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'deobf'
 }
 
-tasks.withType(JavaCompile) { task ->
-    task.options.encoding = 'UTF-8'
+// Create API jar with sources and compiled files
+task apiJar(type: Jar) {
+    from sourceSets.main.allSource
+    from sourceSets.main.output
+    include 'team/chisel/api/**/*'
+    classifier = 'api'
+}
+
+// Create source attachment for dev jar
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
 }
 
 artifacts {
-    archives jar
-    archives sourcesJar
-    archives javadocJar
     archives deobfJar
+    archives sourcesJar
+    archives apiJar
 }
 
-curse {
-    dependsOn build
-    onlyIf { return project.hasProperty('curseforge_key') }
+publishing {
+    tasks.publish.dependsOn 'build'
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+            artifact deobfJar
+            artifact sourcesJar
+            artifact apiJar
+        }
+    }
+
+    repositories {
+        if (project.hasProperty('mavendir')) {
+            maven { url mavendir }
+        }
+    }
+}
+
+println('Changelog:\n' + getChangelogText())
+
+String getChangelogText() {
+    def changelogFile = file('changelog.txt')
+    String str = ''
+    int lineCount = 0
+    boolean done = false
+    changelogFile.eachLine {
+        if (done || it == null) {
+            return
+        }
+        if (it.size() > 1) {
+            def temp = it
+            if (lineCount == 0) {
+                temp = "Chisel ${version}"
+                temp = "<h2>$temp</h2>"
+            } else if (it.startsWith('-')) {
+                temp = "&nbsp;&nbsp;&nbsp;$temp"
+            } else {
+                temp = "<h4>$temp</h4>"
+            }
+            str += "$temp<br/>"
+            lineCount++
+            return
+        } else {
+            done = true
+        }
+    }
+    return str
+}
+
+tasks.curseforge.dependsOn 'reobf'
+tasks.curseforge.enabled = !dev && project.hasProperty('curseforge_key')
+
+curseforge {
     if (project.hasProperty('curseforge_key')) {
         apiKey = project.curseforge_key
     }
 
-    projectId = curseforge_project_id
-    releaseType = 'release'
-
-    additionalArtifact sourcesJar, javadocJar, deobfJar
-
-    relatedProject 'tinkers-construct': 'requiredLibrary'
-    relatedProject 'mantle': 'requiredLibrary'
-    relatedProject 'thermalexpansion': 'optionalLibrary'
-    relatedProject 'ender-io': 'optionalLibrary'
-}
-
-idea {
-    module {
-        inheritOutputDirs = true
+    project {
+        id = project.projectId
+        changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
+        changelogType = 'html'
+        releaseType = 'release'
+        relations {
+            embeddedLibrary 'ctmlib'
+        }
+        mainArtifact(jar) {
+            displayName = "Chisel - ${version}"
+        }
+        addArtifact deobfJar
+        addArtifact sourcesJar
+        addArtifact(apiJar) {
+            relations {}
+        }
     }
 }
+
+idea { module { inheritOutputDirs = true } }
