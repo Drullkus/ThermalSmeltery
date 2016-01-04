@@ -1,18 +1,38 @@
 # MISC
 itemGroup.ThermalSmeltery=Thermal Smeltery
 info.thermalsmeltery.toggleIngot=Toggle Ingots
+info.thermalsmeltery.toggleIngotWait=Will toggle Ingots after operation!
 info.thermalsmeltery.toggleBlock=Toggle Blocks
+info.thermalsmeltery.toggleBlockWait=Will toggle Blocks after operation!
 info.thermalsmeltery.block=Blocks: %d
 info.thermalsmeltery.brick=Bricks: %d
 info.thermalsmeltery.ingot=Ingots: %d
 info.thermalsmeltery.panel=Panels: %d
 info.thermalsmeltery.nugget=Nuggets: %d
 
+# FLUID NAMES
+fluid.ConductiveIron=Molten Conductive Iron
+fluid.DarkSteel=Molten Dark Steel
+fluid.EnergeticAlloy=Molten Energetic Alloy
+fluid.PhasedGold=Molten Vibrant Alloy
+fluid.PhasedIron=Molten Pulsating Iron
+
+tile.fluid.molten.ConductiveIron.name=Molten Conductive Iron
+tile.fluid.molten.DarkSteel.name=Molten Dark Steel
+tile.fluid.molten.EnergeticAlloy.name=Molten Energetic Alloy
+tile.fluid.molten.PhasedGold.name=Molten Vibrant Alloy
+tile.fluid.molten.PhasedIron.name=Molten Pulsating Iron
 
 # ITEMS
-item.thermalsmeltery:potatoesMashed.name=Mashed Potato
-item.thermalsmeltery:potatoesWedge.name=Potato Shard
-item.thermalsmeltery:upgradeparts.PerditioVoid.name=Null Voiding Touch
+item.thermalsmeltery.bucket.ConductiveIron.name=Molten Conductive Iron Bucket
+item.thermalsmeltery.bucket.DarkSteel.name=Molten Dark Steel Bucket
+item.thermalsmeltery.bucket.EnergeticAlloy.name=Molten Energetic Alloy Bucket
+item.thermalsmeltery.bucket.PhasedGold.name=Molten Vibrant Alloy Bucket
+item.thermalsmeltery.bucket.PhasedIron.name=Molten Pulsating Iron Bucket
+
+item.thermalsmeltery.misc.potatoMashed.name=Mashed Potato
+item.thermalsmeltery.misc.potatoWedge.name=Potato Shard
+item.thermalsmeltery.misc.upgradeparts.voiding.name=Null Voiding Touch
 
 # BLOCKS
 tile.thermalsmeltery.machine.stamper.name=Pattern Stamper
