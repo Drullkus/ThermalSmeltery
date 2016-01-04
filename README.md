@@ -3,6 +3,7 @@ This is a very short mod that adds the capability to melt metals in the Thermal 
 
 This mod dynamically adapts every TiCon Smeltery recipe to the Magma Crucible. In theory it should add recipes from mods adding TiCon Smeltery Recipe as well, including ExtraTCon.
 
+[![Build Status](http://ci.tterrag.com/job/ThermalSmeltery/badge/icon)](http://ci.tterrag.com/job/ThermalSmeltery/)
 
 ##[Downloads](http://minecraft.curseforge.com/mc-mods/227661-thermal-smeltery/files)
 Downloads are at [CurseForge](http://minecraft.curseforge.com/mc-mods/227661-thermal-smeltery/files).
