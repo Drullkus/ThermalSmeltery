@@ -147,9 +147,9 @@ jar {
         }
     }
 
-    manifest {
-        attributes 'FMLAT': 'chisel_compile_at.cfg'
-    }
+    //manifest {
+    //    attributes 'FMLAT': 'chisel_compile_at.cfg'
+    //}
 }
 
 // Create deobf dev jars
@@ -175,7 +175,7 @@ task sourcesJar(type: Jar) {
 artifacts {
     archives deobfJar
     archives sourcesJar
-    archives apiJar
+    //archives apiJar //Absolutely none
 }
 
 publishing {
@@ -185,7 +185,7 @@ publishing {
             artifact jar
             artifact deobfJar
             artifact sourcesJar
-            artifact apiJar
+            //artifact apiJar
         }
     }
 
@@ -241,16 +241,19 @@ curseforge {
         changelogType = 'html'
         releaseType = 'release'
         relations {
-            embeddedLibrary 'ctmlib'
+            requiredLibrary 'tinkers-construct'
+            requiredLibrary 'mantle'
+            optionalLibrary 'thermalexpansion'
+            optionalLibrary 'ender-io'
         }
         mainArtifact(jar) {
-            displayName = "Chisel - ${version}"
+            displayName = "Thermal Smeltery - ${version}"
         }
         addArtifact deobfJar
         addArtifact sourcesJar
-        addArtifact(apiJar) {
-            relations {}
-        }
+        //addArtifact(apiJar) {
+        //    relations {}
+        //}
     }
 }
 
