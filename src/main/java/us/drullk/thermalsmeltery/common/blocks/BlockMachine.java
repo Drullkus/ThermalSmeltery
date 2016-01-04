@@ -30,6 +30,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fluids.IFluidHandler;
+import us.drullk.thermalsmeltery.common.tile.TileExtruder;
+import us.drullk.thermalsmeltery.common.tile.TileMachineBase;
+import us.drullk.thermalsmeltery.common.tile.TileStamper;
 
 import java.util.ArrayList;
 import java.util.List;

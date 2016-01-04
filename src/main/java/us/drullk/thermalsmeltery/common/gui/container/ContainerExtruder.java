@@ -2,7 +2,7 @@ package us.drullk.thermalsmeltery.common.gui.container;
 
 import cofh.lib.gui.slot.SlotEnergy;
 import cofh.lib.gui.slot.SlotRemoveOnly;
-import us.drullk.thermalsmeltery.common.blocks.TileExtruder;
+import us.drullk.thermalsmeltery.common.tile.TileExtruder;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 

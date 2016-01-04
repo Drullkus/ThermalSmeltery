@@ -42,6 +42,7 @@ public class TSmeltConfig
 
 		tConSteelRecipe = config.get(CATEGORY_TCONSTRUCT, "Allow Steel to be made in the Smeltery", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
 		tConYelloriumCasting = config.get(CATEGORY_TCONSTRUCT, "Allow Yellorium to be casted into the casting table/basin.", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
+		tConSmelteryTickFrequency = config.get(CATEGORY_TCONSTRUCT, "How many ticks occur between each smeltery checks for players. Maximum is 120.", 20, "Only used if the Tinker's construct RF Smeltery Module is enabled.").getInt(20);
 
 		EIOElectricalSteelCasting = config.get(CATEGORY_EIO, "Allow Steel to be casted onto Silicon, creating EnderIO's Electrical Steel ingot", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
 		EIOEnergeticAlloyRecipe = config.get(CATEGORY_EIO, "Allow Destabilized Redstone, Glowstone, and Molten Gold to be mixed, creating molten Energetic Alloy", true, "Only used if the Tinker's construct Smeltery Module is enabled.").getBoolean(true);
@@ -64,10 +65,12 @@ public class TSmeltConfig
 		stamperMultiplier,
 		extruderMultiplier;
 
-	// TCon Smeltery
+	// TCon
 	public static boolean
 		tConSteelRecipe,
 		tConYelloriumCasting;
+	public static int
+		tConSmelteryTickFrequency;
 
 	// Ender IO
 	public static boolean

@@ -1,4 +1,4 @@
-package us.drullk.thermalsmeltery.common.blocks;
+package us.drullk.thermalsmeltery.common.tile;
 
 import us.drullk.thermalsmeltery.common.core.handler.TSmeltConfig;
 import us.drullk.thermalsmeltery.common.gui.client.GuiStamper;

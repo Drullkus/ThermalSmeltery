@@ -15,6 +15,8 @@ Downloads are at [CurseForge](http://minecraft.curseforge.com/mc-mods/227661-the
 
 I'm totally cool with you adding the mod to Modpacks. You don't really need to tell me about it but feel free to PM me about it on the MCF anyway... :D
 
+##ETA On Updates
+[Hofstadter's law](https://en.wikipedia.org/wiki/Hofstadter%27s_law) applies itself.
 
 ##Issue Reporting
 

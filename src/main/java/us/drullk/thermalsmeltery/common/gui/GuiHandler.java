@@ -1,6 +1,6 @@
 package us.drullk.thermalsmeltery.common.gui;
 
-import us.drullk.thermalsmeltery.common.blocks.TileMachineBase;
+import us.drullk.thermalsmeltery.common.tile.TileMachineBase;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

@@ -5,7 +5,7 @@ import cofh.core.gui.element.*;
 import cofh.lib.gui.container.IAugmentableContainer;
 import cofh.lib.gui.element.TabBase;
 import cofh.lib.util.helpers.StringHelper;
-import us.drullk.thermalsmeltery.common.blocks.TileMachineBase;
+import us.drullk.thermalsmeltery.common.tile.TileMachineBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;

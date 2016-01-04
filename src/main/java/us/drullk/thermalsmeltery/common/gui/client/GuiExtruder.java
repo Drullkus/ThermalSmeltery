@@ -4,7 +4,7 @@ import cofh.lib.gui.element.ElementButton;
 import cofh.lib.gui.element.ElementDualScaled;
 import cofh.lib.gui.element.ElementEnergyStored;
 import cofh.lib.gui.element.ElementFluid;
-import us.drullk.thermalsmeltery.common.blocks.TileExtruder;
+import us.drullk.thermalsmeltery.common.tile.TileExtruder;
 import us.drullk.thermalsmeltery.common.gui.container.ContainerExtruder;
 import us.drullk.thermalsmeltery.common.gui.elements.ElementSlotBorder;
 import us.drullk.thermalsmeltery.common.gui.elements.ElementTinkersTank;

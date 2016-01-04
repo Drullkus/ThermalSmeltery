@@ -5,7 +5,7 @@ import cofh.core.item.ItemBlockBase;
 import cofh.lib.util.helpers.*;
 import us.drullk.thermalsmeltery.common.blocks.BlockMachine;
 import us.drullk.thermalsmeltery.common.blocks.MachineHelper;
-import us.drullk.thermalsmeltery.common.blocks.TileMachineBase;
+import us.drullk.thermalsmeltery.common.tile.TileMachineBase;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;

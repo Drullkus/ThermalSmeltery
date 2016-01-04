@@ -1,4 +1,4 @@
-package us.drullk.thermalsmeltery.common.blocks;
+package us.drullk.thermalsmeltery.common.tile;
 
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyContainerItem;
@@ -18,6 +18,8 @@ import cofh.lib.audio.SoundTile;
 import cofh.lib.util.TimeTracker;
 import cofh.lib.util.helpers.*;
 import us.drullk.thermalsmeltery.ThermalSmeltery;
+import us.drullk.thermalsmeltery.common.blocks.BlockMachine;
+import us.drullk.thermalsmeltery.common.blocks.MachineHelper;
 import us.drullk.thermalsmeltery.common.network.PacketThermalSmeltery;
 import com.google.common.base.Strings;
 import com.mojang.authlib.GameProfile;
@@ -58,7 +60,7 @@ public abstract class TileMachineBase extends TileCoFHBase implements ITileInfoP
     protected static final int[] lightValueSmeltery = new int[]{7, 7};
     public static boolean[] enableSecurity = new boolean[]{true, true};
     int outputTracker;
-    protected String tileName = "";
+    public String tileName = "";
     protected GameProfile owner;
     protected AccessMode access;
     protected boolean canAccess;

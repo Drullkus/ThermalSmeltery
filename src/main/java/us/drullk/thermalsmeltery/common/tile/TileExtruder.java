@@ -1,4 +1,4 @@
-package us.drullk.thermalsmeltery.common.blocks;
+package us.drullk.thermalsmeltery.common.tile;
 
 import cofh.api.tileentity.ITileInfo;
 import cofh.core.network.PacketCoFHBase;
