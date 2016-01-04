@@ -194,8 +194,8 @@ public class MachineHelper
         }
     }
 
-    //This is the only method with direct references to ThermalExpansion classes which might require modification with
-    //TE updates, however I think it's probably worth it rather than reproducing the code ala TileMachineBase.
+    /* This is the only method with direct references to ThermalExpansion classes which might require modification with
+    TE updates, however I think it's probably worth it rather than reproducing the code ala TileMachineBase. */
     public static void registerRecipes(ItemStack machine, Object[] args)
     {
         NEIRecipeWrapper.addMachineRecipe(new RecipeMachine(machine, BlockMachine.defaultAugments, args));

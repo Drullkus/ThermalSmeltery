@@ -5,7 +5,10 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.crafting.CastingRecipe;
 import tconstruct.library.crafting.LiquidCasting;
+import tconstruct.plugins.gears.GearCast;
+import tconstruct.plugins.gears.TinkerGears;
 import tconstruct.smeltery.TinkerSmeltery;
+import tconstruct.weaponry.TinkerWeaponry;
 
 import java.util.*;
 
@@ -70,7 +73,20 @@ public class MachineRecipeRegistry
 
     public static boolean isValidCast(ItemStack stack)
     {
-        return stack != null && stack.getItem() == TinkerSmeltery.metalPattern && !incompatibleCasts.contains(stack.getItemDamage());
+        if(stack==null)
+			return false;
+		if(stack.getItem() == TinkerSmeltery.metalPattern)
+		{
+			if(!incompatibleCasts.contains(stack.getItemDamage()))
+				return true;
+		}
+		if(stack.getItem() == TinkerWeaponry.metalPattern)
+			if(!(stack.getItemDamage() == 3)) // Damned Bow Limbs
+				return true;
+		if(stack.getItem() == TinkerGears.gearCast)
+			return true;
+
+        return false;
     }
 
     public static boolean isValidMetal(ItemStack stack)

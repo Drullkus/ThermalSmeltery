@@ -27,9 +27,9 @@ public class TSmeltConfig
 
 		config.addCustomCategoryComment(CATEGORY_TE, "Only used if Thermal Expansion module is on.\n" + "Do not modify the internal names lightly.");
 
-		multiplier = config.get(CATEGORY_TE, "The Multiplier for RF Cost for Magma Crucible recipe adaptation", 5).getInt(5);
-		stamperMultiplier = config.get(CATEGORY_TE, "The Multiplier for RF Cost for Pattern Stamper recipe adaptation", 5).getInt(5);
-		extruderMultiplier = config.get(CATEGORY_TE, "The Multiplier for RF Cost for Auto-Caster recipe adaptation", 5).getInt(5);
+		multiplier = config.get(CATEGORY_TE, "The Multiplier for RF Cost for Magma Crucible recipe adaptation", 1).getInt(1);
+		stamperMultiplier = config.get(CATEGORY_TE, "The Multiplier for RF Cost for Pattern Stamper recipe adaptation", 1).getInt(1);
+		extruderMultiplier = config.get(CATEGORY_TE, "The Multiplier for RF Cost for Auto-Caster recipe adaptation", 1).getInt(1);
 		MachineHelper.ENERGY_STORAGE = config.get(CATEGORY_TE, "The internal name for the Energy Storage TE augment", MachineHelper.ENERGY_STORAGE).getString();
 		MachineHelper.GENERAL_AUTO_OUTPUT = config.get(CATEGORY_TE, "The internal name for the Auto-Output TE augment", MachineHelper.GENERAL_AUTO_OUTPUT).getString();
 		MachineHelper.GENERAL_RECONFIG_SIDES = config.get(CATEGORY_TE, "The internal name for the Side Config TE augment", MachineHelper.GENERAL_RECONFIG_SIDES).getString();

@@ -62,7 +62,7 @@ public class ThermalSmeltery
     {
         pulsar.postInit(event);
 
-        // logger.info("Oh no... I'm smelting! I better call Saul!"); RIP
+        logger.info("Oh no... I'm smelting!");
     }
 
 }
