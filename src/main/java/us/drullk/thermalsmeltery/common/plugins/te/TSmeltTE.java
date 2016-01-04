@@ -2,11 +2,13 @@ package us.drullk.thermalsmeltery.common.plugins.te;
 
 import java.util.Map;
 
+import cofh.lib.util.helpers.ItemHelper;
+import net.minecraft.init.Items;
 import us.drullk.thermalsmeltery.ThermalSmeltery;
 import us.drullk.thermalsmeltery.common.blocks.MachineHelper;
 import us.drullk.thermalsmeltery.common.blocks.ModBlocks;
 import us.drullk.thermalsmeltery.common.gui.GuiHandler;
-import us.drullk.thermalsmeltery.common.items.ModItems;
+import us.drullk.thermalsmeltery.common.items.TSItems;
 import us.drullk.thermalsmeltery.common.network.PacketThermalSmeltery;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -32,21 +34,9 @@ public class TSmeltTE
     
     @Handler
     public void preInit (FMLPostInitializationEvent event) {
-        Map<ItemMetaWrapper, FluidStack> smelteryMap = tconstruct.library.crafting.Smeltery.getSmeltingList();
-        Map<ItemMetaWrapper, Integer> tempMap = tconstruct.library.crafting.Smeltery.getTemperatureList();
-
-        for (Map.Entry<ItemMetaWrapper, FluidStack> entry : smelteryMap.entrySet()) {
-            ItemStack input = new ItemStack(entry.getKey().item, 1, entry.getKey().meta);
-            int energy = tempMap.get(entry.getKey()) * TSmeltConfig.multiplier;
-            TE4Helper.addCrucibleRecipe(energy, input, entry.getValue());
-        }
-
-        MachineHelper.initialize();
-        ModBlocks.initialize();
-        PacketThermalSmeltery.initialize();
-
-        nullifier = new ItemStack(GameRegistry.findItem("ThermalExpansion", "Device"), 1, 5);
-        TE4Helper.addPulverizerRecipe(20000, nullifier, new ItemStack(ModItems.Tool_Mod_Void, 1, 0));
+		MachineHelper.initialize();
+		ModBlocks.initialize();
+		PacketThermalSmeltery.initialize();
     }
 
     @Handler
@@ -58,6 +48,19 @@ public class TSmeltTE
     @Handler
     public void postInit (FMLPostInitializationEvent event)
     {
+		Map<ItemMetaWrapper, FluidStack> smelteryMap = tconstruct.library.crafting.Smeltery.getSmeltingList();
+		Map<ItemMetaWrapper, Integer> tempMap = tconstruct.library.crafting.Smeltery.getTemperatureList();
+
+		for (Map.Entry<ItemMetaWrapper, FluidStack> entry : smelteryMap.entrySet()) {
+			ItemStack input = new ItemStack(entry.getKey().item, 1, entry.getKey().meta);
+			int energy = tempMap.get(entry.getKey()) * TSmeltConfig.multiplier;
+			TE4Helper.addCrucibleRecipe(energy, input, entry.getValue());
+		}
+
+		this.nullifier = new ItemStack(GameRegistry.findItem("ThermalExpansion", "Device"), 1, 5);
+		TE4Helper.addPulverizerRecipe(20000, this.nullifier, new ItemStack(TSItems.itemBase, 1, 0));
+		TE4Helper.addPulveriserRecipe(1337, new ItemStack(Items.potato), TSItems.potatoesMashed, ItemHelper.cloneStack(TSItems.potatoesWedge, 2), 10);
+
         ModBlocks.postInit();
     }
 }

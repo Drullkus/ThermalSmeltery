@@ -1,6 +1,6 @@
 package us.drullk.thermalsmeltery.common.plugins.tcon.tools;
 
-import us.drullk.thermalsmeltery.common.items.ModItems;
+import us.drullk.thermalsmeltery.common.items.TSItems;
 import us.drullk.thermalsmeltery.common.lib.LibMisc;
 
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -21,7 +21,7 @@ public class TConToolModifiers
     @Handler
     public void postInit (FMLPostInitializationEvent event)
     {
-        ItemStack voidTouch = new ItemStack(ModItems.Tool_Mod_Void, 1, 0);
+        ItemStack voidTouch = new ItemStack(TSItems.itemBase, 1, 0);
         int effect = 20;
         ModifyBuilder.registerModifier(new ModVoidTouch(new ItemStack[] { voidTouch }, effect, "Voiding", "\u00a7b", "Voiding"));
 

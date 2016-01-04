@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiExtruder extends GuiMachineBase
 {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("thermalsmeltery:textures/gui/castingExtruderGui.v5.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation("thermalsmeltery:textures/gui/castingExtruderGui.v6.png");
     ElementSlotBorder[] tankOverlay = new ElementSlotBorder[2];
     ElementSlotBorder outputOverlay;
     ElementButton block;
@@ -77,7 +77,7 @@ public class GuiExtruder extends GuiMachineBase
         {
             if (!this.extruder.blockFlag)
             {
-                this.block.setToolTip("info.thermalexpansion.toggleWait");
+                this.block.setToolTip("info.thermalsmeltery.toggleIngotWait");
                 this.block.setDisabled();
             } else
             {
@@ -88,7 +88,7 @@ public class GuiExtruder extends GuiMachineBase
             }
         } else if (this.extruder.blockFlag)
         {
-            this.block.setToolTip("info.thermalexpansion.toggleWait");
+            this.block.setToolTip("info.thermalsmeltery.toggleBlockWait");
             this.block.setDisabled();
         } else
         {

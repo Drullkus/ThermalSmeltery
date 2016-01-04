@@ -2,7 +2,7 @@ package us.drullk.thermalsmeltery;
 
 import us.drullk.thermalsmeltery.common.core.handler.TSmeltConfig;
 import us.drullk.thermalsmeltery.common.core.handler.ModCreativeTab;
-import us.drullk.thermalsmeltery.common.items.ModItems;
+import us.drullk.thermalsmeltery.common.items.TSItems;
 import us.drullk.thermalsmeltery.common.lib.LibMisc;
 import us.drullk.thermalsmeltery.common.plugins.eio.smeltery.EnderIOSmeltery;
 import us.drullk.thermalsmeltery.common.plugins.tcon.smeltery.TConSmeltery;
@@ -37,6 +37,8 @@ public class ThermalSmeltery
     {
         TSmeltConfig.initProps(event.getModConfigurationDirectory());
 
+		TSItems.preInit();
+
         pulsar.registerPulse(new TSmeltTE());
         pulsar.registerPulse(new TConSmeltery());
         pulsar.registerPulse(new TConToolModifiers());
@@ -50,7 +52,7 @@ public class ThermalSmeltery
     @EventHandler
     public void init (FMLInitializationEvent event)
     {
-        ModItems.init();
+        TSItems.init();
 
         pulsar.init(event);
     }
