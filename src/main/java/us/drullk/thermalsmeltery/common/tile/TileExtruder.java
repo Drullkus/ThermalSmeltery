@@ -7,7 +7,7 @@ import cofh.lib.util.helpers.StringHelper;
 import us.drullk.thermalsmeltery.common.core.handler.TSmeltConfig;
 import us.drullk.thermalsmeltery.common.gui.client.GuiExtruder;
 import us.drullk.thermalsmeltery.common.gui.container.ContainerExtruder;
-import us.drullk.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRegistry;
+import us.drullk.thermalsmeltery.common.plugins.te.MachineRecipeRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;

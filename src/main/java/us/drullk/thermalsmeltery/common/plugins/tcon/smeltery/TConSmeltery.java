@@ -67,16 +67,5 @@ public class TConSmeltery {
 
 	@Handler
 	public void postInit(FMLPostInitializationEvent event) {
-		LiquidCasting tableCasting = TConstructRegistry.getTableCasting();
-
-		for (CastingRecipe recipe : tableCasting.getCastingRecipes()) {
-			MachineRecipeRegistry.registerStampingRecipe(tableCasting, recipe);
-			MachineRecipeRegistry.registerIngotRecipe(recipe);
-		}
-
-		LiquidCasting basinCasting = TConstructRegistry.getBasinCasting();
-		for (CastingRecipe recipe : basinCasting.getCastingRecipes()) {
-			MachineRecipeRegistry.registerBlockRecipe(recipe);
-		}
 	}
 }

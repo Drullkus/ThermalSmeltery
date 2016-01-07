@@ -8,34 +8,54 @@ import mantle.blocks.iface.IFacingLogic;
 import mantle.blocks.iface.IMasterLogic;
 import mantle.blocks.iface.IServantLogic;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 import tconstruct.TConstruct;
 import us.drullk.thermalsmeltery.ThermalSmeltery;
+import us.drullk.thermalsmeltery.common.blocks.IRFSmeltery;
 import us.drullk.thermalsmeltery.common.core.handler.TSmeltConfig;
 
-public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic, IEnergyReceiver, IEnergyStorage, IFluidHandler
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic, ITileRFSmeltery
 {
-	private boolean debug = true;
+	public static final int MAX_SMELTERY_SIZE_DIAMETER = 7, MAX_SMELTERY_HEIGHT = 16, MB_P_BLOCK = TConstruct.ingotLiquidValue * 16;
 
-	private int tick;
-
-	private final int maxTick = TSmeltConfig.tConSmelteryTickFrequency >= 120 ? 120 : TSmeltConfig.tConSmelteryTickFrequency;
-
-	public static final int MAX_SMELTERY_SIZE_DIAMETER = 8, MB_P_BLOCK = TConstruct.ingotLiquidValue * 20;
+	private static final int maxTick = TSmeltConfig.tConSmelteryTickFrequency >= TSmeltConfig.tickCeiling ? TSmeltConfig.tickCeiling : TSmeltConfig.tConSmelteryTickFrequency;
 
 	public boolean validStructure;
 
 	protected byte direction;
 
-	public TileRFSmelteryLogic(int invSize)
+	private boolean inUse = false, debug = true, needsUpdate;
+
+	private int tick, maxInvCapacity, smelteryBottomHeight, smelteryTopHeight, diameter, maxFluidCapacity, maxRFCapacity = 10000, RFStorage = 0;
+
+	private int[] meltingTempPoints, currentActiveTemp;
+
+	private ArrayList<FluidStack> fluidStorage = new ArrayList<FluidStack>();
+
+	Random rand = new Random();
+
+	public TileRFSmelteryLogic()
 	{
-		super(invSize);
+		super(0);
+	}
+
+	public void RFSmelteryNeedsUpdate()
+	{
+		needsUpdate = true;
 	}
 
 	@Override
@@ -47,30 +67,164 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 	@Override
 	protected String getDefaultName()
 	{
-		return "TSmeltery.RFSmeltery";
+		return "TSmelt.RFSmeltery";
 	}
 
 	@Override
 	public void updateEntity()
 	{
-		tick++;
-
-		if(tick >= maxTick)
+		if(!needsUpdate)
 		{
-			tick = 0;
-			//detectEntities();
+			tick++;
 		}
-		int radius = getSmelteryDiameter(xCoord, yCoord, zCoord);
 
-		if(radius != -1)
+		if(tick >= maxTick || needsUpdate)
+		{
+			needsUpdate = false;
+
+			doMetrics();
+
+			doActions();
+
+			tick = 0;
+		}
+	}
+
+	/*
+	First, check to see if it has items.
+		If yes, get temps for each of them and save to ArrayList
+		Do we have RF?
+			Update Progress Arraylist
+				If progress equals to temp in array list
+					Smelt that item!
+	*/
+
+	private void doActions()
+	{
+		if(inventory.length > maxInvCapacity)
+		{
+			// Dump excess items on ground
+			for(int c = inventory.length - maxInvCapacity; c > maxInvCapacity || c >= 0; c--)
+			{
+				ItemStack stack = inventory[c];
+				if(stack != null)
+				{
+					float jumpX = rand.nextFloat() * 0.8F + 0.1F;
+					float jumpY = rand.nextFloat() * 0.8F + 0.1F;
+					float jumpZ = rand.nextFloat() * 0.8F + 0.1F;
+
+					int offsetX = 0;
+					int offsetZ = 0;
+					switch(getRenderDirection())
+					{
+						case 2: // +z
+							offsetZ = -1;
+							break;
+						case 3: // -z
+							offsetZ = 1;
+							break;
+						case 4: // +x
+							offsetX = -1;
+							break;
+						case 5: // -x
+							offsetX = 1;
+							break;
+					}
+
+					while(stack.stackSize > 0)
+					{
+						int itemSize = rand.nextInt(21) + 10;
+
+						if(itemSize > stack.stackSize)
+						{
+							itemSize = stack.stackSize;
+						}
+
+						stack.stackSize -= itemSize;
+						EntityItem entityitem = new EntityItem(worldObj, (double) ((float) xCoord + jumpX + offsetX), (double) ((float) yCoord + jumpY), (double) ((float) zCoord + jumpZ + offsetZ), new ItemStack(stack.getItem(), itemSize, stack.getItemDamage()));
+
+						if(stack.hasTagCompound())
+						{
+							entityitem.getEntityItem().setTagCompound((NBTTagCompound) stack.getTagCompound().copy());
+						}
+
+						float offset = 0.05F;
+						entityitem.motionX = (double) ((float) rand.nextGaussian() * offset);
+						entityitem.motionY = (double) ((float) rand.nextGaussian() * offset + 0.2F);
+						entityitem.motionZ = (double) ((float) rand.nextGaussian() * offset);
+						worldObj.spawnEntityInWorld(entityitem);
+					}
+				}
+			}
+
+			ItemStack[] temporaryInventory = new ItemStack[maxInvCapacity];
+			int[] temporaryMeltingTempPoints = new int[maxInvCapacity];
+			int[] temporaryCurrentActiveTemp = new int[maxInvCapacity];
+
+			for(int c = 0; c < temporaryInventory.length; c++)
+			{
+				temporaryInventory[c] = inventory[c];
+				temporaryMeltingTempPoints[c] = meltingTempPoints[c];
+				temporaryCurrentActiveTemp[c] = currentActiveTemp[c];
+			}
+
+			inventory = temporaryInventory;
+			meltingTempPoints = temporaryMeltingTempPoints;
+			currentActiveTemp = temporaryCurrentActiveTemp;
+		}
+
+		checkHasItems();
+
+		if(inUse)
+		{
+			inUse = false;
+
+
+		}
+	}
+
+	private void checkHasItems()
+	{
+		inUse = false;
+		for(int i = 0; i < maxInvCapacity; i++)
+		{
+			if(this.isStackInSlot(i))
+			{
+				inUse = true;
+				break;
+			}
+		}
+	}
+
+	public void doMetrics()
+	{
+		diameter = getSmelteryDiameter(xCoord, yCoord, zCoord);
+
+		if(diameter != -1)
 		{
 			if(debug)
 			{
-				ThermalSmeltery.logger.info("Radius: " + radius);
+				ThermalSmeltery.logger.info("Diameter: " + diameter);
+			}
+
+			validStructure = checkValidStructure();
+
+			if(debug)
+			{
+				ThermalSmeltery.logger.info("Structure: " + validStructure);
+			}
+
+			if(validStructure)
+			{
+				maxInvCapacity = diameter * diameter * (smelteryTopHeight - smelteryBottomHeight);
+				maxFluidCapacity = maxInvCapacity * MB_P_BLOCK;
+				maxRFCapacity = ((int) ((double) maxFluidCapacity / 1.5)) + 10000;
 			}
 		}
 		else
 		{
+			validStructure = false;
+
 			if(debug)
 			{
 				ThermalSmeltery.logger.warn("Invalid RF Smeltery Construction!");
@@ -78,16 +232,220 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 		}
 	}
 
-	@Override
-	public boolean getActive()
+	public int getSmelteryDiameter(int x, int y, int z)
 	{
-		return validStructure;
+		// Parameters x, y, z should "put" us in the smeltery. Or rather, scanning the empty space.
+		// checkValidPlacement() puts this scanning method "inside the smeltery"
+		// Returns the diameter
+		int diameterSpaceVerified = 0;
+
+		switch(getRenderDirection())
+		{
+			case 2: // +z
+				for(int west = 1; west <= MAX_SMELTERY_SIZE_DIAMETER && west == diameterSpaceVerified + 1; west++)
+				{
+					if(diameterSpaceVerified + 1 == west && (worldObj.getBlock(x, y, z + west) == null || worldObj.isAirBlock(x, y, z + west)))
+					{
+						if(debug)
+						{
+							worldObj.setBlock(x, y + 1, z + west, Blocks.gold_ore);
+						}
+						diameterSpaceVerified++;
+					}
+
+					if(west == MAX_SMELTERY_SIZE_DIAMETER && diameterSpaceVerified + 1 == west && (worldObj.getBlock(x, y, z + west + 1) == null || worldObj.isAirBlock(x, y, z + west + 1)))
+					{
+						return -1;
+					}
+				}
+				break;
+			case 3: // -z
+				for(int east = 1; east <= MAX_SMELTERY_SIZE_DIAMETER && east == diameterSpaceVerified + 1; east++)
+				{
+					if(diameterSpaceVerified + 1 == east && (worldObj.getBlock(x, y, z - east) == null || worldObj.isAirBlock(x, y, z - east)))
+					{
+						if(debug)
+						{
+							worldObj.setBlock(x, y + 1, z - east, Blocks.emerald_ore);
+						}
+						diameterSpaceVerified++;
+					}
+
+					if(east == MAX_SMELTERY_SIZE_DIAMETER && diameterSpaceVerified + 1 == east && (worldObj.getBlock(x, y, z - east - 1) == null || worldObj.isAirBlock(x, y, z - east - 1)))
+					{
+						return -1;
+					}
+				}
+				break;
+			case 4: // +x
+				for(int south = 1; south <= MAX_SMELTERY_SIZE_DIAMETER && south == diameterSpaceVerified + 1; south++)
+				{
+					if(diameterSpaceVerified + 1 == south && (worldObj.getBlock(x + south, y, z) == null || worldObj.isAirBlock(x + south, y, z)))
+					{
+						if(debug)
+						{
+							worldObj.setBlock(x + south, y + 1, z, Blocks.diamond_ore);
+						}
+						diameterSpaceVerified++;
+					}
+
+					if(south == MAX_SMELTERY_SIZE_DIAMETER && diameterSpaceVerified + 1 == south && (worldObj.getBlock(x + south + 1, y, z) == null || worldObj.isAirBlock(x + south + 1, y, z)))
+					{
+						return -1;
+					}
+				}
+				break;
+			case 5: // -x
+				for(int north = 1; north <= MAX_SMELTERY_SIZE_DIAMETER && north == diameterSpaceVerified + 1; north++)
+				{
+					if(diameterSpaceVerified + 1 == north && (worldObj.getBlock(x - north, y, z) == null || worldObj.isAirBlock(x - north, y, z)))
+					{
+						if(debug)
+						{
+							worldObj.setBlock(x - north, y + 1, z, Blocks.redstone_ore);
+						}
+						diameterSpaceVerified++;
+					}
+
+					if(north == MAX_SMELTERY_SIZE_DIAMETER && diameterSpaceVerified + 1 == north && (worldObj.getBlock(x - north - 1, y, z) == null || worldObj.isAirBlock(x - north - 1, y, z)))
+					{
+						return -1;
+					}
+				}
+				break;
+			default:
+				if(debug)
+				{
+					ThermalSmeltery.logger.warn("There was a problem with determining rotation direction of RFSmeltery!");
+				}
+				return -1;
+		}
+
+		return diameterSpaceVerified;
 	}
 
-	@Override
-	public void setActive(boolean flag)
+	public boolean checkValidStructure()
 	{
-		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		int x = xCoord, y = yCoord, z = zCoord, smelteryBottomOffset = 1, smelteryTopOffset = 1, radius = getSmelteryCenterOffset(diameter);
+
+		switch(getRenderDirection())
+		{
+			case 2: // +z
+				z = zCoord - radius;
+				break;
+			case 3: // -z
+				z = zCoord + radius;
+				break;
+			case 4: // +x
+				x = xCoord - radius;
+				break;
+			case 5: // -x
+				x = xCoord + radius;
+				break;
+		}
+
+		checkSmelteryLayers(x, y, z, radius);
+
+		for(int c = 1; c < MAX_SMELTERY_HEIGHT; c++)
+		{
+			if(smelteryBottomOffset == c)
+			{
+				if(checkSmelteryLayers(x, y - c, z, radius))
+				{
+					smelteryBottomOffset++;
+				}
+				else if(checkSmelteryBottom(x, y - c, z, radius))
+				{
+					smelteryBottomHeight = yCoord - c;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else if(smelteryTopOffset == (c - smelteryBottomOffset))
+			{
+				if(checkSmelteryLayers(x, y + (c - smelteryBottomOffset), z, radius))
+				{
+					smelteryTopOffset++;
+				}
+				else
+				{
+					smelteryTopHeight = yCoord + smelteryTopOffset;
+
+					return true;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	public boolean checkSmelteryBottom(int x, int y, int z, int range)
+	{
+		for(int yD = -range; yD <= range; yD++)
+		{
+			for(int xD = -range; xD <= range; xD++)
+			{
+				// If there is air, then this whole method is invalidated
+				if((worldObj.getBlock(x, y, z) == null || worldObj.isAirBlock(x, y, z)))
+				{
+					return false;
+				}
+				else if(!(worldObj.getBlock(x, y, z) instanceof ITileRFSmeltery))
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	public boolean checkSmelteryLayers(int x, int y, int z, int range)
+	{
+		// Check walls
+		for(int c = -range - 1; c <= range + 1; c++)
+		{
+			// Check z+ walls
+			if(!(worldObj.getBlock(x + c, y, z + range + 1) != null && worldObj.getBlock(x, y, z) instanceof IRFSmeltery))
+			{
+				return false;
+			}
+
+			// Check z- walls
+			if(!(worldObj.getBlock(x + c, y, z - range - 1) != null && worldObj.getBlock(x, y, z) instanceof IRFSmeltery))
+			{
+				return false;
+			}
+
+			// Check x+ walls
+			if(!(worldObj.getBlock(x + range + 1, y, z + c) != null && worldObj.getBlock(x, y, z) instanceof IRFSmeltery))
+			{
+				return false;
+			}
+
+			// Check x- walls
+			if(!(worldObj.getBlock(x - range - 1, y, z + c) != null && worldObj.getBlock(x, y, z) instanceof IRFSmeltery))
+			{
+				return false;
+			}
+		}
+
+		// Check empty space.
+		for(int yD = -range; yD <= range; yD++)
+		{
+			for(int xD = -range; xD <= range; xD++)
+			{
+				// If there is a block, then this whole method is invalidated
+				if(!(worldObj.getBlock(x, y, z) == null || worldObj.isAirBlock(x, y, z)))
+				{
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 
 	@Override
@@ -132,6 +490,23 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 		}
 	}
 
+	public int getSmelteryCenterOffset(int diameter)
+	{
+		return (diameter - (diameter % 2)) / 2;
+	}
+
+	@Override
+	public boolean getActive()
+	{
+		return validStructure;
+	}
+
+	@Override
+	public void setActive(boolean flag)
+	{
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+	}
+
 	@Override
 	public String getInventoryName()
 	{
@@ -141,226 +516,29 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 	@Override
 	public void openInventory()
 	{
-
+		// Useless
 	}
 
 	@Override
 	public void closeInventory()
 	{
-
+		// Useless
 	}
 
 	@Override
 	public void notifyChange(IServantLogic servant, int x, int y, int z)
 	{
-		checkValidPlacement();
-	}
-
-	public int[] checkValidPlacement()
-	{
-		final int[] initialPlacement;
-
-		switch(getRenderDirection())
-		{
-			case 2: // +z
-				initialPlacement = new int[]{xCoord, yCoord, zCoord + 1};
-				break;
-			case 3: // -z
-				initialPlacement = new int[]{xCoord, yCoord, zCoord - 1};
-				break;
-			case 4: // +x
-				initialPlacement = new int[]{xCoord + 1, yCoord, zCoord};
-				break;
-			case 5: // -x
-				initialPlacement = new int[]{xCoord - 1, yCoord, zCoord};
-				break;
-			default:
-				initialPlacement = new int[]{xCoord, yCoord, zCoord};
-				if(debug)
-				{
-					ThermalSmeltery.logger.warn("There was a problem with determining rotation direction of RFSmeltery!");
-				}
-				break;
-		}
-
-		return initialPlacement;
-	}
-
-	public int getSmelteryDiameter(int x, int y, int z)
-	{
-		// Parameters x, y, z should "put" us in the smeltery. Or rather, scanning the empty space.
-		// checkValidPlacement() puts this scanning method "inside the smeltery"
-		// Returns the diameter
-		int diameterSpaceVerified = 0;
-
-		switch(getRenderDirection())
-		{
-			case 2: // +z
-				for(int c = 0; c < MAX_SMELTERY_SIZE_DIAMETER || c == diameterSpaceVerified; c++)
-				{
-					if(worldObj.getBlock(x, y, z + c) == null || worldObj.isAirBlock(x, y, z + c))
-					{
-						diameterSpaceVerified++;
-					}
-				}
-				break;
-			case 3: // -z
-				for(int c = 0; c < MAX_SMELTERY_SIZE_DIAMETER || c == diameterSpaceVerified; c++)
-				{
-					if(worldObj.getBlock(x, y, z - c) == null || worldObj.isAirBlock(x, y, z - c))
-					{
-						diameterSpaceVerified++;
-					}
-				}
-				break;
-			case 4: // +x
-				for(int c = 0; c < MAX_SMELTERY_SIZE_DIAMETER || c == diameterSpaceVerified; c++)
-				{
-					if(worldObj.getBlock(x + c, y, z) == null || worldObj.isAirBlock(x + c, y, z))
-					{
-						diameterSpaceVerified++;
-					}
-				}
-				break;
-			case 5: // -x
-				for(int c = 0; c < MAX_SMELTERY_SIZE_DIAMETER || c == diameterSpaceVerified; c++)
-				{
-					if(worldObj.getBlock(x - c, y, z) == null || worldObj.isAirBlock(x - c, y, z))
-					{
-						diameterSpaceVerified++;
-					}
-				}
-				break;
-			default:
-				if(debug)
-				{
-					ThermalSmeltery.logger.warn("There was a problem with determining rotation direction of RFSmeltery!");
-				}
-				return -1;
-		}
-
-		return diameterSpaceVerified;
-	}
-
-	/*public int getSmelteryDiameter(int x, int y, int z)
-	{
-		// Parameters x, y, z should "put" us in the smeltery. Or rather, scanning the empty space.
-		// checkValidPlacement() puts this scanning method "inside the smeltery"
-		// Returns the radius, excluding the center block.
-
-		// Adjust the x-position of the block until the difference between the outer walls is at most 1
-		// basically this means we center the block inside the smeltery on the x axis.
-		// Smeltery must be square!
-		int xDiff1 = 1, xDiff2 = 1; // x-difference
-
-		for(int i = 1; i < MAX_SMELTERY_SIZE_DIAMETER; i++) // Don't check farther than needed (MAX_SMELTERY_SIZE_DIAMETER)
-		{
-			if(xDiff1 == i && (worldObj.getBlock(x - xDiff1, y, z) == null || worldObj.isAirBlock(x - xDiff1, y, z)))
-			{
-				if(debug)
-				{
-					worldObj.setBlock(x - xDiff1, y + 1, z, Blocks.redstone_ore);
-				}
-				xDiff1++;
-			}
-
-			if(xDiff2 == i && (worldObj.getBlock(x + xDiff2, y, z) == null || worldObj.isAirBlock(x + xDiff2, y, z)))
-			{
-				if(debug)
-				{
-					worldObj.setBlock(x + xDiff2, y + 1, z, Blocks.diamond_ore);
-				}
-				xDiff2++;
-			}
-		}
-
-		// Same for z-axis
-		int zDiff1 = 1, zDiff2 = 1;
-		for(int i = 1; i < MAX_SMELTERY_SIZE_DIAMETER; i++) // Don't check farther than needed
-		{
-			if(zDiff1 == i && (worldObj.getBlock(x, y, z - zDiff1) == null || worldObj.isAirBlock(x, y, z - zDiff1)))
-			{
-				if(debug)
-				{
-					worldObj.setBlock(x, y + 1, z - zDiff1, Blocks.emerald_ore);
-				}
-				zDiff1++;
-			}
-
-			if(zDiff2 == i && (worldObj.getBlock(x, y, z + zDiff2) == null || worldObj.isAirBlock(x, y, z + zDiff2)))
-			{
-				if(debug)
-				{
-					worldObj.setBlock(x, y + 1, z + zDiff2, Blocks.gold_ore);
-				}
-				zDiff2++;
-			}
-		}
-
-		if((xDiff1 == xDiff2))
-		{
-			if(xDiff1 + xDiff2 - 1 == (zDiff1 > zDiff2 ? zDiff1 : zDiff2))
-			{
-				//System.out.println(zDiff1 + " and " + zDiff2 + " at " + xCoord + ", "+ yCoord + ", "+ zCoord);
-				return xDiff1;
-			}
-		}
-
-		if((zDiff1 == zDiff2))
-		{
-			if(zDiff1 + zDiff2 - 1 == (xDiff1 > xDiff2 ? xDiff1 : xDiff2))
-			{
-				//System.out.println(xDiff1 + " and " + xDiff2 + " at " + xCoord + ", "+ yCoord + ", "+ zCoord);
-				return zDiff1;
-			}
-		}
-
-		if(debug)
-		{
-			ThermalSmeltery.logger.warn("There was a problem! " + xDiff1 + ", " + xDiff2 + ", " + zDiff1 + ", " + zDiff2);
-		}
-		return -1;
-	}*/
-
-	public void checkValidStructure(int x, int y, int z, int[] sides)
-	{
-		int xSize, ySize, zSize;
-
-		if(debug)
-		{
-			worldObj.setBlock(x, y + 1, z, Blocks.redstone_block);
-			worldObj.setBlock(x - sides[0] + 1, y + 2, z - sides[2] + 1, Blocks.diamond_block);
-			worldObj.setBlock(x + sides[1] - 1, y + 2, z + sides[3] - 1, Blocks.emerald_block);
-		}
-
-	}
-
-	@Override
-	public int receiveEnergy(int i, boolean b)
-	{
-		return 0;
-	}
-
-	@Override
-	public int extractEnergy(int i, boolean b)
-	{
-		return 0;
-	}
-
-	@Override
-	public int getEnergyStored()
-	{
-		return 0;
-	}
-
-	@Override
-	public int getMaxEnergyStored()
-	{
-		return 0;
+		//TODO Fix
 	}
 
 	@Override
 	public int receiveEnergy(ForgeDirection forgeDirection, int i, boolean b)
+	{
+		return 0;
+	}
+
+	@Override
+	public int extractEnergy(ForgeDirection forgeDirection, int i, boolean b)
 	{
 		return 0;
 	}
@@ -374,13 +552,13 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 	@Override
 	public int getMaxEnergyStored(ForgeDirection forgeDirection)
 	{
-		return 0;
+		return maxRFCapacity;
 	}
 
 	@Override
 	public boolean canConnectEnergy(ForgeDirection forgeDirection)
 	{
-		return false;
+		return validStructure;
 	}
 
 	@Override
@@ -434,7 +612,7 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 	@Override
 	public int getCapacity()
 	{
-		return 0;
+		return maxFluidCapacity;
 	}
 
 	@Override

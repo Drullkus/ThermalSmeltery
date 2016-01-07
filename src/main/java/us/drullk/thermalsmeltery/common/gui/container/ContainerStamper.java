@@ -5,7 +5,7 @@ import cofh.lib.gui.slot.SlotEnergy;
 import cofh.lib.gui.slot.SlotRemoveOnly;
 import cofh.lib.gui.slot.SlotValidated;
 import us.drullk.thermalsmeltery.common.tile.TileStamper;
-import us.drullk.thermalsmeltery.common.plugins.tcon.smeltery.MachineRecipeRegistry;
+import us.drullk.thermalsmeltery.common.plugins.te.MachineRecipeRegistry;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;

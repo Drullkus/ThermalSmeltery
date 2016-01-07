@@ -9,8 +9,9 @@ import net.minecraft.world.World;
 import us.drullk.thermalsmeltery.ThermalSmeltery;
 import us.drullk.thermalsmeltery.common.tile.TileRFSmelteryInterfaceLogic;
 import us.drullk.thermalsmeltery.common.tile.TileRFSmelteryLogic;
+import us.drullk.thermalsmeltery.common.tile.TileRFSmelteryServant;
 
-public class RFSmelteryBlock extends InventoryBlock
+public class RFSmelteryBlock extends InventoryBlock implements IRFSmeltery
 {
 	public RFSmelteryBlock()
 	{
@@ -28,11 +29,11 @@ public class RFSmelteryBlock extends InventoryBlock
 		switch(metadata)
 		{
 			case 0:
-				return new TileRFSmelteryLogic(10);
+				return new TileRFSmelteryLogic();
 			case 1:
 				return new TileRFSmelteryInterfaceLogic();
 			default:
-				return new MultiServantLogic();
+				return new TileRFSmelteryServant();
 		}
 	}
 

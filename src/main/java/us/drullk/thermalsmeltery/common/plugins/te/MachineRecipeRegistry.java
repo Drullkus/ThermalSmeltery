@@ -1,11 +1,10 @@
-package us.drullk.thermalsmeltery.common.plugins.tcon.smeltery;
+package us.drullk.thermalsmeltery.common.plugins.te;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
 import tconstruct.library.crafting.CastingRecipe;
 import tconstruct.library.crafting.LiquidCasting;
-import tconstruct.plugins.gears.GearCast;
 import tconstruct.plugins.gears.TinkerGears;
 import tconstruct.smeltery.TinkerSmeltery;
 import tconstruct.weaponry.TinkerWeaponry;
