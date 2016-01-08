@@ -11,8 +11,8 @@ public class LibMisc
 
 	public static final String DEPENDENCIES = "after:BigReactors;required-after:TConstruct;after:ThermalExpansion";
 
-	public static final String COMMON_PROXY = "xxx";
+	public static final String COMMON_PROXY = "us.drullk.thermalsmeltery.proxy.TSmeltCommonProxy";
 
-	public static final String CLIENT_PROXY = "xxx";
+	public static final String CLIENT_PROXY = "us.drullk.thermalsmeltery.proxy.TSmeltClientProxy";
 
 }

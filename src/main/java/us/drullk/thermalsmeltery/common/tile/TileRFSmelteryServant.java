@@ -21,12 +21,6 @@ public class TileRFSmelteryServant extends MultiServantLogic implements ITileRFS
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection forgeDirection, int i, boolean b)
-	{
-		return 0;
-	}
-
-	@Override
 	public int getEnergyStored(ForgeDirection forgeDirection)
 	{
 		return 0;

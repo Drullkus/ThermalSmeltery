@@ -5,6 +5,7 @@ import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
 import mantle.blocks.iface.IMasterLogic;
 import mantle.blocks.iface.IServantLogic;
+import mantle.world.CoordTuple;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -12,6 +13,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -42,6 +44,8 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 	private int[] meltingTempPoints, currentActiveTemp;
 
 	private ArrayList<FluidStack> fluidStorage = new ArrayList<FluidStack>();
+
+	private CoordTuple minCoordTuple, maxCoordTuple;
 
 	Random rand = new Random();
 
@@ -104,7 +108,7 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 
 		if(fluidAmountStored > maxFluidCapacity)
 		{
-			for(int c = fluidStored.size()-1; c <= 0 || fluidAmountStored <= maxFluidCapacity; c++)
+			for(int c = fluidStored.size() - 1; c <= 0 || fluidAmountStored <= maxFluidCapacity; c++)
 			{
 				excessFluidAmount = fluidAmountStored - maxFluidCapacity;
 
@@ -476,16 +480,16 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 		switch(getRenderDirection())
 		{
 			case 2: // +z
-				z = zCoord - radius;
+				z = zCoord - radius - 1;
 				break;
 			case 3: // -z
-				z = zCoord + radius;
+				z = zCoord + radius + 1;
 				break;
 			case 4: // +x
-				x = xCoord - radius;
+				x = xCoord - radius - 1;
 				break;
 			case 5: // -x
-				x = xCoord + radius;
+				x = xCoord + radius + 1;
 				break;
 		}
 
@@ -501,7 +505,7 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 				}
 				else if(checkSmelteryBottom(x, y - c, z, radius))
 				{
-					smelteryBottomHeight = yCoord - c;
+					smelteryBottomHeight = yCoord - c - 1;
 				}
 				else
 				{
@@ -683,12 +687,6 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection forgeDirection, int i, boolean b)
-	{
-		return 0;
-	}
-
-	@Override
 	public int getEnergyStored(ForgeDirection forgeDirection)
 	{
 		return 0;
@@ -776,5 +774,200 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 	public FluidStack drain(int maxDrain, boolean doDrain)
 	{
 		return null;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tags)
+	{
+		validStructure = tags.getBoolean("ValidStructure");
+		RFStorage = tags.getInteger("PowerStored");
+		inUse = tags.getBoolean("InUse");
+
+		direction = tags.getByte("Direction");
+		smelteryBottomHeight = tags.getInteger("BottomHeight");
+		smelteryTopHeight = tags.getInteger("TopHeight");
+
+		maxFluidCapacity = tags.getInteger("MaxLiquid");
+		maxRFCapacity = tags.getInteger("MaxRF");
+		maxInvCapacity = tags.getInteger("MaxInventory");
+
+		int[] pos = tags.getIntArray("MinPos");
+		if(pos.length > 2)
+		{
+			minCoordTuple = new CoordTuple(pos[0], pos[1], pos[2]);
+		}
+		else
+		{
+			minCoordTuple = new CoordTuple(xCoord, yCoord, zCoord);
+		}
+
+		pos = tags.getIntArray("MaxPos");
+		if(pos.length > 2)
+		{
+			maxCoordTuple = new CoordTuple(pos[0], pos[1], pos[2]);
+		}
+		else
+		{
+			maxCoordTuple = new CoordTuple(xCoord, yCoord, zCoord);
+		}
+
+		meltingTempPoints = tags.getIntArray("MeltingTemperatures");
+		currentActiveTemp = tags.getIntArray("ActiveTemperatures");
+
+		NBTTagList liquidTag = tags.getTagList("Liquids", 10);
+		fluidStorage.clear();
+
+		for(int c = 0; c < liquidTag.tagCount(); c++)
+		{
+			NBTTagCompound nbt = liquidTag.getCompoundTagAt(c);
+			FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+
+			if(fluid != null)
+			{
+				fluidStorage.add(fluid);
+			}
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tags)
+	{
+		super.writeToNBT(tags);
+
+		tags.setBoolean("ValidStructure", validStructure);
+		tags.setInteger("PowerStored", RFStorage);
+		tags.setBoolean("InUse", inUse);
+
+		tags.setByte("Direction", direction);
+		tags.setInteger("BottomHeight", smelteryBottomHeight);
+		tags.setInteger("TopHeight", smelteryTopHeight);
+
+		tags.setInteger("MaxLiquid", maxFluidCapacity);
+		tags.setInteger("MaxRF", maxRFCapacity);
+		tags.setInteger("MaxInventory", maxInvCapacity);
+
+		int[] pos;
+		if(minCoordTuple == null)
+		{
+			pos = new int[]{xCoord, yCoord, zCoord};
+		}
+		else
+		{
+			pos = new int[]{minCoordTuple.x, minCoordTuple.y, minCoordTuple.z};
+		}
+		tags.setIntArray("MinPos", pos);
+
+		if(maxCoordTuple == null)
+		{
+			pos = new int[]{xCoord, yCoord, zCoord};
+		}
+		else
+		{
+			pos = new int[]{maxCoordTuple.x, maxCoordTuple.y, maxCoordTuple.z};
+		}
+		tags.setIntArray("MaxPos", pos);
+
+		tags.setIntArray("MeltingTemperatures", meltingTempPoints);
+		tags.setIntArray("ActiveTemperatures", currentActiveTemp);
+
+		NBTTagList taglist = new NBTTagList();
+
+		for(FluidStack liquid : fluidStorage)
+		{
+			NBTTagCompound nbt = new NBTTagCompound();
+			liquid.writeToNBT(nbt);
+			taglist.appendTag(nbt);
+		}
+
+		tags.setTag("Liquids", taglist);
+	}
+
+	private CoordTuple getMinCoords()
+	{
+		int x = xCoord, y = yCoord, z = zCoord, radius = getSmelteryCenterOffset(diameter);
+
+		CoordTuple minCoords;
+
+		switch(getRenderDirection())
+		{
+			case 2: // +z
+				z = zCoord - radius - 1;
+				break;
+			case 3: // -z
+				z = zCoord + radius + 1;
+				break;
+			case 4: // +x
+				x = xCoord - radius - 1;
+				break;
+			case 5: // -x
+				x = xCoord + radius + 1;
+				break;
+		}
+
+		minCoords = new CoordTuple(x - radius, smelteryBottomHeight, z - radius);
+
+		return minCoords;
+	}
+
+	private CoordTuple getMaxCoords()
+	{
+		int x = xCoord, y = yCoord, z = zCoord, radius = getSmelteryCenterOffset(diameter);
+
+		CoordTuple maxCoords;
+
+		switch(getRenderDirection())
+		{
+			case 2: // +z
+				z = zCoord - radius - 1;
+				break;
+			case 3: // -z
+				z = zCoord + radius + 1;
+				break;
+			case 4: // +x
+				x = xCoord - radius - 1;
+				break;
+			case 5: // -x
+				x = xCoord + radius + 1;
+				break;
+		}
+
+		maxCoords = new CoordTuple(x - radius, smelteryBottomHeight, z - radius);
+
+		return maxCoords;
+	}
+
+	public CoordTuple getMinCoordTuple()
+	{
+		return minCoordTuple;
+	}
+
+	public CoordTuple getMaxCoordTuple()
+	{
+		return maxCoordTuple;
+	}
+
+	public int getHeight()
+	{
+		return smelteryTopHeight - smelteryBottomHeight;
+	}
+
+	public int getDiameter()
+	{
+		return diameter;
+	}
+
+	public ArrayList<FluidStack> getFluidStorage()
+	{
+		return fluidStorage;
+	}
+
+	public int getCapacityPerLayer()
+	{
+		return diameter * diameter * MB_P_BLOCK;
+	}
+
+	public int getTempForSlot (int slot)
+	{
+		return currentActiveTemp[slot];
 	}
 }

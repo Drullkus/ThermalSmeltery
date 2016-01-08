@@ -1,5 +1,6 @@
 package us.drullk.thermalsmeltery;
 
+import cpw.mods.fml.common.SidedProxy;
 import us.drullk.thermalsmeltery.common.core.handler.TSmeltConfig;
 import us.drullk.thermalsmeltery.common.core.handler.ModCreativeTab;
 import us.drullk.thermalsmeltery.common.items.TSItems;
@@ -20,6 +21,7 @@ import mantle.pulsar.control.PulseManager;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import us.drullk.thermalsmeltery.proxy.TSmeltCommonProxy;
 
 @Mod(modid = LibMisc.MOD_ID,
 	name = LibMisc.MOD_NAME,
@@ -34,6 +36,9 @@ public class ThermalSmeltery
 	public static PulseManager pulsar = new PulseManager(LibMisc.MOD_ID, new ForgeCFG("TSmeltModules", "Modules: Disabling these will disable a chunk of the mod"));
 
 	public static ModCreativeTab itemTab;
+
+	@SidedProxy(clientSide = "us.drullk.thermalsmeltery.proxy.TSmeltClientProxy", serverSide = "us.drullk.thermalsmeltery.proxy.TSmeltCommonProxy")
+	public static TSmeltCommonProxy proxy;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -57,6 +62,8 @@ public class ThermalSmeltery
 	public void init(FMLInitializationEvent event)
 	{
 		TSItems.init();
+
+		proxy.init();
 
 		pulsar.init(event);
 	}

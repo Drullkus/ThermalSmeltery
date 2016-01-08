@@ -14,6 +14,7 @@ import mantle.pulsar.pulse.Handler;
 import mantle.pulsar.pulse.Pulse;
 import us.drullk.thermalsmeltery.common.tile.TileRFSmelteryInterfaceLogic;
 import us.drullk.thermalsmeltery.common.tile.TileRFSmelteryLogic;
+import us.drullk.thermalsmeltery.common.tile.TileRFSmelteryServant;
 
 @ObjectHolder(LibMisc.MOD_ID)
 @Pulse(id = "TSmelt RF Smeltery",
@@ -33,9 +34,8 @@ public class TConEngineering
 		GameRegistry.registerBlock(TConEngineering.RFSmeltery, ItemBlockRFSmeltery.class, "RFSmeltery");
 
 		GameRegistry.registerTileEntity(TileRFSmelteryLogic.class, "TSmelt.RFSmeltery");
-
 		GameRegistry.registerTileEntity(TileRFSmelteryInterfaceLogic.class, "TSmelt.RFSmelteryInterface");
-		GameRegistry.registerTileEntity(MultiServantLogic.class, "TSmelt.Servants");
+		GameRegistry.registerTileEntity(TileRFSmelteryServant.class, "TSmelt.Servants");
 	}
 
 	@Handler

@@ -107,10 +107,15 @@ dependencies {
     compile "codechicken:CodeChickenCore:${minecraft_version}-${ccc_version}:dev"
     compile "codechicken:NotEnoughItems:${minecraft_version}-${nei_version}:dev"
 
+
+    shade ("team.chisel.ctmlib:CTMLib:${ctmlib_version}") {
+        transitive = false
+    }
+    compile ("com.enderio.core:EnderCore:$minecraft_version-$endercore_version:dev")
+
     compile "mantle:Mantle:$minecraft_version-$mantle_version:deobf"
     compile "tconstruct:TConstruct:$minecraft_version-$tconstruct_version:deobf"
-    //compile "mcp.mobius.waila:Waila:${waila_version}_$minecraft_version:dev"
-    compile ("com.enderio.core:EnderCore:$minecraft_version-$endercore_version:dev")
+    compile "mcp.mobius.waila:Waila:${waila_version}_$minecraft_version:dev"
     compile ("com.enderio:EnderIO:$minecraft_version-$enderio_version:dev") {
         transitive = false
     }
