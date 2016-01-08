@@ -1,7 +1,5 @@
 package us.drullk.thermalsmeltery.common.tile;
 
-import cofh.api.energy.IEnergyReceiver;
-import cofh.api.energy.IEnergyStorage;
 import mantle.blocks.abstracts.InventoryLogic;
 import mantle.blocks.iface.IActiveLogic;
 import mantle.blocks.iface.IFacingLogic;
@@ -19,13 +17,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.*;
 import tconstruct.TConstruct;
+import tconstruct.library.crafting.Smeltery;
 import us.drullk.thermalsmeltery.ThermalSmeltery;
 import us.drullk.thermalsmeltery.common.blocks.IRFSmeltery;
 import us.drullk.thermalsmeltery.common.core.handler.TSmeltConfig;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic, IFacingLogic, IFluidTank, IMasterLogic, ITileRFSmeltery
@@ -40,7 +37,7 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 
 	private boolean inUse = false, debug = true, needsUpdate;
 
-	private int tick, maxInvCapacity, smelteryBottomHeight, smelteryTopHeight, diameter, maxFluidCapacity, maxRFCapacity = 10000, RFStorage = 0;
+	private int tick, maxInvCapacity, smelteryBottomHeight, smelteryTopHeight, diameter, maxFluidCapacity, maxRFCapacity = 10000, RFStorage = 0, totalRFCost = 0;
 
 	private int[] meltingTempPoints, currentActiveTemp;
 
@@ -53,7 +50,7 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 		super(0);
 	}
 
-	public void RFSmelteryNeedsUpdate()
+	public void setNeedsUpdate()
 	{
 		needsUpdate = true;
 	}
@@ -84,10 +81,56 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 
 			doMetrics();
 
-			doActions();
+			if(validStructure)
+			{
+				reassertRFStorage();
+
+				reassertFluidStorage();
+
+				reassertItemStorage();
+
+				doActions();
+			}
 
 			tick = 0;
 		}
+	}
+
+	private void reassertFluidStorage()
+	{
+		ArrayList<FluidStack> fluidStored = fluidStorage;
+		int fluidAmountStored = getTotalFluidAmount();
+		int excessFluidAmount;
+
+		if(fluidAmountStored > maxFluidCapacity)
+		{
+			for(int c = fluidStored.size()-1; c <= 0 || fluidAmountStored <= maxFluidCapacity; c++)
+			{
+				excessFluidAmount = fluidAmountStored - maxFluidCapacity;
+
+				if(excessFluidAmount >= fluidStored.get(c).amount)
+				{
+					/*while(fluidStored.get(c).amount >= 1000)
+					{
+						fluidStored.get(c).amount -= 1000;
+
+						//TODO: Put blocks of fluid in the world
+					}*/
+
+					fluidStored.remove(c);
+
+					fluidAmountStored = getTotalFluidAmount();
+				}
+				else
+				{
+					fluidStored.get(c).amount -= excessFluidAmount;
+
+					fluidAmountStored = getTotalFluidAmount();
+				}
+			}
+		}
+
+		fluidStorage = fluidStored;
 	}
 
 	/*
@@ -95,11 +138,97 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 		If yes, get temps for each of them and save to ArrayList
 		Do we have RF?
 			Update Progress Arraylist
-				If progress equals to temp in array list
-					Smelt that item!
+			If progress equals to temp in array list
+				Smelt that item!
 	*/
 
 	private void doActions()
+	{
+		checkHasItems(); // Will set inUse to true if there are items
+
+		if(inUse)
+		{
+			inUse = false;
+
+			if(RFStorage > 0)
+			{
+				int highestTemperature = 0;
+				int totalTemperature = 0;
+				int averageTemperature;
+
+				for(int c = 0; c >= inventory.length; c++)
+				{
+					if(inventory[c] == null)
+					{
+						meltingTempPoints[c] = 0;
+					}
+					else if(Smeltery.getSmelteryResult(inventory[c]) == null)
+					{
+						meltingTempPoints[c] = 0;
+					}
+					else
+					{
+						meltingTempPoints[c] = Smeltery.getLiquifyTemperature(inventory[c]);
+
+						if(highestTemperature < meltingTempPoints[c])
+						{
+							highestTemperature = meltingTempPoints[c];
+						}
+
+						totalTemperature += meltingTempPoints[c];
+					}
+				}
+
+				averageTemperature = (totalTemperature / (meltingTempPoints.length >= 1 ? meltingTempPoints.length : 1));
+				totalRFCost = ((int) (2.17293 * averageTemperature * ((3 - (Math.log10(5 * diameter))) / 5))) * TSmeltConfig.multiplier;
+
+				int fluidStored = getTotalFluidAmount();
+
+				for(int c = 0; c >= inventory.length && totalRFCost > RFStorage; c++)
+				{
+					if(meltingTempPoints[c] > 0)
+					{
+						currentActiveTemp[c] += diameter;
+
+						RFStorage -= totalRFCost * (diameter);
+
+						if(currentActiveTemp[c] >= Smeltery.getLiquifyTemperature(inventory[c]))
+						{
+							FluidStack smelteryResult = Smeltery.getSmelteryResult(inventory[c]);
+
+							if(fluidStored + smelteryResult.amount <= maxFluidCapacity)
+							{
+								fluidStored += smelteryResult.amount;
+								fluidStorage.add(smelteryResult);
+								inventory[c] = null;
+							}
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			totalRFCost = 0;
+		}
+	}
+
+	private int getTotalFluidAmount()
+	{
+		int fluidStored = 0;
+
+		for(FluidStack fs : fluidStorage)
+		{
+			if(fs != null)
+			{
+				fluidStored += fs.amount;
+			}
+		}
+
+		return fluidStored;
+	}
+
+	public void reassertItemStorage()
 	{
 		if(inventory.length > maxInvCapacity)
 		{
@@ -157,30 +286,30 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 				}
 			}
 
-			ItemStack[] temporaryInventory = new ItemStack[maxInvCapacity];
-			int[] temporaryMeltingTempPoints = new int[maxInvCapacity];
-			int[] temporaryCurrentActiveTemp = new int[maxInvCapacity];
-
-			for(int c = 0; c < temporaryInventory.length; c++)
-			{
-				temporaryInventory[c] = inventory[c];
-				temporaryMeltingTempPoints[c] = meltingTempPoints[c];
-				temporaryCurrentActiveTemp[c] = currentActiveTemp[c];
-			}
-
-			inventory = temporaryInventory;
-			meltingTempPoints = temporaryMeltingTempPoints;
-			currentActiveTemp = temporaryCurrentActiveTemp;
+			reassertInventorySizes();
 		}
-
-		checkHasItems();
-
-		if(inUse)
+		else if(inventory.length < maxInvCapacity)
 		{
-			inUse = false;
-
-
+			reassertInventorySizes();
 		}
+	}
+
+	private void reassertInventorySizes()
+	{
+		ItemStack[] temporaryInventory = new ItemStack[maxInvCapacity];
+		int[] temporaryMeltingTempPoints = new int[maxInvCapacity];
+		int[] temporaryCurrentActiveTemp = new int[maxInvCapacity];
+
+		for(int c = 0; c < temporaryInventory.length; c++)
+		{
+			temporaryInventory[c] = inventory[c];
+			temporaryMeltingTempPoints[c] = meltingTempPoints[c];
+			temporaryCurrentActiveTemp[c] = currentActiveTemp[c];
+		}
+
+		inventory = temporaryInventory;
+		meltingTempPoints = temporaryMeltingTempPoints;
+		currentActiveTemp = temporaryCurrentActiveTemp;
 	}
 
 	private void checkHasItems()
@@ -225,10 +354,26 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 		{
 			validStructure = false;
 
+			totalRFCost = 0;
+
+			maxRFCapacity = 10000;
+
 			if(debug)
 			{
 				ThermalSmeltery.logger.warn("Invalid RF Smeltery Construction!");
 			}
+		}
+	}
+
+	private void reassertRFStorage()
+	{
+		if(RFStorage < 0)
+		{
+			RFStorage = 0;
+		}
+		else if(RFStorage > maxRFCapacity)
+		{
+			RFStorage = maxRFCapacity;
 		}
 	}
 
