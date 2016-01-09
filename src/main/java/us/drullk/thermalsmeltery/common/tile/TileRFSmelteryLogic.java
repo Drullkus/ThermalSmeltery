@@ -6,6 +6,7 @@ import mantle.blocks.iface.IFacingLogic;
 import mantle.blocks.iface.IMasterLogic;
 import mantle.blocks.iface.IServantLogic;
 import mantle.world.CoordTuple;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -45,7 +46,7 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 
 	private ArrayList<FluidStack> fluidStorage = new ArrayList<FluidStack>();
 
-	private CoordTuple minCoordTuple, maxCoordTuple;
+	private CoordTuple minCoordTuple, maxCoordTuple, defaultTuple = new CoordTuple(xCoord, yCoord, zCoord);
 
 	Random rand = new Random();
 
@@ -352,15 +353,22 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 				maxInvCapacity = diameter * diameter * (smelteryTopHeight - smelteryBottomHeight);
 				maxFluidCapacity = maxInvCapacity * MB_P_BLOCK;
 				maxRFCapacity = ((int) ((double) maxFluidCapacity / 1.5)) + 10000;
+
+				minCoordTuple = getMinCoords();
+				maxCoordTuple = getMaxCoords();
 			}
 		}
 		else
 		{
 			validStructure = false;
-
 			totalRFCost = 0;
 
+			maxInvCapacity = 0;
+			maxFluidCapacity = 0;
 			maxRFCapacity = 10000;
+
+			minCoordTuple = defaultTuple;
+			maxCoordTuple = defaultTuple;
 
 			if(debug)
 			{
@@ -397,7 +405,7 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 					{
 						if(debug)
 						{
-							worldObj.setBlock(x, y + 1, z + west, Blocks.gold_ore);
+							worldObj.setBlock(x, y + 5, z + west, Blocks.gold_ore);
 						}
 						diameterSpaceVerified++;
 					}
@@ -415,7 +423,7 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 					{
 						if(debug)
 						{
-							worldObj.setBlock(x, y + 1, z - east, Blocks.emerald_ore);
+							worldObj.setBlock(x, y + 5, z - east, Blocks.emerald_ore);
 						}
 						diameterSpaceVerified++;
 					}
@@ -433,7 +441,7 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 					{
 						if(debug)
 						{
-							worldObj.setBlock(x + south, y + 1, z, Blocks.diamond_ore);
+							worldObj.setBlock(x + south, y + 5, z, Blocks.diamond_ore);
 						}
 						diameterSpaceVerified++;
 					}
@@ -451,7 +459,7 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 					{
 						if(debug)
 						{
-							worldObj.setBlock(x - north, y + 1, z, Blocks.redstone_ore);
+							worldObj.setBlock(x - north, y + 5, z, Blocks.redstone_ore);
 						}
 						diameterSpaceVerified++;
 					}
@@ -480,51 +488,64 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 		switch(getRenderDirection())
 		{
 			case 2: // +z
-				z = zCoord - radius - 1;
-				break;
-			case 3: // -z
 				z = zCoord + radius + 1;
 				break;
+			case 3: // -z
+				z = zCoord - radius - 1;
+				break;
 			case 4: // +x
-				x = xCoord - radius - 1;
+				x = xCoord + radius + 1;
 				break;
 			case 5: // -x
-				x = xCoord + radius + 1;
+				x = xCoord - radius - 1;
 				break;
 		}
 
-		checkSmelteryLayers(x, y, z, radius);
-
-		for(int c = 1; c < MAX_SMELTERY_HEIGHT; c++)
+		if(debug)
 		{
-			if(smelteryBottomOffset == c)
-			{
-				if(checkSmelteryLayers(x, y - c, z, radius))
-				{
-					smelteryBottomOffset++;
-				}
-				else if(checkSmelteryBottom(x, y - c, z, radius))
-				{
-					smelteryBottomHeight = yCoord - c - 1;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else if(smelteryTopOffset == (c - smelteryBottomOffset))
-			{
-				if(checkSmelteryLayers(x, y + (c - smelteryBottomOffset), z, radius))
-				{
-					smelteryTopOffset++;
-				}
-				else
-				{
-					smelteryTopHeight = yCoord + smelteryTopOffset;
+			ThermalSmeltery.logger.info("Scanning Smeltery BlockStructure!");
+		}
 
-					return true;
+		if(checkSmelteryLayers(x, y, z, radius))
+		{
+			for(int c = 1; c < MAX_SMELTERY_HEIGHT; c++)
+			{
+				if(smelteryBottomOffset == c)
+				{
+					if(checkSmelteryLayers(x, y - c, z, radius))
+					{
+						smelteryBottomOffset++;
+					}
+					else if(checkSmelteryBottom(x, y - c, z, radius))
+					{
+						smelteryBottomHeight = yCoord - c - 1;
+					}
+					else
+					{
+						return false;
+					}
 				}
-			}
+				else if(smelteryTopOffset == (c - smelteryBottomOffset))
+				{
+					if(checkSmelteryLayers(x, y + (c - smelteryBottomOffset), z, radius))
+					{
+						smelteryTopOffset++;
+					}
+					else
+					{
+						smelteryTopHeight = yCoord + smelteryTopOffset;
+
+						return true;
+					}
+				}
+			}//*/
+
+			doDebug(x + radius + 1, smelteryTopHeight, z + radius + 1, Blocks.hardened_clay);
+			doDebug(x + radius + 1, smelteryBottomHeight, z + radius + 1, Blocks.wool);
+		}
+		else
+		{
+			return false;
 		}
 
 		return true;
@@ -537,11 +558,11 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 			for(int xD = -range; xD <= range; xD++)
 			{
 				// If there is air, then this whole method is invalidated
-				if((worldObj.getBlock(x, y, z) == null || worldObj.isAirBlock(x, y, z)))
+				if((worldObj.getBlock(xD, y, yD) == null || worldObj.isAirBlock(xD, y, yD)))
 				{
 					return false;
 				}
-				else if(!(worldObj.getBlock(x, y, z) instanceof ITileRFSmeltery))
+				else if(!(worldObj.getBlock(xD, y, yD) instanceof ITileRFSmeltery))
 				{
 					return false;
 				}
@@ -551,33 +572,51 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 		return true;
 	}
 
+	private void doDebug(int x, int y, int z, Block b)
+	{
+		if(debug)
+		{
+			worldObj.setBlock(x, y, z, b);
+		}
+	}
+
 	public boolean checkSmelteryLayers(int x, int y, int z, int range)
 	{
+		//doDebug(x, yCoord + 1, z, Blocks.bedrock);
+
 		// Check walls
-		for(int c = -range - 1; c <= range + 1; c++)
+		for(int c = -range; c <= range; c++)
 		{
-			// Check z+ walls
-			if(!(worldObj.getBlock(x + c, y, z + range + 1) != null && worldObj.getBlock(x, y, z) instanceof IRFSmeltery))
+			/*if(debug)
 			{
-				return false;
+				doDebug(x + c, y + 5, z + range + 1, Blocks.gold_block);
+				doDebug(x + c, y + 6, z - range - 1, Blocks.emerald_block);
+				doDebug(x + range + 1, y + 7, z + c, Blocks.diamond_block);
+				doDebug(x - range - 1, y + 8, z + c, Blocks.redstone_block);
+			}//*/
+
+			// Check z+ walls
+			if(!(worldObj.getBlock(x + c, y, z + range + 1) != null && worldObj.getBlock(x + c, y, z + range + 1) instanceof IRFSmeltery))
+			{
+				//return false;
 			}
 
 			// Check z- walls
-			if(!(worldObj.getBlock(x + c, y, z - range - 1) != null && worldObj.getBlock(x, y, z) instanceof IRFSmeltery))
+			if(!(worldObj.getBlock(x + c, y, z - range - 1) != null && worldObj.getBlock(x + c, y, z - range - 1) instanceof IRFSmeltery))
 			{
-				return false;
+				//return false;
 			}
 
 			// Check x+ walls
-			if(!(worldObj.getBlock(x + range + 1, y, z + c) != null && worldObj.getBlock(x, y, z) instanceof IRFSmeltery))
+			if(!(worldObj.getBlock(x + range + 1, y, z + c) != null && worldObj.getBlock(x + range + 1, y, z + c) instanceof IRFSmeltery))
 			{
-				return false;
+				//return false;
 			}
 
 			// Check x- walls
-			if(!(worldObj.getBlock(x - range - 1, y, z + c) != null && worldObj.getBlock(x, y, z) instanceof IRFSmeltery))
+			if(!(worldObj.getBlock(x - range - 1, y, z + c) != null && worldObj.getBlock(x - range - 1, y, z + c) instanceof IRFSmeltery))
 			{
-				return false;
+				//return false;
 			}
 		}
 
@@ -587,7 +626,7 @@ public class TileRFSmelteryLogic extends InventoryLogic implements IActiveLogic,
 			for(int xD = -range; xD <= range; xD++)
 			{
 				// If there is a block, then this whole method is invalidated
-				if(!(worldObj.getBlock(x, y, z) == null || worldObj.isAirBlock(x, y, z)))
+				if(!(worldObj.getBlock(x + xD, y, z + yD) == null || worldObj.isAirBlock(x + xD, y, z + yD)))
 				{
 					return false;
 				}
