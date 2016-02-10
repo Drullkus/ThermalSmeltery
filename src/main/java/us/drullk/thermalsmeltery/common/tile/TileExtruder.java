@@ -229,7 +229,7 @@ public class TileExtruder extends TileMachineBase implements IFluidHandler, ITil
     private int getRecipeTime(CastingRecipe recipe)
     {
         if (recipe == null) return 0;
-        return recipe.coolTime * 1000 * TSmeltConfig.stamperMultiplier;
+        return recipe.coolTime * 1000 * TSmeltConfig.extruderMultiplier;
 
         /**
          Controls the speed of the machine
