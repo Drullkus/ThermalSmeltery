@@ -9,7 +9,7 @@ import us.drullk.thermalsmeltery.common.Compat;
 import us.drullk.thermalsmeltery.common.LibMisc;
 import us.drullk.thermalsmeltery.common.TSmeltConfig;
 
-@Mod(modid = LibMisc.MOD_ID, name = LibMisc.MOD_NAME, dependencies = LibMisc.DEPENDENCIES)
+@Mod(modid = LibMisc.MOD_ID, name = LibMisc.MOD_NAME, dependencies = LibMisc.DEPENDENCIES, version = LibMisc.VERSION)
 public class ThermalSmeltery {
     private static final String modID = "Thermal Smeltery";
     private static final Logger logger = LogManager.getLogger(modID);
