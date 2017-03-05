@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "ThermalSmeltery",
+    "name": "Thermal Smeltery",
+    "description": "${description}",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["Drullkus"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]
