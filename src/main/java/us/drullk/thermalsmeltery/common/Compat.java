@@ -16,7 +16,7 @@ public class Compat {
         for (MeltingRecipe recipe : smelteryMap) {
             for (ItemStack entry : recipe.input.getInputs())
             {
-                if (!(entry.getItem() instanceof ToolPart))
+                if (entry != null && !(entry.getItem() instanceof ToolPart))
                 {
                     int energy = recipe.getTemperature() * TSmeltConfig.rfCostMultiplier; // Calculate temperature to energy here
                     addCrucibleRecipe(energy, entry, recipe.getResult());
