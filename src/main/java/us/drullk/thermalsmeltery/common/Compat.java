@@ -2,7 +2,7 @@ package us.drullk.thermalsmeltery.common;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.*;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import slimeknights.tconstruct.library.smeltery.MeltingRecipe;
 import slimeknights.tconstruct.library.tools.ToolPart;
@@ -16,7 +16,7 @@ public class Compat {
         for (MeltingRecipe recipe : smelteryMap) {
             for (ItemStack entry : recipe.input.getInputs())
             {
-                if (!(entry.getItem() instanceof ToolPart))
+                if (entry != null && !(entry.getItem() instanceof ToolPart))
                 {
                     int energy = recipe.getTemperature() * TSmeltConfig.rfCostMultiplier; // Calculate temperature to energy here
                     addCrucibleRecipe(energy, entry, recipe.getResult());
@@ -27,11 +27,11 @@ public class Compat {
 
     private static void addCrucibleRecipe(int energy, ItemStack input, FluidStack output)
     {
-        if (input == null || output == null)
+        if (input == null || output == null || FluidRegistry.getFluidName(output) == null)
         {
             return;
         }
-
+        
         NBTTagCompound message = new NBTTagCompound();
 
         message.setInteger("energy", energy);
