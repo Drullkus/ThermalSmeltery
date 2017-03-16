@@ -2,6 +2,7 @@ package us.drullk.thermalsmeltery.common;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import slimeknights.tconstruct.library.smeltery.MeltingRecipe;
@@ -16,7 +17,13 @@ public class Compat {
         for (MeltingRecipe recipe : smelteryMap) {
             for (ItemStack entry : recipe.input.getInputs())
             {
-                if (!(entry.getItem() instanceof ToolPart))
+                // I swear... If this doesn't stop the crashing...
+
+                if (entry != null &&
+                        !(entry.getItem() instanceof ToolPart) &&
+                        recipe.output != null &&
+                        FluidRegistry.getFluidName(recipe.output) != null &&
+                        !(FluidRegistry.getFluidName(recipe.output.getFluid()).matches("")))
                 {
                     int energy = recipe.getTemperature() * TSmeltConfig.rfCostMultiplier; // Calculate temperature to energy here
                     addCrucibleRecipe(energy, entry, recipe.getResult());
@@ -27,7 +34,7 @@ public class Compat {
 
     private static void addCrucibleRecipe(int energy, ItemStack input, FluidStack output)
     {
-        if (input == null || output == null)
+        if (input == null || output == null || output.getFluid() == null)
         {
             return;
         }
